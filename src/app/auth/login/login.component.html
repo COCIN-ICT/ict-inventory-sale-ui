@@ -1,0 +1,68 @@
+<div class="min-h-screen flex items-center justify-center bg-white px-4">
+  <div class="w-full max-w-sm border border-gray-200 rounded-lg shadow-md">
+    <!-- Header -->
+    <div class="bg-indigo-900 text-white text-center py-3 rounded-t-lg">
+      <h2 class="text-lg font-semibold">Login</h2>
+    </div>
+
+    <!-- Logo -->
+    <div class="flex justify-center my-4">
+      <img src="assets/logo.png" alt="Logo" class="w-20 h-20" />
+    </div>
+
+    <!-- Borrow Small Small Text -->
+    <div class="text-center text-indigo-900 font-bold -mt-3 mb-6">
+      <p class="text-lg leading-4">Borrow</p>
+      <p class="text-sm text-cyan-500 font-semibold">Small Small</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="px-6 pb-6">
+      <!-- Username -->
+      <div class="mb-4 relative">
+        <div class="absolute left-0 top-0 h-full w-[120px] bg-indigo-900 text-white flex items-center justify-center rounded-l-full font-semibold text-sm">
+          Username
+        </div>
+        <input
+          formControlName="username"
+          type="text"
+          placeholder=""
+          class="pl-[130px] pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4 relative">
+        <div class="absolute left-0 top-0 h-full w-[120px] bg-indigo-900 text-white flex items-center justify-center rounded-l-full font-semibold text-sm">
+          Password
+        </div>
+        <input
+          formControlName="password"
+          type="password"
+          placeholder=""
+          class="pl-[130px] pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+        />
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage" class="text-red-600 text-sm text-center mb-3">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        class="w-full bg-indigo-900 text-white py-2 rounded-full hover:bg-indigo-800 transition disabled:opacity-50"
+      >
+        <span *ngIf="!isLoading">Login</span>
+        <span *ngIf="isLoading">Logging in...</span>
+      </button>
+
+      <!-- Forgot Password -->
+      <p class="text-center text-sm text-gray-500 mt-4">
+        Forgot Password? <span class="font-medium text-gray-700">Contact Administrator</span>
+      </p>
+    </form>
+  </div>
+</div>
