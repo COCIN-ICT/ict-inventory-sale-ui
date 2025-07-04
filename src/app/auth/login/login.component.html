@@ -10,7 +10,7 @@
       <img src="assets/logo.png" alt="Logo" class="w-20 h-20" />
     </div>
 
-    <!-- Borrow Small Small Text -->
+    <!-- App Text -->
     <div class="text-center text-indigo-900 font-bold -mt-3 mb-6">
       <p class="text-lg leading-4">COCIN</p>
       <p class="text-sm text-cyan-500 font-semibold">Management System</p>
@@ -18,7 +18,8 @@
 
     <!-- Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="px-6 pb-6">
-      <!-- Username -->
+
+      <!-- Username Field -->
       <div class="mb-4 relative">
         <div class="absolute left-0 top-0 h-full w-[120px] bg-indigo-900 text-white flex items-center justify-center rounded-l-full font-semibold text-sm">
           Username
@@ -28,10 +29,14 @@
           type="text"
           placeholder=""
           class="pl-[130px] pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          [ngClass]="{'border-red-500': username?.invalid && (username?.touched || username?.dirty)}"
         />
+        <p *ngIf="username?.invalid && (username?.touched || username?.dirty)" class="text-red-500 text-sm mt-1 ml-[130px]">
+          Username is required
+        </p>
       </div>
 
-      <!-- Password -->
+      <!-- Password Field -->
       <div class="mb-4 relative">
         <div class="absolute left-0 top-0 h-full w-[120px] bg-indigo-900 text-white flex items-center justify-center rounded-l-full font-semibold text-sm">
           Password
@@ -41,10 +46,15 @@
           type="password"
           placeholder=""
           class="pl-[130px] pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          [ngClass]="{'border-red-500': password?.invalid && (password?.touched || password?.dirty)}"
         />
+        <p *ngIf="password?.invalid && (password?.touched || password?.dirty)" class="text-red-500 text-sm mt-1 ml-[130px]">
+          <span *ngIf="password?.errors?.['required']">Password is required</span>
+          <span *ngIf="password?.errors?.['minlength']">Min. 6 characters required</span>
+        </p>
       </div>
 
-      <!-- Error -->
+      <!-- General Error -->
       <div *ngIf="errorMessage" class="text-red-600 text-sm text-center mb-3">
         {{ errorMessage }}
       </div>

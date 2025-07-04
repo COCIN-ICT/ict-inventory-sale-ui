@@ -43,6 +43,7 @@ export class LoginComponent {
           // Failed login
           this.errorMessage = 'Invalid username or password';
         }
+        console.log('test', username, password);
 
         this.isLoading = false;
       }, 1000);
