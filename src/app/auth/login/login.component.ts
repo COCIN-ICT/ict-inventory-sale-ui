@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import axios from 'axios';
+import { APPURL } from '../../helpers';
 
 @Component({
   selector: 'app-login',
@@ -31,13 +33,15 @@ export class LoginComponent {
       this.errorMessage = '';
       
       // Simulate API call
-      setTimeout(() => {
+      setTimeout(async () => {
         const { username, password } = this.loginForm.value;
+        const response =await axios.post(`${APPURL}/auth/login`, { username, password });
 
         // Mock authentication logic
-        if (username === 'admin' && password === 'admin123') {
+        if (response && response.status === 200) {
           // Successful login
-          localStorage.setItem('token', 'mock-jwt-token');
+          localStorage.setItem('token', response?.data.token);
+          alert('Login successful!');
           this.router.navigate(['/dashboard']);
         } else {
           // Failed login
