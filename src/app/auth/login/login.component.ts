@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import axios from 'axios';
-import { APPURL } from '../../helpers';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +35,7 @@ export class LoginComponent {
       // Simulate API call
       setTimeout(async () => {
         const { username, password } = this.loginForm.value;
-        const response =await axios.post(`${APPURL}/auth/login`, { username, password });
+        const response = await axios.post(`${environment.apiUrl}/auth/login`, { username, password });
 
         // Mock authentication logic
         if (response && response.status === 200) {
