@@ -1,0 +1,90 @@
+<div class="flex min-h-screen bg-gray-50 text-gray-900 font-inter">
+  <!-- Sidebar -->
+  
+<aside class="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col">
+  <!-- Logo Section -->
+  <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+    <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <div>
+      <h1 class="text-lg font-semibold text-gray-900">Admin Panel</h1>
+      <p class="text-sm text-gray-500">System Management</p>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="px-4 py-3">
+    <input type="text" placeholder="Search menu..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 bg-gray-50 text-gray-600" />
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+    <a routerLink="/dashboard" routerLinkActive="bg-blue-100 text-blue-600" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded">
+      <span>🏠</span> <span>Dashboard</span>
+    </a>
+
+    <div>
+      <button class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded">
+        <span class="flex items-center gap-2">👥 User Management</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <ul class="ml-4 space-y-1">
+        <li><a routerLink="/dashboard/users" routerLinkActive="active" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">All Users</a></li>
+        <li><a routerLink="/user-management/create-user" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Create User</a></li>
+        <li><a routerLink="/user-management/user-roles" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">User Roles</a></li>
+        <li><a routerLink="/user-management/deactivated-users" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Deactivated Users</a></li>
+       
+      </ul>
+    </div>
+     <!-- <button (click)="goToAllUsers()" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">
+          <span class="flex items-center gap-2">👥 All Users</span> </button> -->
+
+    <a routerLink="/supplier-management" routerLinkActive="bg-blue-100 text-blue-600" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded">
+      <span>📋</span> <span>Supplier Management</span>
+    </a>
+    <div>
+      <button class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded">
+        <span class="flex items-center gap-2">🛒 Purchases & Procurement</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <ul class="ml-4 space-y-1">
+        <li><a routerLink="/purchases/purchase-requests" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Purchase Requests</a></li>
+        <li><a routerLink="/purchases/purchase-orders" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Purchase Orders</a></li>
+        <li><a routerLink="/purchases/goods-receipt" class="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Goods Receipt</a></li>
+      </ul>
+    </div>
+    <!-- Add remaining sections (Inventory Management, Sales & POS Terminals, etc.) similarly -->
+
+    <!-- Footer / Super Admin -->
+    <div class="border-t border-gray-200 bg-gray-50 px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-blue-600 text-white text-xs font-semibold rounded-full flex items-center justify-center">SA</div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">Super Admin</p>
+            <p class="text-xs text-gray-500">admincompany.com</p>
+          </div>
+        </div>
+        <button title="Logout">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+
+  <!-- Main Content Area -->
+  <main class="flex-1 p-6 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </main>
+</div>
