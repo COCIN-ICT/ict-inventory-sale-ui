@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { APPURL } from '../../../../helpers';
+import { environment } from '../../../../../environments/environment';
 import { User, UserService } from '../../../../services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
