@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { APPURL } from '../helpers';
+import { environment } from '../../environments/environment';
 
 export interface User {
   firstName: string;
@@ -24,11 +24,12 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUsers() {
-    return this.http.get(`${APPURL}/user`);
+    return this.http.get(environment.apiUrl + '/user');
   }
 
   createUser(user: User) {
-    return this.http.post(`${APPURL}/user`, user);
+    return this.http.post(`${environment}/user`, user);
   }
+  
   
 }
