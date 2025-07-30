@@ -15,6 +15,7 @@ export interface User {
 }
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,8 +29,19 @@ export class UserService {
   }
 
   createUser(user: User) {
-    return this.http.post(`${environment}/user`, user);
-  }
+  return this.http.post(`${environment.apiUrl}/user`, user,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }
+  );
+}
+
   
+  getRoles() {
+    return this.http.get(environment.apiUrl + '/role');
+  }
   
 }
