@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 interface AuthResponse {
   token: string;
@@ -11,15 +12,17 @@ interface AuthResponse {
 })
 export class AuthService {
   private apiUrl = 'api';
+    refreshToken: any;
 
   constructor( private http: HttpClient) { }
 
   login(username: string, password: string) {
-    return this.http.post(`${ this.apiUrl}/login`, { username, password});
+    return this.http.post(`${environment.apiUrl}/auth/login`, { username, password});
   }
 
   logout(){
-    localStorage.removeItem('token')
+    localStorage.removeItem('token'),
+    localStorage.removeItem('currentUser');
   }
 
    isLoggedIn(): boolean {
