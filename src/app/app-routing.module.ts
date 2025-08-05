@@ -13,9 +13,11 @@ const routes: Routes = [
       { path: '', loadChildren: () => import('./dashboard/pages/home/home.module').then(m => m.HomeModule) }, 
       { path: 'create-user', loadChildren: () => import('./dashboard/pages/create-user/create-user.module').then(m => m.CreateUserModule) },
       { path: 'user-roles', loadChildren: () => import('./dashboard/pages/user-roles/user-roles.module').then(m => m.UserRolesModule) },
+      { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
       { path: 'deactivated-users', loadChildren: () => import('./dashboard/pages/deactivated-users/deactivated-users.module').then(m => m.DeactivatedUsersModule) },
     ]
   },
+  { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
  
 
   

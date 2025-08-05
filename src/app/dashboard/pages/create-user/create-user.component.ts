@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../../services/user.service';
+import { RolesService } from '../../../services/roles.service';
+import { DepartmentsService } from '../../../services/departments.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -8,24 +10,28 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './create-user.component.css'
 })
 export class CreateUserComponent {
-  constructor(private userService: UserService, private fb: FormBuilder) {}
-  newUser = {
-    firstName: '',
-    lastName: '',  
-    middleName: '',
-    username: '',
-    password: '',
-    address: '',
-    phone: '',
-    email: '',
-    roleId: ''
-  };
+  constructor(private userService: UserService, private fb: FormBuilder, 
+              private departmentsService: DepartmentsService, private rolesServices: RolesService) {}
+  // newUser = {
+  //   firstName: '',
+  //   lastName: '',  
+  //   middleName: '',
+  //   username: '',
+  //   password: '',
+  //   address: '',
+  //   phone: '',
+  //   email: '',
+  //   roleId: ''
+  // };
 
   userForm!: FormGroup;
   roles: any[] = [];
+  departments: any[] = [];
+  
   ngOnInit(): void {
     this.initform();
     this.loadRoles();
+    this.loadDepartments();
   }
 
   initform() {
@@ -38,12 +44,13 @@ export class CreateUserComponent {
       address: [''],
       phone: [''],
       email: ['', [Validators.required, Validators.email]],
+      departmentId: [1, Validators.required],
       roleId: [1, Validators.required]
     });
-  }
+  };
 
   loadRoles() {
-    this.userService.getRoles()
+    this.rolesServices.getRoles()
     .subscribe({
       next: (res:any) => {
         console.log('API response:', res);
@@ -52,12 +59,27 @@ export class CreateUserComponent {
         console.log('Final roles:', this.roles);
       }
     })
-  }
+  };
+
+  loadDepartments() {
+    this.departmentsService.getDepartments()
+    .subscribe({
+      next: (res:any) => {
+        console.log('API response:', res);
+        //different response structures
+        this.departments = res.data || res.departments || res.result || res || [];
+        console.log('Final departments:', this.departments);
+      }
+    })
+  };
+
+
 
   createUser() {
      console.log('Create user clicked');
     if (this.userForm.valid) {
       const newUser = this.userForm.value;
+      console.log('New user data:', newUser);
       this.userService.createUser(newUser).subscribe({
         next: (res:any) => {
           alert('User created successfully!');
