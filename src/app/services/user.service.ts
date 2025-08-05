@@ -30,18 +30,10 @@ export class UserService {
 
   createUser(user: User) {
   return this.http.post(`${environment.apiUrl}/user`, user,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    }
   );
 }
 
   
-  getRoles() {
-    return this.http.get(environment.apiUrl + '/role');
-  }
+  
   
 }
