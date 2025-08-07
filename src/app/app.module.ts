@@ -15,11 +15,14 @@ import { ContentComponent } from './layout/content/content.component';
 import { MainComponent } from './layout/main/main.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AllUsersModule } from './dashboard/pages/all-users/all-users.module';
+import { EditSupplierComponent } from './dashboard/pages/supplier-management/edit-supplier/edit-supplier.component';
+import { SupplierDetailsComponent } from './dashboard/pages/supplier-management/supplier-details/supplier-details.component';
 import { StoreModule } from '@ngrx/store';
 import { authReducer } from './store/auth/auth.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
 import { AuthInterceptor } from './auth.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -29,13 +32,16 @@ import { AuthInterceptor } from './auth.interceptor';
     FooterComponent,
     HeaderComponent,
     ContentComponent,
-    MainComponent
+    MainComponent,
+    EditSupplierComponent,
+    SupplierDetailsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
     ReactiveFormsModule,
+    HttpClientModule,
     
     AllUsersModule,
     
