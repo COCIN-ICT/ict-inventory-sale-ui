@@ -28,14 +28,29 @@
         </div>
         
         <div class="flex space-x-2">
-          <button (click)="viewSupplier(supplier.id)" class="flex-1 px-3 py-2 bg-green-600 text-white rounded text-xs font-medium hover:bg-green-700 transition-all duration-200">
+          <button (click)="viewSupplier(supplier.id)" class="flex-1 px-2 py-2 bg-green-600 text-white rounded text-xs font-medium hover:bg-green-700 transition-all duration-200">
             View
           </button>
-          <button (click)="editSupplier(supplier.id)" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-all duration-200">
+          <button (click)="editSupplier(supplier.id)" class="flex-1 px-2 py-2 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-all duration-200">
             Edit
           </button>
-          <button class="flex-1 px-3 py-2 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700 transition-all duration-200">
-            Delete
+          <button 
+            (click)="toggleSupplierStatus(supplier)"
+            [disabled]="togglingStatus[supplier.id]"
+            class="flex-1 px-2 py-2 text-xs font-medium rounded transition-all duration-200"
+            [class]="supplier.active 
+              ? 'bg-red-600 text-white hover:bg-red-700' 
+              : 'bg-green-600 text-white hover:bg-green-700'">
+            <span *ngIf="!togglingStatus[supplier.id]" class="text-xs">
+              {{ supplier.active ? 'Deactivate' : 'Activate' }}
+            </span>
+            <span *ngIf="togglingStatus[supplier.id]" class="flex items-center justify-center text-xs">
+              <svg class="animate-spin -ml-1 mr-1 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Updating...
+            </span>
           </button>
         </div>
       </div>
@@ -70,9 +85,28 @@
                 <span *ngIf="!supplier.active" class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Inactive</span>
               </td>
               <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
-                <button (click)="viewSupplier(supplier.id)" class="px-2 sm:px-4 py-1 sm:py-2 bg-green-600 text-white rounded text-xs font-medium hover:bg-green-700 transition-all duration-200 mr-1 sm:mr-2">View</button>
-                                 <button (click)="editSupplier(supplier.id)" class="px-2 sm:px-4 py-1 sm:py-2 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-all duration-200 mr-1 sm:mr-2">Edit</button>
-                <button class="px-2 sm:px-4 py-1 sm:py-2 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700 transition-all duration-200">Delete</button>
+                <div class="flex flex-wrap gap-1 sm:gap-2">
+                  <button (click)="viewSupplier(supplier.id)" class="px-2 sm:px-3 py-1 sm:py-2 bg-green-600 text-white rounded text-xs font-medium hover:bg-green-700 transition-all duration-200">View</button>
+                  <button (click)="editSupplier(supplier.id)" class="px-2 sm:px-3 py-1 sm:py-2 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-all duration-200">Edit</button>
+                  <button 
+                    (click)="toggleSupplierStatus(supplier)"
+                    [disabled]="togglingStatus[supplier.id]"
+                    class="px-2 sm:px-3 py-1 sm:py-2 text-xs font-medium rounded transition-all duration-200"
+                    [class]="supplier.active 
+                      ? 'bg-red-600 text-white hover:bg-red-700' 
+                      : 'bg-green-600 text-white hover:bg-green-700'">
+                    <span *ngIf="!togglingStatus[supplier.id]">
+                      {{ supplier.active ? 'Deactivate' : 'Activate' }}
+                    </span>
+                    <span *ngIf="togglingStatus[supplier.id]" class="flex items-center">
+                      <svg class="animate-spin -ml-1 mr-1 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Updating...
+                    </span>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

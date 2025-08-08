@@ -39,4 +39,12 @@ export class SupplierService {
   deleteSupplier(id: number) {
     return this.http.delete(`${environment.apiUrl}/supplier/${id}`);
   }
+
+  getActiveSuppliers() {
+    return this.http.get<Supplier[]>(`${environment.apiUrl}/supplier/active`);
+  }
+
+  toggleSupplierStatus(id: number) {
+    return this.http.put<Supplier>(`${environment.apiUrl}/supplier/${id}`, {});
+  }
 } 

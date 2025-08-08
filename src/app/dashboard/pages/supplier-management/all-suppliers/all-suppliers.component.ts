@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AllSuppliersComponent implements OnInit {
   suppliers: any[] = [];
+  togglingStatus: { [key: number]: boolean } = {};
 
   constructor(private supplierService: SupplierService, private router: Router){}
 
@@ -38,5 +39,66 @@ export class AllSuppliersComponent implements OnInit {
 
   editSupplier(supplierId: number) {
     this.router.navigate(['/home/supplier-management/edit-supplier', supplierId]);
+  }
+
+  toggleSupplierStatus(supplier: any) {
+    if (this.togglingStatus[supplier.id]) {
+      return; // Prevent multiple clicks
+    }
+
+    this.togglingStatus[supplier.id] = true;
+
+    this.supplierService.toggleSupplierStatus(supplier.id).subscribe({
+      next: (response: any) => {
+        console.log('Toggle response:', response);
+        
+        // Update the supplier in the list
+        const index = this.suppliers.findIndex(s => s.id === supplier.id);
+        if (index !== -1) {
+          this.suppliers[index] = response;
+        }
+        
+        this.togglingStatus[supplier.id] = false;
+        
+        // Show success message
+        const status = response.active ? 'activated' : 'deactivated';
+        this.showSuccessMessage(`Supplier "${response.name}" has been ${status} successfully!`);
+      },
+      error: (error) => {
+        console.error('Error toggling supplier status:', error);
+        this.togglingStatus[supplier.id] = false;
+        this.showErrorMessage('Failed to update supplier status. Please try again.');
+      }
+    });
+  }
+
+  private showSuccessMessage(message: string) {
+    // Create a temporary success message
+    const successDiv = document.createElement('div');
+    successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50';
+    successDiv.textContent = message;
+    document.body.appendChild(successDiv);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      if (document.body.contains(successDiv)) {
+        document.body.removeChild(successDiv);
+      }
+    }, 3000);
+  }
+
+  private showErrorMessage(message: string) {
+    // Create a temporary error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-md shadow-lg z-50';
+    errorDiv.textContent = message;
+    document.body.appendChild(errorDiv);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      if (document.body.contains(errorDiv)) {
+        document.body.removeChild(errorDiv);
+      }
+    }, 3000);
   }
 } 

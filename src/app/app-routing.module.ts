@@ -21,6 +21,7 @@ const routes: Routes = [
       // Supplier Management Routes
       { path: 'supplier-management/suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/all-suppliers/all-suppliers.module').then(m => m.AllSuppliersModule) },
       { path: 'supplier-management/create-supplier', loadChildren: () => import('./dashboard/pages/supplier-management/create-supplier/create-supplier.module').then(m => m.CreateSupplierModule) },
+      { path: 'supplier-management/active-suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/active-suppliers/active-suppliers.module').then(m => m.ActiveSuppliersModule) },
       { path: 'supplier-management/supplier-details/:id', component: SupplierDetailsComponent },
       { path: 'supplier-management/edit-supplier/:id', component: EditSupplierComponent },
     ]
