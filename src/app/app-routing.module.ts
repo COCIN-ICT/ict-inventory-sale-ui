@@ -14,10 +14,12 @@ const routes: Routes = [
       { path: 'create-user', loadChildren: () => import('./dashboard/pages/create-user/create-user.module').then(m => m.CreateUserModule) },
       { path: 'user-roles', loadChildren: () => import('./dashboard/pages/user-roles/user-roles.module').then(m => m.UserRolesModule) },
       { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
+      { path: 'departments', loadChildren: () => import('./dashboard/pages/departments/departments.module').then(m => m.DepartmentsModule) },
       { path: 'deactivated-users', loadChildren: () => import('./dashboard/pages/deactivated-users/deactivated-users.module').then(m => m.DeactivatedUsersModule) },
     ]
   },
-  { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
+  // { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
+  // { path: 'departments', loadChildren: () => import('./dashboard/pages/departments/departments.module').then(m => m.DepartmentsModule) },
  
 
   

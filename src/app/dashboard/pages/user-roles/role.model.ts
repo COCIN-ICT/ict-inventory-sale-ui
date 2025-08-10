@@ -1,6 +1,6 @@
 export interface Permission {
   id?: number;
-  permissionType: string;
+  permissionType?: string;
   selected?: boolean;
 }
 

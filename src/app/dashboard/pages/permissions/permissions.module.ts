@@ -8,7 +8,8 @@ import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    PermissionsComponent
+    PermissionsComponent,
+    
   ],
   imports: [
     CommonModule,

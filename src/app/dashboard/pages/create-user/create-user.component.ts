@@ -28,6 +28,7 @@ export class CreateUserComponent {
   roles: any[] = [];
   departments: any[] = [];
   
+  
   ngOnInit(): void {
     this.initform();
     this.loadRoles();

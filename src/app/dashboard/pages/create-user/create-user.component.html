@@ -65,9 +65,8 @@
         <!-- Department -->
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-1">Department <span class="text-red-500">*</span></label>
-          <select formControlName="departmentId"
-            class="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option value="">Select Department</option>
+          <select formControlName="departmentId" class="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500">
+            <option [ngValue]="null" selected>Select Department</option>
             <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
           </select>
         </div>
