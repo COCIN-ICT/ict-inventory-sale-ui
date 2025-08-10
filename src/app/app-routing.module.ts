@@ -3,6 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './layout/main/main.component';
 import { AllUsersComponent } from './dashboard/pages/all-users/all-users.component';
 import { AuthGuard } from './auth/auth.guard';
+import { EditSupplierComponent } from './dashboard/pages/supplier-management/edit-supplier/edit-supplier.component';
+import { SupplierDetailsComponent } from './dashboard/pages/supplier-management/supplier-details/supplier-details.component';
+
 
 const routes: Routes = [
   {path: 'login', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
@@ -16,6 +19,12 @@ const routes: Routes = [
       { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
       { path: 'departments', loadChildren: () => import('./dashboard/pages/departments/departments.module').then(m => m.DepartmentsModule) },
       { path: 'deactivated-users', loadChildren: () => import('./dashboard/pages/deactivated-users/deactivated-users.module').then(m => m.DeactivatedUsersModule) },
+      // Supplier Management Routes
+      { path: 'supplier-management/suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/all-suppliers/all-suppliers.module').then(m => m.AllSuppliersModule) },
+      { path: 'supplier-management/create-supplier', loadChildren: () => import('./dashboard/pages/supplier-management/create-supplier/create-supplier.module').then(m => m.CreateSupplierModule) },
+      { path: 'supplier-management/active-suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/active-suppliers/active-suppliers.module').then(m => m.ActiveSuppliersModule) },
+      { path: 'supplier-management/supplier-details/:id', component: SupplierDetailsComponent },
+      { path: 'supplier-management/edit-supplier/:id', component: EditSupplierComponent },
     ]
   },
   // { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
