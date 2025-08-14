@@ -14,6 +14,14 @@ export class CreateSupplierComponent {
   errorMessage = '';
   successMessage = '';
 
+/*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Creates an instance of CreateSupplierComponent.
+   * @param supplierService provides operations for interacting with the suppliers API
+   * @param router provides navigation and URL manipulation capabilities
+   * @param fb provides form builder capabilities
+   */
+/*******  265b65a1-d66c-4d3d-918e-c4776236decf  *******/
   constructor(
     private supplierService: SupplierService,
     private router: Router,
@@ -48,7 +56,7 @@ export class CreateSupplierComponent {
           
           // Redirect to suppliers list after 2 seconds
           setTimeout(() => {
-            this.router.navigate(['/home/supplier-management/suppliers']);
+            this.router.navigate(['/home/supplier-management/supplier']);
           }, 2000);
         },
         error: (error) => {

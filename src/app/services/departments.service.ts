@@ -28,6 +28,11 @@ export class DepartmentsService {
     return this.http.post<Department>(this.baseUrl, department);
   }
 
+
+  getAllUsers(): Observable<{id: number; firstName: string; lastName: string}[]> {
+  return this.http.get<{id: number; firstName: string; lastName: string}[]>(`${environment.apiUrl}/users`);
+  }
+
   updateDepartment(id: number, department: Department): Observable<Department> {
     return this.http.put<Department>(`${this.baseUrl}/${id}`, department);
   }
