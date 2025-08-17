@@ -42,6 +42,34 @@
       </div>
 
       <div>
+        <input type="checkbox" id="unit-of-measure" class="hidden peer">
+        <label for="unit-of-measure" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3"><span class="text-lg">📏</span> Unit of Measure</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </label>
+        <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+          <li><a routerLink="/home/unit-of-measure/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Unit of Measures</a></li>
+          <li><a routerLink="/home/unit-of-measure/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Unit of Measure</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <input type="checkbox" id="purchase-quotations" class="hidden peer">
+        <label for="purchase-quotations" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3"><span class="text-lg">📋</span> Purchase Quotations</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </label>
+        <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+          <li><a routerLink="/home/purchase-quotation/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Purchase Quotations</a></li>
+          <li><a routerLink="/home/purchase-quotation/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Purchase Quotation</a></li>
+        </ul>
+      </div>
+
+      <div>
         <input type="checkbox" id="purchases-procurement" class="hidden peer">
         <label for="purchases-procurement" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
           <span class="flex items-center gap-3"><span class="text-lg">🛒</span> Purchases & Procurement</span>

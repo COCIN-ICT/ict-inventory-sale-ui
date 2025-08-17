@@ -24,6 +24,10 @@ const routes: Routes = [
       { path: 'supplier-management/active-suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/active-suppliers/active-suppliers.module').then(m => m.ActiveSuppliersModule) },
       { path: 'supplier-management/supplier-details/:id', component: SupplierDetailsComponent },
       { path: 'supplier-management/edit-supplier/:id', component: EditSupplierComponent },
+      // Unit of Measure Routes
+      { path: 'unit-of-measure', loadChildren: () => import('./dashboard/pages/unit-of-measure/unit-of-measure.module').then(m => m.UnitOfMeasureModule) },
+      // Purchase Quotation Routes
+      { path: 'purchase-quotation', loadChildren: () => import('./dashboard/pages/purchase-quotation/purchase-quotation.module').then(m => m.PurchaseQuotationModule) },
     ]
   },
   { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },
