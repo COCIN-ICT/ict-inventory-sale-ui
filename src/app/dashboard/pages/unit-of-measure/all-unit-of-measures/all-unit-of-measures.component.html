@@ -1,0 +1,107 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Unit of Measures</h1>
+          <p class="text-gray-600">Manage all units of measure in the system</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unit of Measures List -->
+    <div class="bg-white rounded-lg shadow-md">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900">All Unit of Measures</h2>
+        <p class="text-sm text-gray-600 mt-1">View and manage all units of measure</p>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="p-8 text-center">
+        <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-blue-600">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Loading unit of measures...
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="!loading && errorMessage" class="p-8 text-center">
+        <div class="text-red-600">
+          <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Error loading unit of measures</h3>
+          <p class="mt-1 text-sm text-gray-500">{{ errorMessage }}</p>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && !errorMessage && unitOfMeasures.length === 0" class="p-8 text-center">
+        <div class="text-gray-400">
+          <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No unit of measures</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by creating a new unit of measure.</p>
+          <div class="mt-6">
+            <button 
+              (click)="createNewUnitOfMeasure()"
+              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Create Unit of Measure
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unit of Measures Table -->
+      <div *ngIf="!loading && !errorMessage && unitOfMeasures.length > 0" class="overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let unitOfMeasure of unitOfMeasures" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ unitOfMeasure.code || 'N/A' }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{{ unitOfMeasure.description || 'N/A' }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button 
+                      (click)="viewUnitOfMeasure(unitOfMeasure.id!)"
+                      class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 border border-blue-300">
+                      View
+                    </button>
+                    <button 
+                      (click)="editUnitOfMeasure(unitOfMeasure.id!)"
+                      class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 border border-green-300">
+                      Edit
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+      
+    </div>
+    <button 
+    (click)="createNewUnitOfMeasure()"
+    class="px-4 py-2 bg-blue-600 mt-4 flex items-center justify-center justify-center mx-auto w-full text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+    Create New Unit of Measure
+  </button>
+  </div>
+</div> 

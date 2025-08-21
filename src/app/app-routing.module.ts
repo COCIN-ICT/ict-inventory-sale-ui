@@ -28,7 +28,14 @@ const routes: Routes = [
       { path: 'supplier-management/supplier-details/:id', component: SupplierDetailsComponent },
       { path: 'supplier-management/edit-supplier/:id', component: EditSupplierComponent },
 
+      // Unit of Measure Routes
+      { path: 'unit-of-measure', loadChildren: () => import('./dashboard/pages/unit-of-measure/unit-of-measure.module').then(m => m.UnitOfMeasureModule) },
+      // Purchase Quotation Routes
+      { path: 'purchase-quotation', loadChildren: () => import('./dashboard/pages/purchase-quotation/purchase-quotation.module').then(m => m.PurchaseQuotationModule) },
+
+
       { path: 'store', loadChildren: () => import('./dashboard/pages/store/store.module').then(m => m.StoreModule) },
+
     ]
   },
   { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },

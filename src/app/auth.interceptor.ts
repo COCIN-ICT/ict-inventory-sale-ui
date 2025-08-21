@@ -11,11 +11,18 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
     if (token) {
-      req = req.clone ({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
+      // Don't set Content-Type for FormData requests - let browser set it with boundary
+      const headers: any = {
+        Authorization: `Bearer ${token}`
+      };
+      
+      // Only set Content-Type for non-FormData requests
+      if (!(req.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+      }
+      
+      req = req.clone({
+        setHeaders: headers
       });
     }
     return next.handle(req).pipe(
