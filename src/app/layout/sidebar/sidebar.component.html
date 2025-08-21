@@ -1,3 +1,4 @@
+
  <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
       <a routerLink="/home" routerLinkActive="bg-blue-100 text-blue-600" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
         <span class="text-lg">🏠</span> <span>Dashboard</span>
@@ -178,3 +179,62 @@
       <footer></footer>
       
     </nav>
+<nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+  <a routerLink="/home" routerLinkActive="bg-blue-100 text-blue-600" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
+    <span class="text-lg">🏠</span> <span>Dashboard</span>
+  </a>
+
+  <div>
+    <input type="checkbox" id="user-management" class="hidden peer">
+    <label for="user-management" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+      <span class="flex items-center gap-3"><span class="text-lg">👥</span> User Management</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </label>
+    <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+      <li><a routerLink="/home/users" routerLinkActive="bg-blue-50 text-blue-600" routerLinkActive="active" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Users</a></li>
+      <li><a routerLink="/home/user-management/create-user" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create User</a></li>
+      <li><a routerLink="/home/user-management/user-roles" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">User Roles</a></li>
+      <li><a routerLink="/home/user-management/departments" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Departments</a></li>
+      <li><a routerLink="/home/user-management/permissions" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Permissions</a></li>
+      <li><a routerLink="/home/user-management/units" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Units</a></li>
+      <li><a routerLink="/home/deactivated-users" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Deactivated Users</a></li>
+    </ul>
+  </div>
+
+  <!-- Other sections remain unchanged -->
+  <div>
+    <input type="checkbox" id="supplier-management" class="hidden peer">
+    <label for="supplier-management" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+      <span class="flex items-center gap-3"><span class="text-lg">📋</span> Supplier Management</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </label>
+    <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+      <li><a routerLink="/home/supplier-management/suppliers" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Suppliers</a></li>
+      <li><a routerLink="/home/supplier-management/create-supplier" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Supplier</a></li>
+      <li><a routerLink="/home/supplier-management/active-suppliers" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Active Suppliers</a></li>
+      <li><a routerLink="/home/supplier-management/supplier-history" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Supplier History</a></li>
+      <li><a routerLink="/home/supplier-management/outstanding-payments" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Outstanding Payments</a></li>
+    </ul>
+  </div>
+
+  <!-- Rest of the navigation remains unchanged -->
+  <div>
+    <input type="checkbox" id="purchases-procurement" class="hidden peer">
+    <label for="purchases-procurement" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+      <span class="flex items-center gap-3"><span class="text-lg">🛒</span> Store</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </label>
+    <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+      <li><a routerLink="/home/store/" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Stores</a></li>
+    </ul>
+  </div>
+
+  <!-- Other sections (Inventory Management, Sales & POS, etc.) remain unchanged -->
+  <footer></footer>
+</nav>

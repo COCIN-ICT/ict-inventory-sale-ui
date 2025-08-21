@@ -1,0 +1,50 @@
+<!-- Department Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+  <div class="bg-white w-full max-w-md mx-auto p-6 rounded-lg shadow-xl relative">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">
+      {{ isEditMode ? 'Edit Department' : 'Create Department' }}
+    </h3>
+
+    <form [formGroup]="form" class="space-y-4">
+
+      <!-- Department Name -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Department Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter department name" />
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Department Head -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Department Head</mat-label>
+        <mat-select formControlName="departmentHeadId">
+          <mat-option [value]="null">-- None --</mat-option>
+          <mat-option *ngFor="let head of departmentHeads" [value]="head.id">
+            {{ head.firstName }} {{ head.lastName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </form>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 mt-6">
+      <button
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+      <button
+        class="px-4 py-2 text-white rounded-lg"
+        [ngClass]="isEditMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'"
+        (click)="save()"
+        [disabled]="form.invalid"
+      >
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+    </div>
+  </div>
+</div>
