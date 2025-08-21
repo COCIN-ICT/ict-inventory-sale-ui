@@ -5,6 +5,7 @@ import { StoreRoutingModule } from './store-routing.module';
 import { StoreComponent } from './store.component';
 import { StoreFormComponent } from './components/store-form/store-form.component';
 import { StoreListComponent } from './components/store-list/store-list.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,6 +16,8 @@ import { StoreListComponent } from './components/store-list/store-list.component
   ],
   imports: [
     CommonModule,
+    FormsModule,
+   ReactiveFormsModule,
     StoreRoutingModule
   ]
 })

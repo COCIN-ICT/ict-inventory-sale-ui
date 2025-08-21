@@ -34,7 +34,8 @@
               class="border-b hover:bg-blue-50 transition"
             >
               <td class="px-6 py-4 text-sm font-medium text-gray-800">
-                {{ dept.departmentHeadFirstName }} {{ dept.departmentHeadLastName }}
+                {{ dept.departmentHeadFirstName && dept.departmentHeadLastName ?  dept.departmentHeadFirstName + ' ' + dept.departmentHeadLastName : 'N/A' }}
+                
               </td>
               <td class="px-6 py-4 text-sm text-gray-600">
                 {{ dept.name }}

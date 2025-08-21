@@ -7,7 +7,7 @@ import { AllUsersComponent } from './all-users.component';
 
 @NgModule({
   declarations: [
-    AllUsersComponent
+    //AllUsersComponent
   ],
   imports: [
     CommonModule,
