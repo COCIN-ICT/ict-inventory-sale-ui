@@ -16,6 +16,7 @@ export class UserListComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
   searchTerm = '';
+  originalUsers: User[] = [];
  
 
   
@@ -34,7 +35,8 @@ export class UserListComponent implements OnInit {
     this.userService.getUsers().subscribe({
       next: (res: any) => {
         this.users = res.data || res.users || res.result || res || [];
-        this.filteredUsers = this.users;
+        this.originalUsers = this.users;
+        this.applyFilters();
         // Log the first user object to inspect its structure
       if (this.users.length > 0) {
         console.log('User Data Structure:', this.users[0]);
@@ -48,38 +50,21 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  onSearch(): void {
-    const query = this.searchTerm.toLowerCase().trim();
 
-    // If the search query is empty, reload all users.
-    if (query === '') {
-      this.loadUsers();
-      return;
+
+  searchList(): void{
+    this.applyFilters();
+  }
+
+  private applyFilters(): void {
+    let filteredUsers = [...this.originalUsers];
+
+    if (this.searchTerm) {
+      filteredUsers = filteredUsers.filter(user => 
+        user.username.toLowerCase().includes(this.searchTerm.toLowerCase()));
     }
 
-    // Determine if the search query looks like an email.
-    if (query.includes('@')) {
-      this.userService.getUserByEmail(query).subscribe({
-        next: (user: User) => {
-          this.filteredUsers = user ? [user] : [];
-        },
-        error: (error) => {
-          console.error('Error searching by email:', error);
-          this.filteredUsers = [];
-        }
-      });
-    } else {
-      // Otherwise, search by username.
-      this.userService.getUserByUsername(query).subscribe({
-        next: (user: User) => {
-          this.filteredUsers = user ? [user] : [];
-        },
-        error: (error) => {
-          console.error('Error searching by username:', error);
-          this.filteredUsers = [];
-        }
-      });
-    }
+    this.users = filteredUsers;
   }
 
 
