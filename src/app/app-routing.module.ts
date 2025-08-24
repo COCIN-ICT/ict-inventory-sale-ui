@@ -37,6 +37,14 @@ const routes: Routes = [
 
       { path: 'store', loadChildren: () => import('./dashboard/pages/store/store.module').then(m => m.StoreModule) },
 
+    
+
+      //bank account
+      { path: 'bank-account', loadChildren: () => import('./dashboard/pages/bank-account/bank-account.module').then(m => m.BankAccountModule) },
+
+      //purchase item
+      { path: 'purchase-item', loadChildren: () => import('./dashboard/pages/purchase-item/purchase-item.module').then(m => m.PurchaseItemModule) },
+
     ]
   },
  // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },

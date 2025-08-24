@@ -35,8 +35,8 @@ export class UserListComponent implements OnInit {
     this.userService.getUsers().subscribe({
       next: (res: any) => {
         this.users = res.data || res.users || res.result || res || [];
-        this.originalUsers = this.users;
-        this.applyFilters();
+        this.originalUsers = [...this.users];
+        //this.applyFilters();
         // Log the first user object to inspect its structure
       if (this.users.length > 0) {
         console.log('User Data Structure:', this.users[0]);
@@ -56,16 +56,29 @@ export class UserListComponent implements OnInit {
     this.applyFilters();
   }
 
-  private applyFilters(): void {
-    let filteredUsers = [...this.originalUsers];
+ private applyFilters(): void {
+  let filteredUsers = [...this.originalUsers];
 
-    if (this.searchTerm) {
-      filteredUsers = filteredUsers.filter(user => 
-        user.username.toLowerCase().includes(this.searchTerm.toLowerCase()));
-    }
-
-    this.users = filteredUsers;
+  if (this.searchTerm) {
+    filteredUsers = filteredUsers.filter(user => {
+      // Return false if the user object is null or undefined
+      if (!user) {
+        return false;
+      }
+      
+      const searchTermLower = this.searchTerm.toLowerCase();
+      
+      // Check if the search term exists in username, email, or unitId
+      return (
+        String(user.username).toLowerCase().includes(searchTermLower) ||
+        String(user.email).toLowerCase().includes(searchTermLower) ||
+        String(user.unit.name).toLowerCase().includes(searchTermLower)
+      );
+    });
   }
+  
+  this.users = filteredUsers;
+}
 
 
 
