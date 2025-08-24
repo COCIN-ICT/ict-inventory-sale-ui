@@ -1,0 +1,170 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Item</h1>
+          <p class="text-gray-600">Update the item details</p>
+        </div>
+        <button 
+          (click)="onCancel()"
+          class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading && !itemForm.get('name')?.value" class="bg-white rounded-lg shadow-md p-8 text-center">
+      <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-blue-600">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Loading item...
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div *ngIf="!loading || itemForm.get('name')?.value" class="bg-white rounded-lg shadow-md">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900">Item Details</h2>
+        <p class="text-sm text-gray-600 mt-1">Update the details below to modify the item</p>
+      </div>
+
+      <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="p-6 space-y-6">
+        <!-- Name Field -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+            Item Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter item name"
+            [class.border-red-500]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched"
+          />
+          <div *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched" class="mt-1 text-sm text-red-600">
+            <div *ngIf="itemForm.get('name')?.errors?.['required']">Item name is required.</div>
+            <div *ngIf="itemForm.get('name')?.errors?.['minlength']">Item name must be at least 2 characters long.</div>
+            <div *ngIf="itemForm.get('name')?.errors?.['maxlength']">Item name cannot exceed 100 characters.</div>
+          </div>
+        </div>
+
+        <!-- Item Type Field -->
+        <div>
+          <label for="itemType" class="block text-sm font-medium text-gray-700 mb-2">
+            Item Type <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="itemType"
+            formControlName="itemType"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            [class.border-red-500]="itemForm.get('itemType')?.invalid && itemForm.get('itemType')?.touched">
+            <option value="">Select item type</option>
+            <option *ngFor="let type of itemTypes" [value]="type">
+              {{ type === 'RAW' ? 'Raw' : type === 'RESALABLE' ? 'Resalable' : 'Finished' }}
+            </option>
+          </select>
+          <div *ngIf="itemForm.get('itemType')?.invalid && itemForm.get('itemType')?.touched" class="mt-1 text-sm text-red-600">
+            <div *ngIf="itemForm.get('itemType')?.errors?.['required']">Item type is required.</div>
+          </div>
+        </div>
+
+        <!-- Is Expirable Field -->
+        <div>
+          <label class="flex items-center">
+            <input
+              type="checkbox"
+              formControlName="isExpirable"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <span class="ml-2 text-sm text-gray-700">Is Expirable</span>
+          </label>
+          <div *ngIf="itemForm.get('isExpirable')?.invalid && itemForm.get('isExpirable')?.touched" class="mt-1 text-sm text-red-600">
+            <div *ngIf="itemForm.get('isExpirable')?.errors?.['required']">Please specify if the item is expirable.</div>
+          </div>
+        </div>
+
+        <!-- Unit of Measure Field -->
+        <div>
+          <label for="unitOfMeasureId" class="block text-sm font-medium text-gray-700 mb-2">
+            Unit of Measure <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="unitOfMeasureId"
+            formControlName="unitOfMeasureId"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            [class.border-red-500]="itemForm.get('unitOfMeasureId')?.invalid && itemForm.get('unitOfMeasureId')?.touched">
+            <option value="">Select unit of measure</option>
+            <option *ngFor="let uom of unitOfMeasures" [value]="uom.id">
+              {{ uom.code }} - {{ uom.description }}
+            </option>
+          </select>
+          <div *ngIf="itemForm.get('unitOfMeasureId')?.invalid && itemForm.get('unitOfMeasureId')?.touched" class="mt-1 text-sm text-red-600">
+            <div *ngIf="itemForm.get('unitOfMeasureId')?.errors?.['required']">Unit of measure is required.</div>
+          </div>
+        </div>
+
+        <!-- Item Category Field -->
+        <div>
+          <label for="itemCategoryId" class="block text-sm font-medium text-gray-700 mb-2">
+            Item Category <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="itemCategoryId"
+            formControlName="itemCategoryId"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            [class.border-red-500]="itemForm.get('itemCategoryId')?.invalid && itemForm.get('itemCategoryId')?.touched">
+            <option value="">Select item category</option>
+            <option *ngFor="let category of itemCategories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <div *ngIf="itemForm.get('itemCategoryId')?.invalid && itemForm.get('itemCategoryId')?.touched" class="mt-1 text-sm text-red-600">
+            <div *ngIf="itemForm.get('itemCategoryId')?.errors?.['required']">Item category is required.</div>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 rounded-md p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-red-800">{{ errorMessage }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end space-x-3">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="itemForm.invalid || loading"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="!loading">Update Item</span>
+            <span *ngIf="loading" class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Updating...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 
