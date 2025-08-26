@@ -42,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
         //network error - connection issues
         else if (error.status === 0) {
           console.error('Network error:', error);
-          this.toastService.error('Connection error. Please check your internet connection and try again.');
+          this.toastService.error('Connection error. Please check your internet  service and try again.');
         }
         //other HTTP errors
         else if (error.status >= 400) {
