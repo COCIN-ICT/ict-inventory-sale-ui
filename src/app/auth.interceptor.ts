@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent,HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastService } from './services/toast.service';
 
 
 @Injectable() 
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toastService: ToastService) {}
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
     if (token) {
@@ -30,19 +31,27 @@ export class AuthInterceptor implements HttpInterceptor {
         //token expired or unauthorized
         if (error.status === 401 || error.status === 403) {
           localStorage.removeItem('token');
+          this.toastService.error('Session expired. Please login again.');
           this.router.navigate(['/login']);
         }
         //server error
-        if (error.status === 500) {
+        else if (error.status === 500) {
           console.error('Server error:', error);
+          this.toastService.error('Server error. Please try again later.');
         }
-        //network error
-        if ( error.status === 0) {
+        //network error - connection issues
+        else if (error.status === 0) {
           console.error('Network error:', error);
-          alert('Network error. Please check your connection.');
+          this.toastService.error('Connection error. Please check your internet  service and try again.');
+        }
+        //other HTTP errors
+        else if (error.status >= 400) {
+          console.error('HTTP error:', error);
+          this.toastService.error(`Request failed: ${error.status} ${error.statusText}`);
         }
 
-        return throwError(() => { error.message || 'Server error' });
+        // Return the error for components to handle if needed
+        return throwError(() => error);
       })
  );
   }

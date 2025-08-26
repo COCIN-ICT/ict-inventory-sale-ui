@@ -33,6 +33,10 @@ const routes: Routes = [
       { path: 'unit-of-measure', loadChildren: () => import('./dashboard/pages/unit-of-measure/unit-of-measure.module').then(m => m.UnitOfMeasureModule) },
       // Purchase Quotation Routes
       { path: 'purchase-quotation', loadChildren: () => import('./dashboard/pages/purchase-quotation/purchase-quotation.module').then(m => m.PurchaseQuotationModule) },
+      // Item Category Routes
+      { path: 'item-category', loadChildren: () => import('./dashboard/pages/item-category/item-category.module').then(m => m.ItemCategoryModule) },
+      // Item Routes
+      { path: 'item', loadChildren: () => import('./dashboard/pages/item/item.module').then(m => m.ItemModule) },
 
 
       { path: 'store', loadChildren: () => import('./dashboard/pages/store/store.module').then(m => m.StoreModule) },
