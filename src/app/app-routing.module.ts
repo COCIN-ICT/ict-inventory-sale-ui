@@ -15,6 +15,7 @@ const routes: Routes = [
       { path: 'users', component: AllUsersComponent},
 
       { path: '', loadChildren: () => import('./dashboard/pages/home/home.module').then(m => m.HomeModule) }, 
+      { path: 'user-management/users', loadChildren: () => import('./dashboard/pages/user-management/users/users.module').then(m => m.UsersModule) },
       { path: 'user-management/create-user', loadChildren: () => import('./dashboard/pages/user-management/create-user/create-user.module').then(m => m.CreateUserModule) },
       { path: 'user-management/user-roles', loadChildren: () => import('./dashboard/pages/user-management/user-roles/user-roles.module').then(m => m.UserRolesModule) },
       { path: 'user-management/permissions', loadChildren: () => import('./dashboard/pages/user-management/permissions/permissions.module').then(m => m.PermissionsModule) },
@@ -40,10 +41,21 @@ const routes: Routes = [
 
       { path: 'store', loadChildren: () => import('./dashboard/pages/store/store.module').then(m => m.StoreModule) },
 
+    
+
+      //bank account
+      { path: 'bank-account', loadChildren: () => import('./dashboard/pages/bank-account/bank-account.module').then(m => m.BankAccountModule) },
+
+      //purchase item
+      { path: 'purchase-item', loadChildren: () => import('./dashboard/pages/purchase-item/purchase-item.module').then(m => m.PurchaseItemModule) },
+
+      //purchase order
+      { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
+
     ]
   },
-  { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },
-  
+ // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },
+
   
 
   // { path: 'permissions', loadChildren: () => import('./dashboard/pages/permissions/permissions.module').then(m => m.PermissionsModule) },

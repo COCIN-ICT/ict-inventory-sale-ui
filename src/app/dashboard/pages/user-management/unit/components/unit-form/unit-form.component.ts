@@ -57,7 +57,7 @@ export class UnitFormComponent implements OnInit {
   private loadUnitHeads(): void {
     this.unitService.getUnitHeads().subscribe({
       next: (heads) => this.unitHeads = heads,
-      error: (err) => console.error('Error loading unit heads:', err)
+      error: (err) => this.toast.error('Failed to load unit heads')
    });
   }
   

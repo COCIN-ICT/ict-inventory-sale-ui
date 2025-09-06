@@ -45,7 +45,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     HttpClientModule,
     
     
-    AllUsersModule,
+   // AllUsersModule,
     
     StoreModule.forRoot({
       auth: authReducer

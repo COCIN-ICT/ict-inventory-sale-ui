@@ -11,9 +11,9 @@ const API_URL = `${environment.apiUrl}/store`;
 export class StoreService{
     constructor(private http: HttpClient){}
 
-getStore(): Observable<[Store]>{
-    return this.http.get<[Store]>(API_URL)
-}
+getStore(): Observable<Store[]> { // Changed from [Store] to Store[]
+    return this.http.get<Store[]>(API_URL);
+  }
 
 getStoreById(id: number): Observable<Store> {
     return this.http.get<Store>(`${API_URL}/${id}`);
@@ -23,12 +23,16 @@ createStore(store: Store): Observable<Store> {
     return this.http.post<Store>(API_URL, store);
 }
 
-updateStore(store: Store): Observable<Store> {
-    return this.http.put<Store>(`${API_URL}/${store.id}`, store);
-  }
+updateStore(id: number, store: Store): Observable<Store> {
+  return this.http.put<Store>(`${API_URL}/${id}`, store);
+}
 
-getStoreByDepartmentId(departmentId: number): Observable<Store[]> {
-    return this.http.get<Store[]>(`${API_URL}/department/${departmentId}`);
-  }
+
+
+// getStoreByDepartmentId(departmentId: number): Observable<Store[]> {
+//     return this.http.get<Store[]>(`${API_URL}/department/${departmentId}`);
+//   }
+
+
 
 }

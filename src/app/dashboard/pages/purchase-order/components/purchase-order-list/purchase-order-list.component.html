@@ -1,0 +1,33 @@
+<div class="overflow-x-auto">
+  <table class="min-w-full border border-gray-200 shadow-md rounded-lg">
+    <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+      <tr>
+        <th class="px-6 py-3 text-left border-b">Order #</th>
+        <th class="px-6 py-3 text-left border-b">Supplier</th>
+        <th class="px-6 py-3 text-left border-b">Date</th>
+        <th class="px-6 py-3 text-left border-b">Status</th>
+        <th class="px-6 py-3 text-right border-b">Total</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <tr *ngFor="let order of purchaseOrders" class="hover:bg-gray-50 transition">
+        <td class="px-6 py-4">{{ order.id }}</td>
+        <td class="px-6 py-4">{{ order.orderDate | date}}</td>
+        <td class="px-6 py-4">{{ order.status }}</td>
+        <td class="px-6 py-4">
+          <span
+            class="px-2 py-1 text-xs font-medium rounded-full"
+            [ngClass]="{
+              'bg-green-100 text-green-700': order.status === 'Approved',
+              'bg-yellow-100 text-yellow-700': order.status === 'Pending',
+              'bg-red-100 text-red-700': order.status === 'Rejected'
+            }"
+          >
+            {{ order.status }}
+          </span>
+        </td>
+        <td class="px-6 py-4 text-right font-semibold">{{ order.totalAmount| currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

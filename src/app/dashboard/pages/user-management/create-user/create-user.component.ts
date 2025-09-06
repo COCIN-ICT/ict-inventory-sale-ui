@@ -6,6 +6,9 @@ import { DepartmentsService } from '../../../../services/departments.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../../../services/toast.service';
 import { Router } from '@angular/router';
+import { UnitService } from '../../../../services/unit.service';
+import { Unit } from '../unit/unit.model';
+
 
 @Component({
   selector: 'app-create-user',
@@ -16,17 +19,20 @@ export class CreateUserComponent {
   
   constructor(private userService: UserService, private fb: FormBuilder, 
               private departmentsService: DepartmentsService, private rolesServices: RolesService,
-              private toast: ToastService, private router: Router) {}
+              private toast: ToastService, private router: Router,
+              private unitService: UnitService) {}
 
   userForm!: FormGroup;
   roles: any[] = [];
   departments: any[] = [];
+  units: Unit[] = [];
   
   
   ngOnInit(): void {
     this.initform();
     this.loadRoles();
     this.loadDepartments();
+    this.loadUnit();
   }
 
   initform() {
@@ -39,7 +45,7 @@ export class CreateUserComponent {
       address: [''],
       phone: [''],
       email: ['', [Validators.required, Validators.email]],
-      departmentId: [1, Validators.required],
+      UnitId: [1, Validators.required],
       roleId: [1, Validators.required]
     });
   };
@@ -67,6 +73,18 @@ export class CreateUserComponent {
       }
     })
   };
+
+  loadUnit() {
+    this.unitService.getUnits().subscribe({
+      next: (res:any) => {
+        console.log('API response:', res);
+        //different response structures
+        this.units = res.data || res.units || res.result || res || [];
+        this.toast.success('Units loaded successfully');
+        console.log('Final units:', this.units);
+      }
+    })
+  }
 
 
 
