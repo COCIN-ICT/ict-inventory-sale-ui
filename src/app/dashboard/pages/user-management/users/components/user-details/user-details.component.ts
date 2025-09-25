@@ -5,6 +5,7 @@ import { UserService } from '../../../../../../services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs'; // Import forkJoin for parallel API calls
 import { map } from 'rxjs/operators'; // Import map
+import { ToastService } from '../../../../../../services/toast.service';
 
 @Component({
   selector: 'app-user-details',
@@ -25,7 +26,8 @@ export class UserDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toast: ToastService 
   ) {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -38,9 +40,12 @@ export class UserDetailsComponent implements OnInit {
       phone: ['', Validators.required], 
       email: ['', [Validators.required, Validators.email]],
       unit: [null, Validators.required], // Change to 'unit'
-      roles: [[], Validators.required] // Change to 'roles'
+      roles: [[], Validators.required], // Change to 'roles'
+
+      newPassword: ['']
     });
   }
+
 
   ngOnInit(): void {
     // We need to fetch roles and units for the dropdowns in the form
@@ -117,6 +122,41 @@ export class UserDetailsComponent implements OnInit {
       }
     });
   }
+
+  updatePassword(user: any, newPassword: string): void {
+  if (!newPassword) {
+    this.error = "Password cannot be empty";
+    return;
+  }
+
+  // build full payload expected by backend
+  const updatedUser = {
+    firstName: this.user!.firstName,
+    lastName: this.user!.lastName,
+    middleName: this.user!.middleName,
+    username: this.user!.username,
+    password: newPassword,  // 👈 updated here
+    address: this.user!.address,
+    phone: this.user!.phone,
+    email: this.user!.email,
+    unitId: this.user!.unit?.id,          // 👈 required
+    roleId: this.user!.roles?.[0]?.id     // 👈 required (first role)
+  };
+
+  this.userService.updateUser(this.user!.id!, updatedUser).subscribe({
+    next: () => {
+      this.toast.success("Password updated successfully");
+      this.userForm.patchValue({ newPassword: "" }); // clear the input
+    },
+    error: (err) => {
+      this.error = "Failed to update password. Please try again.";
+      console.error("Error updating password:", err);
+    }
+  });
+}
+
+
+
 
   goBack(): void {
     this.router.navigate(['/home/user-management/users']);

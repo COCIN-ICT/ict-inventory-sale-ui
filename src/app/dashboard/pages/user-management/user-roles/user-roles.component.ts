@@ -81,13 +81,13 @@ export class UserRolesComponent implements OnInit {
         },
         error: err => {
           console.error('Error attaching permissions:', err);
-          alert('Role created, but some permissions failed to attach.');
+          this.toast.error('Role created, but some permissions failed to attach.');
         }
       });
     },
     error: err => {
       console.error('Error creating role:', err);
-      alert('Failed to create role.');
+      this.toast.error('Failed to create role.');
     }
   });
 }
@@ -95,13 +95,13 @@ export class UserRolesComponent implements OnInit {
 
 saveRole() {
   if (!this.newRole.roleName.trim()) {
-    alert('Role name is required');
+    this.toast.error('Role name is required');
     return;
   }
 
   // Only enforce permission selection in create mode
   if (!this.editMode && !this.hasSelectedPermissions()) {
-    alert('At least one permission must be selected');
+    this.toast.error('At least one permission must be selected');
     return;
   }
 
@@ -161,7 +161,7 @@ updateRole() {
         },
         error: err => {
           console.error('Error updating role:', err);
-          alert('Failed to update role.');
+          this.toast.error('Failed to update role.');
         }
       });
     }
@@ -246,7 +246,7 @@ editRole(role: Role) {
   //     },
   //     error: (err) => {
   //       console.error('Delete failed:', err);
-  //       alert('Failed to delete role');
+  //       this.toast.error('Failed to delete role');
   //     }
   // });
   // }
@@ -273,7 +273,7 @@ editRole(role: Role) {
           },
           error: (err) => {
             console.error('Delete failed:', err);
-            alert('Failed to delete role');
+            this.toast.error('Failed to delete role');
           }
         });
       }

@@ -42,6 +42,7 @@ successMessage: any;
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        
         this.loadDepartments(); // Reload departments after form submission
       }
     });
