@@ -23,6 +23,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
 import { AuthInterceptor } from './auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatIconModule  } from '@angular/material/icon';
 
 
 @NgModule({
@@ -43,6 +44,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatIconModule,
+    
     
     
    // AllUsersModule,

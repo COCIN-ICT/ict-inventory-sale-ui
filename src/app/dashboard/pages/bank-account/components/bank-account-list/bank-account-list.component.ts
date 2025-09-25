@@ -14,6 +14,7 @@ export class BankAccountListComponent {
   bankAccounts: BankAccountResponse[] = [];
   originalAccounts: BankAccountResponse[] = [];
   searchTerm = '';
+  selectedStatus: boolean | null = null; 
 
   constructor(private dialog: MatDialog, private bankAccountService: BankAccountService, 
     private toast: ToastService
@@ -24,7 +25,9 @@ export class BankAccountListComponent {
     this.loadAccounts();
   }
 
-  loadAccounts(): void {
+  loadAccounts(status?: boolean): void {
+    this.selectedStatus = status ?? null;
+    if (status === null || status === undefined) {
     this.bankAccountService.getBankAccounts().subscribe({
       next: (res: any) => {
         this.bankAccounts = res.data || res.users || res.result || res || []  ;
@@ -35,6 +38,19 @@ export class BankAccountListComponent {
         this.bankAccounts = [];
       }
     });
+  }
+ else {
+    this.bankAccountService.getBankAccountsByStatus(status).subscribe({
+      next: (res: any) => {
+        this.bankAccounts = res.data || res.users || res.result || res || []  ;
+        this.originalAccounts = [...this.bankAccounts];
+      },
+      error: (err) => {
+        console.error('err', err);
+        this.bankAccounts = [];
+      }
+    });
+  }
   }
 
   private applyFilters(): void {
@@ -86,6 +102,7 @@ export class BankAccountListComponent {
   const dialogRef = this.dialog.open(BankAccountFormComponent, { data: {...account }});
   console.log('Account passed to dialog:', account);
 
+
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
       // Instant local update (optimistic UI)
@@ -95,26 +112,31 @@ export class BankAccountListComponent {
       }
 
       // Sync with backend (server refresh)
-      this.loadAccounts();
+       this.loadAccounts();
     }
   });
 }
 
   changeStatus(account: BankAccountResponse): void {
-    const newStatus = account.active ? 'deactivate' : 'active';
-    const message = `Are you sure you want to ${newStatus} account ${account.accountNumber}?`;
-    if (confirm(message)) {
-      this.bankAccountService.changeStatus(account.id, newStatus).subscribe({
+    // const newStatus = account.active ? 'deactivate' : 'active';
+    // const message = `Are you sure you want to ${newStatus} account ${account.accountNumber}?`;
+   
+      this.bankAccountService.changeStatus(account.id,).subscribe({
         next: () => {
-          this.toast.success(`Account status changed successfully!`); 
-          account.active = !account.active; 
-          this.loadAccounts();
+          const index = this.bankAccounts.findIndex(acc => acc.id === account.id); 
+          if (index !== -1) {
+            this.originalAccounts[index] = { ...this.originalAccounts[index], active: !account.active };
+             this.toast.success(`Account status changed successfully!`); 
+            account.active = !account.active; 
+           this.loadAccounts( this.selectedStatus ?? undefined);
+          }
+         
         },
         error: (err) => {
           console.error('Error changing status:', err);
         }
       });
-    }
+    
   }
 
 

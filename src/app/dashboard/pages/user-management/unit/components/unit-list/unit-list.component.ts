@@ -95,8 +95,15 @@ export class UnitListComponent implements OnInit {
     });
   }
 
+  toggleInProgress= new Set<number>();
   toggleUnitStatus(unit: Unit): void {
-    this.unitService.changeUnitStatus(unit.id!).subscribe({
+    const newStatus = unit.active ? 'deactivate' : 'active';
+    
+    
+    this.toggleInProgress.add(unit.id!);
+
+
+    this.unitService.changeUnitStatus(unit.id!, newStatus).subscribe({
       next: (updatedUnit) => {
         const index = this.units.findIndex(u => u.id === updatedUnit.id);
         if (index !== -1) {

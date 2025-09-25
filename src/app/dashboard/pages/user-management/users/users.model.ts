@@ -33,6 +33,8 @@ export interface User {
   lastName: string;
   middleName: string;
   username: string;
+  password?: string; // Make password optional
+ 
   address: string;
   phone: string;
   email: string;

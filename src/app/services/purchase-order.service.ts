@@ -17,4 +17,8 @@ export class PurchaseOrderService {
   getAllOrders(): Observable<PurchaseOrder[]> {
     return this.http.get<PurchaseOrder[]>(API_URL);
   }
+
+  getOrderById(id: number): Observable<PurchaseOrder> {
+    return this.http.get<PurchaseOrder>(`${API_URL}/${id}`);
+  }
 }

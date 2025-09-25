@@ -32,8 +32,8 @@ export class UnitService {
     return this.http.put<Unit>(`${API_URL}/${id}`, unit);
   }
 
-  changeUnitStatus(id: number): Observable<Unit> {
-    return this.http.patch<Unit>(`${API_URL}/change-status/${id}`, {});
+  changeUnitStatus(id: number, status: 'active' | 'deactivate'): Observable<Unit> {
+    return this.http.patch<Unit>(`${API_URL}/change-status/${id}`, {status});
   }
 
   

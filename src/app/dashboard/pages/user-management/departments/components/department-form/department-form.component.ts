@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DepartmentsService } from '../../../../../../services/departments.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DepartmentList, NewDepartment, User } from '../../departments.model';
+import { ToastService } from '../../../../../../services/toast.service';
 
 @Component({
   selector: 'app-department-form',
@@ -16,25 +17,32 @@ export class DepartmentFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private departmentsService: DepartmentsService,
+              private toast: ToastService,
               private dialogRef: MatDialogRef<DepartmentFormComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DepartmentList) {}
     ngOnInit(): void {
     this.isEditMode = !!this.data;
+    this.initializeForm();
+    this.loadDepartmentHeads();
+  }
 
-    // Load users first, then initialize the form
+  private initializeForm(): void {
+    this.form = this.fb.group({
+      name: [this.data?.name || '', Validators.required],
+      departmentHeadId: [this.data?.departmentHeadId || null, Validators.required]
+     
+    });
+  }
+
+  private loadDepartmentHeads(): void {
     this.departmentsService.getAllUsers().subscribe({
-      next: (users: any) => {
-        this.departmentHeads = users.data || users.users || users.result || users || [];
-
-        // Initialize the form AFTER the users have been loaded
-        this.form = this.fb.group({
-          name: [this.data?.name || '', Validators.required],
-          // Use a proper null check for departmentHeadId
-          departmentHeadId: [this.data?.departmentHeadId || null]
-        });
+      next: (response: User[]) => {
+        // Handle various API response formats
+        this.departmentHeads = response;
       },
       error: (err) => {
         console.error('Error fetching users:', err);
+        // You might want to handle this error more gracefully, like showing a toast message
       }
     });
   }
@@ -50,13 +58,13 @@ export class DepartmentFormComponent implements OnInit {
     if(this.isEditMode && this.data?.id){
       //update
       this.departmentsService.updateDepartment(this.data.id, payload).subscribe({
-        next: () => this.dialogRef.close(true),
-        error: () => alert('Error updating department')
+        next: (updated) => this.dialogRef.close(updated),
+        error: () => this.toast.error('Error updating department')
        });
       } else {
         this.departmentsService.createDepartment(payload).subscribe({
-          next: () => this.dialogRef.close(true),
-          error: () => alert('Error creating department')
+          next: (created) => this.dialogRef.close(created),
+          error: () => this.toast.error('Error creating department')
         });
       }
     }

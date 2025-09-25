@@ -1,48 +1,71 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-  <div class="bg-white w-full max-w-md mx-auto p-6 rounded-lg shadow-xl relative">
-    <h3 class="text-xl font-bold text-gray-800 mb-4">
+  <div class="bg-white w-full max-w-md mx-auto p-6 rounded-xl shadow-2xl relative">
+    <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">
       {{ isEditMode ? 'Edit Department' : 'Create Department' }}
     </h3>
 
-    <form [formGroup]="form" class="space-y-4">
+    <form [formGroup]="form" class="space-y-6" (ngSubmit)="save()">
 
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Department Name</mat-label>
-        <input matInput formControlName="name" placeholder="Enter department name" />
-        <mat-error *ngIf="form.get('name')?.hasError('required')">
-          Name is required
-        </mat-error>
-      </mat-form-field>
+  <!-- Department Name Field -->
+  <div>
+    <label for="department-name" class="block text-sm font-medium text-gray-700 mb-2">
+      Department Name
+    </label>
+    <div class="relative rounded-lg shadow-sm">
+      <input
+        type="text"
+        id="department-name"
+        formControlName="name"
+        class="block w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition duration-150 ease-in-out p-3 pr-10 text-gray-900 placeholder-gray-400"
+        placeholder="Enter department name"
+      />
+    </div>
+    <p class="mt-2 text-sm text-red-600" *ngIf="form.get('name')?.hasError('required')">
+      Name is required
+    </p>
+  </div>
 
-      <ng-container *ngIf="departmentHeads.length > 0">
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Department Head</mat-label>
-                <mat-select formControlName="departmentHeadId">
-                    <mat-option [value]="null">-- N/A --</mat-option>
-                    <mat-option *ngFor="let head of departmentHeads" [value]="head.id">
-                        {{ head.firstName }} {{ head.lastName }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </ng-container>
+  <!-- Department Head Select -->
+  <div *ngIf="departmentHeads.length > 0">
+    <label for="department-head" class="block text-sm font-medium text-gray-700 mb-2">
+      Department Head
+    </label>
+    <select
+      id="department-head"
+      formControlName="departmentHeadId"
+      class="block w-full rounded-lg border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500 transition duration-150 ease-in-out p-3 text-gray-900"
+    >
+      <option [value]="null">-- N/A --</option>
+      <ng-container *ngFor="let head of departmentHeads">
+        <option [value]="head.id">
+          {{ head.firstName }} {{ head.lastName }}
+        </option>
+      </ng-container>
+    </select>
+  </div>
 
-      </form>
-
-    <div class="flex justify-end gap-3 mt-6">
+   <!-- Action Buttons -->
+    <div class="flex justify-end gap-4 mt-8">
       <button
-        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+        class="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 shadow-md"
         (click)="close()"
       >
         Cancel
       </button>
       <button
-        class="px-4 py-2 text-white rounded-lg"
+        
+        class="px-5 py-2 text-white rounded-lg transition-all duration-200 shadow-md"
         [ngClass]="isEditMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'"
-        (click)="save()"
-        [disabled]="form.invalid"
+        
+        [disabled]="form?.invalid"
       >
         {{ isEditMode ? 'Update' : 'Create' }}
       </button>
     </div>
+
+</form>
+
+
+    
   </div>
 </div>
