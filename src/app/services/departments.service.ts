@@ -30,7 +30,7 @@ export class DepartmentsService {
 
 
   getAllUsers(): Observable<{id: number; firstName: string; lastName: string}[]> {
-  return this.http.get<{id: number; firstName: string; lastName: string}[]>(`${environment.apiUrl}/users`);
+  return this.http.get<{id: number; firstName: string; lastName: string}[]>(`${environment.apiUrl}/user`);
   }
 
   updateDepartment(id: number, department: Department): Observable<Department> {

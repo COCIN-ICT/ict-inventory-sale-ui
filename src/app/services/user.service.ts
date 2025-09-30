@@ -29,6 +29,7 @@ export class UserService {
   return this.http.delete(`${API_URL}/${id}`);}
 
   updateUser(id: number, payload: Partial<User>): Observable<User> {
+    console.log("Sending to backend:", payload);
   return this.http.put<User>(`${API_URL}/${id}`, payload);
 }
  getUserByUsername(username: string): Observable<User> {

@@ -1,12 +1,14 @@
 <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
   <a routerLink="/home" routerLinkActive="bg-blue-100 text-blue-600" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
-    <span class="text-lg">🏠</span> <span>Dashboard</span>
+    <!-- Dashboard -->
+<span class="text-lg"><mat-icon>dashboard</mat-icon></span> Dashboard
   </a>
 
   <div>
     <input type="checkbox" id="user-management" class="hidden peer">
     <label for="user-management" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-      <span class="flex items-center gap-3"><span class="text-lg">👥</span> User Management</span>
+      <!-- User Management -->
+      <span class="text-lg"><mat-icon>group</mat-icon></span> User Management
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
@@ -27,7 +29,8 @@
   <div>
     <input type="checkbox" id="supplier-management" class="hidden peer">
     <label for="supplier-management" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-      <span class="flex items-center gap-3"><span class="text-lg">📋</span> Supplier Management</span>
+      <!-- Supplier Management -->
+      <span class="text-lg"><mat-icon>assignment</mat-icon></span> Supplier Management
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
@@ -46,7 +49,8 @@
   <div>
     <input type="checkbox" id="purchases-procurement" class="hidden peer">
     <label for="purchases-procurement" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-      <span class="flex items-center gap-3"><span class="text-lg">🛒</span> Store</span>
+      <!-- Store -->
+      <span class="text-lg"><mat-icon>store</mat-icon></span> Store
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
@@ -59,7 +63,8 @@
   <div>
         <input type="checkbox" id="unit-of-measure" class="hidden peer">
         <label for="unit-of-measure" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">📏</span> Unit of Measure</span>
+          <!-- Unit of Measure -->
+          <span class="text-lg"><mat-icon>straighten</mat-icon></span> Unit of Measure
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -73,7 +78,8 @@
       <div>
         <input type="checkbox" id="purchase-quotations" class="hidden peer">
         <label for="purchase-quotations" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">📋</span> Purchase Quotations</span>
+          <!-- Purchase Quotations -->
+          <span class="text-lg"><mat-icon>request_quote</mat-icon></span> Purchase Quotations
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -87,7 +93,8 @@
       <div>
         <input type="checkbox" id="bank-account" class="hidden peer">
         <label for="bank-account" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">📋</span> Bank Account</span>
+          <!-- Bank Account -->
+          <span class="text-lg"><mat-icon>account_balance</mat-icon></span> Bank Account
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -97,10 +104,11 @@
         </ul>
       </div>
 
-      <!-- <div>
+       <div>
         <input type="checkbox" id="purchase-item" class="hidden peer">
         <label for="purchase-item" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">📋</span> Purchase Items</span>
+          <!-- Purchase Items -->
+          <span class="text-lg"><mat-icon>shopping_cart</mat-icon></span> Purchase Items
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -108,12 +116,13 @@
         <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
           <li><a routerLink="/home/purchase-item" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Purchase Items</a></li>
         </ul>
-      </div> -->
+      </div> 
 
        <div>
         <input type="checkbox" id="purchase-order" class="hidden peer">
         <label for="purchase-order" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">📋</span> Purchase Order</span>
+          <!-- Purchase Order -->
+          <span class="text-lg"><mat-icon>receipt_long</mat-icon></span> Purchase Order
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -125,11 +134,26 @@
         </ul>
       </div>
 
+      <div>
+        <input type="checkbox" id="production-order" class="hidden peer">
+        <label for="production-order" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+          <!-- Purchase Order -->
+          <span class="text-lg"><mat-icon>receipt_long</mat-icon></span>Production Order
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </label>
+        <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+          <li><a routerLink="/home/production-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Purchase Order</a></li>
+        </ul>
+      </div>
 
-<div>
+
+      <div>
         <input type="checkbox" id="item-category" class="hidden peer">
         <label for="item-category" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">🏷️</span> Item Categories</span>
+          <!-- Item Categories -->
+          <span class="text-lg"><mat-icon>category</mat-icon></span> Item Categories
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -140,14 +164,11 @@
         </ul>
       </div>
 
-
-
-
-
       <div>
         <input type="checkbox" id="items" class="hidden peer">
         <label for="items" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3"><span class="text-lg">📦</span> Items</span>
+          <!-- Items -->
+          <span class="text-lg"><mat-icon>inventory_2</mat-icon></span> Items
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>

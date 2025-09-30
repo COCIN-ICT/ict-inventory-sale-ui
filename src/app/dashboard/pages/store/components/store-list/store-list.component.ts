@@ -117,9 +117,7 @@ openCreateForm(): void {
 
 
 openEditForm(store: Store): void {
-  const dialogRef = this.dialog.open(StoreFormComponent, {
-    data: { ...store }
-  });
+  const dialogRef = this.dialog.open(StoreFormComponent, {data: { ...store }});
 
   dialogRef.afterClosed().subscribe((updatedStore: Store | null) => {
     if (updatedStore) {
