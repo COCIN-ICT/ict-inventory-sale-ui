@@ -52,7 +52,7 @@ const routes: Routes = [
       { path: 'production-order', loadChildren: () => import('./dashboard/pages/production-order/production-order.module').then(m => m.ProductionOrderModule) },
  
       //purchase order
-     // { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
+      { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
 
     ]
   },
