@@ -50,10 +50,11 @@ const routes: Routes = [
       { path: 'purchase-item', loadChildren: () => import('./dashboard/pages/purchase-item/purchase-item.module').then(m => m.PurchaseItemModule) },
 
       //purchase order
-     // { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
+      { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
 
     ]
   },
+  { path: 'production-order', loadChildren: () => import('./dashboard/pages/production-order/production-order.module').then(m => m.ProductionOrderModule) },
  // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },
 
   
