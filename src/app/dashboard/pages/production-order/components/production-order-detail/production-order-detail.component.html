@@ -1,0 +1,108 @@
+<div class="w-full mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="text-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading production order details...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!isLoading && errorMessage" class="bg-red-100 text-red-700 px-4 py-3 rounded mb-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Details -->
+  <div *ngIf="!isLoading && productionOrder" class="space-y-6">
+    <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">
+      Production Order #{{ productionOrder.id }}
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-gray-500">Order ID</p>
+        <p class="text-lg font-medium text-gray-800">{{ productionOrder.id }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Order Name</p>
+        <p class="text-lg font-medium text-gray-800">{{ productionOrder.createdBy?.firstName }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Status</p>
+        <span class="px-3 py-1 rounded-full text-sm font-semibold"
+          [ngClass]="{
+            'bg-green-100 text-green-700': productionOrder.status === 'COMPLETED',
+            'bg-yellow-100 text-yellow-700': productionOrder.status === 'PENDING',
+            'bg-red-100 text-red-700': productionOrder.status === 'CANCELLED'
+          }"
+        >
+          {{ productionOrder.status || 'Unknown' }}
+        </span>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Created Date</p>
+        <p class="text-lg font-medium text-gray-800">
+          {{ productionOrder.createdAt | date:'medium' }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Quantity</p>
+        <p class="text-lg font-medium text-gray-800">{{ productionOrder.approvedAt }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Customer</p>
+        <p class="text-lg font-medium text-gray-800">{{ productionOrder.createdAt || 'N/A' }}</p>
+      </div>
+    </div>
+
+    <div>
+        <h3>Input Items</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Id</th>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                </tr>
+                
+            </thead>
+            <tbody>
+                <tr
+              *ngFor="let item of productionOrder.inputItems"
+              class="border-b hover:bg-blue-50 transition"
+            >
+              <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                {{ item.id }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ item?.item?.name }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ item.quantity }}
+              </td>
+            </tbody>
+        </table>
+        <button class="bg-gray-600 p-3 text-white rounded-lg">Add Input Item</button>
+
+        <h3>Output Items</h3>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex justify-end space-x-3 pt-6 border-t">
+      
+      <button
+        class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
+      >
+        Edit
+      </button>
+      <button
+        class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
