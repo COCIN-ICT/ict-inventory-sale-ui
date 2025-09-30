@@ -14,6 +14,7 @@ export interface PurchaseQuotationRequest {
   supplierId: number;
   amount: number;
   invoice?: File | string;
+  purchaseOrderId?: number;
 }
 
 export interface PurchaseQuotationResponse {
@@ -73,6 +74,19 @@ export class PurchaseQuotationService {
       console.log('Service: Request URL:', `${environment.apiUrl}/quotation`);
       return this.http.post<PurchaseQuotationResponse>(`${environment.apiUrl}/quotation`, requestData);
     }
+  }
+
+  createPurchaseQuotationForOrder(payload: { supplierId: number; amount: number; purchaseOrderId: number; invoiceFile?: File; }) {
+    const { supplierId, amount, purchaseOrderId, invoiceFile } = payload;
+    if (invoiceFile) {
+      const formData = new FormData();
+      formData.append('supplierId', String(supplierId));
+      formData.append('amount', String(amount));
+      formData.append('purchaseOrderId', String(purchaseOrderId));
+      formData.append('invoiceFile', invoiceFile);
+      return this.http.post<PurchaseQuotationResponse>(`${environment.apiUrl}/purchase/quotation`, formData);
+    }
+    return this.http.post<PurchaseQuotationResponse>(`${environment.apiUrl}/purchase/quotation`, { supplierId, amount, purchaseOrderId });
   }
 
   // Alternative method with different field names
