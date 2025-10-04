@@ -58,7 +58,11 @@ const routes: Routes = [
   },
 
   //{ path: 'production-order', loadChildren: () => import('./dashboard/pages/production-order/production-order.module').then(m => m.ProductionOrderModule) },
- // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },
+ // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) 
+      //purchase order
+
+    
+  // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) }
 
   // { path: 'user-management', loadChildren: () => import('./dashboard/pages/user-management/user-management.module').then(m => m.UserManagementModule) },
 
