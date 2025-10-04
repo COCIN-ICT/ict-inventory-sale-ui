@@ -6,6 +6,7 @@ import { ProductionOrderComponent } from './production-order.component';
 import { ProudctionOrderListComponent } from './components/proudction-order-list/proudction-order-list.component';
 import { ProudctionOrderFormComponent } from './components/proudction-order-form/proudction-order-form.component';
 import { ProductionOrderDetailComponent } from './components/production-order-detail/production-order-detail.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ProductionOrderDetailComponent } from './components/production-order-de
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     ProductionOrderRoutingModule,
     
   ]

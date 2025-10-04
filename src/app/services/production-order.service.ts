@@ -19,6 +19,10 @@ export class ProductionOrderService {
      return this.http.get<ProductionOrder[]>(API_URL);
    }
 
+   getPendingProductionOrders(): Observable<ProductionOrder[]> {
+    return this.http.get<ProductionOrder[]>(`${API_URL}/pending`);
+  }
+
    createProductionOrders(productionOrders: ProductionOrder): Observable<ProductionOrder> {
        return this.http.post<ProductionOrder>(API_URL, productionOrders);
      }
@@ -27,6 +31,25 @@ export class ProductionOrderService {
   return this.http.get<ProductionOrder>(`${API_URL}/${id}`);   
   }
 
+  deleteProductionOrder(id: number): Observable<void> {
+      return this.http.delete<void>(`${API_URL}/${id}`);
+    }
+
+  vetProductionOrder(id: number): Observable<any> {
+  return this.http.patch(`${API_URL}/vet/${id}`, {});
+  }
+
+  approveProductionOrder(id: number) {
+  return this.http.patch(`${API_URL}/approve/${id}`, {});
+  }
+
+  finishProductionOrder(id: number) {
+    return this.http.patch(`${API_URL}/finish/${id}`, {});
+  }
+
+  dispenseProductionOrder(id: number) {
+    return this.http.patch(`${API_URL}/dispense/${id}`, {});
+  }
  
    
 

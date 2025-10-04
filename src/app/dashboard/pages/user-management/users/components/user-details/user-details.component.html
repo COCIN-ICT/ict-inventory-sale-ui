@@ -39,26 +39,26 @@
             </ng-container>
           </div>
 
-          <div>
-  <label class="block text-gray-700 font-medium mb-1">Password</label>
+          <div *ngIf="!isEditMode">
+            <label class="block text-gray-700 font-medium mb-1">Password</label>
 
-  <!-- Always editable input -->
-  <div class="flex space-x-2 items-center">
-    <input 
-      type="password" 
-      formControlName="newPassword"
-      class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
-      placeholder="Enter new password"
-    />
-    <button 
-      type="button" 
-      (click)="updatePassword(user, userForm.value.newPassword)"
-      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-    >
-      Update
-    </button>
-  </div>
-  <small class="text-gray-500">Leave empty if you don’t want to change.</small>
+            <!-- Always editable input -->
+            <div class="flex space-x-2 items-center">
+              <input 
+                type="password" 
+                formControlName="newPassword"
+                class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+                placeholder="Enter new password"
+              />
+              <button 
+                type="button" 
+                (click)="updatePassword(user, userForm.value.newPassword)"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+              >
+                Update
+              </button>
+            </div>
+            <small class="text-gray-500">Leave empty if you don’t want to change.</small>
           </div>
 
 
@@ -95,16 +95,28 @@
           </div>
 
            <div>
-          <label class="block text-gray-700 font-medium mb-1">Roles</label>
-          <ng-container *ngIf="!isEditMode">
-            <p class="text-gray-900 font-bold">{{ user.resolvedRoleNames }}</p>
-          </ng-container>
-          <ng-container *ngIf="isEditMode">
-            <select formControlName="roles" multiple class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
-              <option *ngFor="let role of roles" [ngValue]="role.id">{{ role.roleName }}</option>
-            </select>
-          </ng-container>
-        </div>
+  <label class="block text-gray-700 font-medium mb-1">Roles</label>
+
+  <!-- Show when not editing -->
+  <ng-container *ngIf="!isEditMode">
+    <p class="text-gray-900 font-bold">{{ user.resolvedRoleNames }}</p>
+  </ng-container>
+
+  <!-- Show when editing -->
+  <ng-container *ngIf="isEditMode">
+    <select 
+      formControlName="roles" 
+      multiple 
+      class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+      
+      <option *ngFor="let role of roles" [ngValue]="role.id">
+        {{ role.roleName }}
+      </option>
+    </select>
+  </ng-container>
+          </div>
+
+
 
           
           <div class="md:col-span-2">

@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { Router } from 'express';
 import { RouterModule } from '@angular/router';
+import { A11yModule } from "@angular/cdk/a11y";
 
 
 @NgModule({
@@ -27,8 +28,8 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule
-
-  ]
+    RouterModule,
+    A11yModule
+]
 })
 export class UsersModule { }

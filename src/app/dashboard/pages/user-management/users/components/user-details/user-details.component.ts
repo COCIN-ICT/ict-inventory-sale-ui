@@ -1,10 +1,10 @@
+// user-details.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Role, Unit, User, UserDisplay } from '../../users.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../../../services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs'; // Import forkJoin for parallel API calls
-import { map } from 'rxjs/operators'; // Import map
+import { forkJoin } from 'rxjs';
 import { ToastService } from '../../../../../../services/toast.service';
 
 @Component({
@@ -34,21 +34,20 @@ export class UserDetailsComponent implements OnInit {
       lastName: ['', Validators.required],
       middleName: [''],
       username: ['', Validators.required],
-      // This is a view component, password validation is not needed here
-      password: [''], 
       address: ['', Validators.required],
       phone: ['', Validators.required], 
       email: ['', [Validators.required, Validators.email]],
-      unit: [null, Validators.required], // Change to 'unit'
-      roles: [[], Validators.required], // Change to 'roles'
-
+      unit: [null, Validators.required],
+      roles: [[]], // ✅ just an array of role IDs
       newPassword: ['']
     });
-  }
+ }
 
+  passswordForm = this.fb.group({
+    newPassword: ['', Validators.required]
+  });
 
   ngOnInit(): void {
-    // We need to fetch roles and units for the dropdowns in the form
     forkJoin({
       roles: this.userService.getRoles(),
       units: this.userService.getUnits()
@@ -57,7 +56,6 @@ export class UserDetailsComponent implements OnInit {
         this.roles = roles;
         this.units = units;
         
-        // After fetching roles and units, get the user details
         this.route.paramMap.subscribe(params => {
           const userId = Number(params.get('id'));
           if (userId) {
@@ -82,7 +80,6 @@ export class UserDetailsComponent implements OnInit {
     this.error = null;
     this.userService.getUserById(id).subscribe({
       next: (user) => {
-        // Correctly format roles and unit names from the API response
         const resolvedRoleNames = user.roles.map(r => r.roleName).join(', ');
         const resolvedUnitName = user.unit ? user.unit.name : 'N/A';
         
@@ -92,26 +89,18 @@ export class UserDetailsComponent implements OnInit {
           resolvedUnitName
         };
         
-        // Patch the form with the API data
-       // this.userForm.patchValue({
-         // ...this.user,
-          //unit: this.user.unit.id, // Set the unit control to the unit's ID
-          //roles: this.user.roles.map(r => r.id) // Set the roles control to an array of IDs
-        //});
-         this.userForm.patchValue({
-        firstName: this.user.firstName,
-        lastName: this.user.lastName,
-        middleName: this.user.middleName,
-        username: this.user.username,
-        email: this.user.email,
-        phone: this.user.phone,
-        address: this.user.address,
-        // When patching the form, we use the IDs, not the resolved names
-        // Make sure your form controls are updated to reflect the new API structure
-        // This is a common point of confusion.
-        unitId: this.user.unit.id,
-        roles: this.user.roles.map(r => r.id)
-      });
+        // ✅ patch roles as array of IDs
+        this.userForm.patchValue({
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          middleName: this.user.middleName,
+          username: this.user.username,
+          email: this.user.email,
+          phone: this.user.phone,
+          address: this.user.address,
+          unit: this.user.unit.id,
+          roles: this.user.roles.map(r => r.id)
+        });
 
         this.isLoading = false;
       },
@@ -124,39 +113,35 @@ export class UserDetailsComponent implements OnInit {
   }
 
   updatePassword(user: any, newPassword: string): void {
-  if (!newPassword) {
-    this.error = "Password cannot be empty";
-    return;
-  }
-
-  // build full payload expected by backend
-  const updatedUser = {
-    firstName: this.user!.firstName,
-    lastName: this.user!.lastName,
-    middleName: this.user!.middleName,
-    username: this.user!.username,
-    password: newPassword,  // 👈 updated here
-    address: this.user!.address,
-    phone: this.user!.phone,
-    email: this.user!.email,
-    unitId: this.user!.unit?.id,          // 👈 required
-    roleId: this.user!.roles?.[0]?.id     // 👈 required (first role)
-  };
-
-  this.userService.updateUser(this.user!.id!, updatedUser).subscribe({
-    next: () => {
-      this.toast.success("Password updated successfully");
-      this.userForm.patchValue({ newPassword: "" }); // clear the input
-    },
-    error: (err) => {
-      this.error = "Failed to update password. Please try again.";
-      console.error("Error updating password:", err);
+    if (!newPassword) {
+      this.error = "Password cannot be empty";
+      return;
     }
-  });
-}
 
+    const updatedUser = {
+      firstName: this.user!.firstName,
+      lastName: this.user!.lastName,
+      middleName: this.user!.middleName,
+      username: this.user!.username,
+      password: newPassword,
+      address: this.user!.address,
+      phone: this.user!.phone,
+      email: this.user!.email,
+      unitId: this.user!.unit?.id,
+      roleIds: this.user!.roles?.map(r => r.id) ?? []
+    };
 
-
+    this.userService.updateUser(this.user!.id!, updatedUser).subscribe({
+      next: () => {
+        this.toast.success("Password updated successfully");
+        this.passswordForm.reset();
+      },
+      error: (err) => {
+        this.error = "Failed to update password. Please try again.";
+        console.error("Error updating password:", err);
+      }
+    });
+  }
 
   goBack(): void {
     this.router.navigate(['/home/user-management/users']);
@@ -170,20 +155,18 @@ export class UserDetailsComponent implements OnInit {
     if (this.userForm.valid && this.user) {
       const formValue = this.userForm.value;
 
-      const selectedUnit = this.units.find(u => u.id === formValue.unit);
-      const selectedRoles = this.roles.filter(r => formValue.roles.includes(r.id));
-      
-     const updatedUser = {
+      const updatedUser = {
+        id: this.user.id,
         firstName: formValue.firstName,
         lastName: formValue.lastName,
         middleName: formValue.middleName,
         username: formValue.username,
-        password: formValue.password,
+        password: this.user.password ?? "default123",
         address: formValue.address,
         phone: formValue.phone,
         email: formValue.email,
-        unitId: formValue.unit, // Use the unit ID
-        roleId: formValue.roles[0] // Use the first role ID from the array
+        unitId: formValue.unit,
+        roleIds: formValue.roles // ✅ directly send selected IDs
       };
 
       this.userService.updateUser(this.user.id!, updatedUser).subscribe({

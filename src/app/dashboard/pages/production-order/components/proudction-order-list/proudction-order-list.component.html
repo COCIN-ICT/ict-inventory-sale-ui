@@ -11,6 +11,8 @@
       </button>
     </div>
 
+    {{pendingOrders | json }}
+
     <!-- Success Message -->
     <!-- <div *ngIf="successMessage" class="bg-green-500 text-white p-3 rounded mb-4 text-center transition-opacity duration-500">
       {{ successMessage }}
@@ -48,20 +50,39 @@
                 {{ order.unit?.name }}
               </td>
               <td class="px-6 py-4 text-sm">
-                <button 
-                  class="bg-yellow-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-yellow-600 transition"
-                  (click)="navigateToDetails(order.id || 0)"
+  <!-- Edit -->
+  <button 
+    class="bg-yellow-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-yellow-600 transition"
+    (click)="navigateToDetails(order.id || 0)"
+  >
+    Edit
+  </button>
 
-                >
-                  Edit
-              </button>
-                <!-- <button
-                  class="bg-red-600 text-white px-3 py-1.5 rounded-md hover:bg-red-700 transition"
-                  (click)="deleteOrder(order.id!)"
-                >
-                  Delete
-                </button> -->
-              </td>
+  <!-- Open -->
+  <button 
+    class="bg-green-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-green-600 transition"
+    (click)="navigateToDetails(order.id || 0)"
+  >
+    Open
+  </button>
+
+  <!-- Vet -->
+  <button 
+    class="bg-blue-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-blue-600 transition"
+    (click)="vetProductionOrder(order.id || 0)"
+  >
+    Vet
+  </button>
+
+  <!-- Delete -->
+  <button 
+    class="bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 transition"
+    (click)="deleteProductionOrder(order.id || 0)"
+  >
+    Delete
+  </button>
+</td>
+
             </tr>
           </tbody>
         </table>
