@@ -132,6 +132,20 @@
         </ul>
       </div>
 
+      <div>
+        <input type="checkbox" id="production-order" class="hidden peer">
+        <label for="production-order" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+          <!-- Purchase Order -->
+          <span class="text-lg"><mat-icon>receipt_long</mat-icon></span>Production Order
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 peer-checked:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </label>
+        <ul class="ml-4 space-y-1 max-h-0 peer-checked:max-h-96 transition-all duration-300 overflow-hidden">
+          <li><a routerLink="/home/production-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Purchase Order</a></li>
+        </ul>
+      </div>
+
 
       <div>
         <input type="checkbox" id="item-category" class="hidden peer">

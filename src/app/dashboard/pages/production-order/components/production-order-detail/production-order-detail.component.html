@@ -1,0 +1,191 @@
+<div class="w-full mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="text-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading production order details...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!isLoading && errorMessage" class="bg-red-100 text-red-700 px-4 py-3 rounded mb-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Details -->
+  <div *ngIf="!isLoading && productionOrder" class="space-y-6">
+    <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">
+      Production Order #{{ productionOrder.id }}
+    </h2>
+
+    <!-- Basic Details -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-gray-500">Order ID</p>
+        <p class="text-lg font-medium text-gray-800">{{ productionOrder.id }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Order Name</p>
+        <p class="text-lg font-medium text-gray-800">{{ productionOrder.createdBy?.firstName }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Status</p>
+        <span class="px-3 py-1 rounded-full text-sm font-semibold"
+          [ngClass]="{
+            'bg-green-100 text-green-700': productionOrder.status === 'COMPLETED',
+            'bg-yellow-100 text-yellow-700': productionOrder.status === 'PENDING',
+            'bg-blue-100 text-blue-700': productionOrder.status === 'VETTED',
+            'bg-purple-100 text-purple-700': productionOrder.status === 'APPROVED',
+            'bg-indigo-100 text-indigo-700': productionOrder.status === 'DISPENSED',
+            'bg-red-100 text-red-700': productionOrder.status === 'CANCELLED'
+          }"
+        >
+          {{ productionOrder.status || 'Unknown' }}
+        </span>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Created Date</p>
+        <p class="text-lg font-medium text-gray-800">
+          {{ productionOrder.createdAt | date:'medium' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Status Actions -->
+    <div class="mt-6 flex space-x-4">
+      <!-- Pending -> Vet -->
+      <button
+        *ngIf="productionOrder.status === 'PENDING'"
+        (click)="vetOrder()"
+        class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition disabled:opacity-50"
+        [disabled]="isLoading"
+      >
+        Vet Order
+      </button>
+
+      <!-- Vetted -> Approve -->
+      <button
+        *ngIf="productionOrder.status === 'VETTED'"
+        (click)="approveOrder()"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+        [disabled]="isLoading"
+      >
+        Approve Order
+      </button>
+
+      <!-- Approved -> Dispense -->
+      <button
+        *ngIf="productionOrder.status === 'APPROVED'"
+        (click)="dispenseOrder()"
+        class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition disabled:opacity-50"
+        [disabled]="isLoading"
+      >
+        Dispense Order
+      </button>
+
+      <!-- Dispensed -> Finish -->
+      <button
+        *ngIf="productionOrder.status === 'DISPENSED'"
+        (click)="finishOrder()"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
+        [disabled]="isLoading"
+      >
+        Finish Order
+      </button>
+    </div>
+
+    <!-- Input Items -->
+    <div>
+      <h3 class="text-lg font-bold text-gray-700 mt-6 mb-2">Input Items</h3>
+      <table class="w-full border-collapse border border-gray-200">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border px-4 py-2 text-left">Item Id</th>
+            <th class="border px-4 py-2 text-left">Item Name</th>
+            <th class="border px-4 py-2 text-left">Quantity</th>
+            <th class="border px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of productionOrder.inputItems" class="border-b hover:bg-blue-50 transition">
+            <td class="px-4 py-2">{{ item.id }}</td>
+            <td class="px-4 py-2">{{ item?.item?.name }}</td>
+            <td class="px-4 py-2">{{ item.quantity }}</td>
+            <td class="px-4 py-2">
+              <button
+                (click)="deleteInputItem(item.id!)"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button
+        (click)="openAddModal()"
+        class="mt-4 bg-gray-600 px-4 py-2 text-white rounded-lg hover:bg-gray-700 transition"
+      >
+        Add Input Item
+      </button>
+    </div>
+
+    <!-- Output Items placeholder -->
+    <div>
+      <h3 class="text-lg font-bold text-gray-700 mt-6">Output Items</h3>
+      <!-- Similar table for output items -->
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div
+  *ngIf="showAddModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+    <h2 class="text-xl font-bold mb-4">Add Input Item</h2>
+
+    <form [formGroup]="addInputItemForm" (ngSubmit)="submitAddInputItem()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Item ID</label>
+        <input
+          type="number"
+          formControlName="itemId"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+          placeholder="Enter Item ID"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Quantity</label>
+        <input
+          type="number"
+          formControlName="quantity"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+          placeholder="Enter Quantity"
+        />
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button
+          type="button"
+          (click)="closeAddModal()"
+          class="px-4 py-2 rounded bg-gray-400 text-white hover:bg-gray-500"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="addInputItemForm.invalid"
+          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

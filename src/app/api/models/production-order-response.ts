@@ -15,7 +15,7 @@ export interface ProductionOrderResponse {
   id?: number;
   inputItems?: Array<ProductionItemResponse>;
   outputItems?: Array<ProductionItemResponse>;
-  status?: 'PENDING' | 'VETTED' | 'APPROVED' | 'CLEARED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED';
+  status?: 'PENDING' | 'VETTED' | 'APPROVED' | 'CLEARED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED' | "DISPENSED" | undefined;
   unit?: UnitResponse;
   updatedAt?: string;
   vettedAt?: string;
