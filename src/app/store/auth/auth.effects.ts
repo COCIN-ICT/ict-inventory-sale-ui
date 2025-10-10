@@ -36,6 +36,7 @@ interface AuthResponse {
                             id: response.user.id,
                             username: response.user.username,
                             password: response.user.password,
+                            unit: response.user.unit,
                             token: response.token
                         };
                         return AuthActions.loginSuccess({ user });
