@@ -3,14 +3,18 @@ import { Unit } from "../user-management/unit/unit.model";
 
 
 export interface Store {
-  id?: number; // optional for create, present when fetching
+  id?: number; 
   name: string;
   location: string;
-  storeType: 'PRIMARY' | 'SECONDARY'; // enum-like string type
+  storeType: 'PRIMARY' | 'SECONDARY'; 
   unitId: number;
   departmentId: number;
 
-  unit?: Unit // related unit info
-  department: Department // related unit info if available
+  unit?: Unit 
+  department?: Department 
+
+  createdAt?: string;
+  updatedAt?: string;
+
   displayOrder?: number; 
 }

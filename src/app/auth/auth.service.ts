@@ -4,28 +4,57 @@ import { environment } from '../../environments/environment';
 
 interface AuthResponse {
   token: string;
-  user?: any; // if your API returns more
+  user?: any; // depends on your backend response structure
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'api';
-    refreshToken: any;
+  private userKey = 'currentUser';
+  private tokenKey = 'token';
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
+  // 🟢 Login and store both token & user data
   login(username: string, password: string) {
-    return this.http.post(`${environment.apiUrl}/auth/login`, { username, password});
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { username, password });
   }
 
-  logout(){
-    localStorage.removeItem('token'),
-    localStorage.removeItem('currentUser');
+  // 🟢 Save login data after successful login
+  saveAuthData(response: AuthResponse): void {
+    if (response.token) {
+      localStorage.setItem(this.tokenKey, response.token);
+    }
+    if (response.user) {
+      localStorage.setItem(this.userKey, JSON.stringify(response.user));
+    }
   }
 
-   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+  // 🟢 Get token
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  // 🟢 Get current user
+  getUser(): any {
+    const user = localStorage.getItem(this.userKey);
+    return user ? JSON.parse(user) : null;
+  }
+
+   getUserUnit() {
+    const user = this.getUser();
+    return user ? user.unit : null;
+  }
+
+  // 🟢 Check login status
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem(this.tokenKey);
+  }
+
+  // 🟢 Logout
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
   }
 }
