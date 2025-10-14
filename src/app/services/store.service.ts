@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { Store } from "../dashboard/pages/store/store.model";
 
 const API_URL = `${environment.apiUrl}/store`;
+const API_URL_STOCK = `${environment.apiUrl}/stock`;
 
 @Injectable({ providedIn: 'root'})
 
@@ -26,6 +27,10 @@ createStore(store: Store): Observable<Store> {
 updateStore(id: number, store: Store): Observable<Store> {
   return this.http.put<Store>(`${API_URL}/${id}`, store);
 }
+
+getStockByStoreId(storeId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${API_URL_STOCK}/store/${storeId}`);
+  }
 
 
 

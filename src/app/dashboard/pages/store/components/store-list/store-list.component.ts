@@ -138,10 +138,10 @@ openEditForm(store: Store): void {
 
 
 
-  openStoreDetails(store: Store): void {
-  console.log('Store being sent:', store);
-  this.router.navigate(['/store-details'], { state: { stock: store } });
-}
+//   openStoreDetails(store: Store): void {
+//   console.log('Store being sent:', store);
+//   this.router.navigate(['/store-details'], { state: { stock: store } });
+// }
 
 
 
