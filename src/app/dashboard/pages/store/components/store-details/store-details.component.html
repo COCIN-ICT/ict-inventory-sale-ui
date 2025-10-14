@@ -1,0 +1,67 @@
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+    Stock Details
+  </h2>
+
+  <!-- If stock data exists -->
+  <div *ngIf="stock; else noData">
+    <div class="space-y-3">
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Name:</span>
+        <span class="text-gray-800">{{ stock.name }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Location:</span>
+        <span class="text-gray-800">{{ stock.location }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Store Type:</span>
+        <span class="text-gray-800">{{ stock.storeType }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Unit Name:</span>
+        <span class="text-gray-800">{{ stock.unit?.name }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Unit Description:</span>
+        <span class="text-gray-800">{{ stock.unit?.description }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Unit Address:</span>
+        <span class="text-gray-800">{{ stock.unit?.address }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-2">
+        <span class="font-semibold text-gray-600">Created At:</span>
+        <span class="text-gray-800">{{ stock.createdAt | date: 'medium' }}</span>
+      </div>
+
+      <div class="flex justify-between">
+        <span class="font-semibold text-gray-600">Last Updated:</span>
+        <span class="text-gray-800">{{ stock.updatedAt | date: 'medium' }}</span>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center mt-6">
+      <button
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        (click)="router.navigate(['/stock-list'])"
+      >
+        Back to List
+      </button>
+      
+    </div>
+  </div>
+
+  <!-- No Data Fallback -->
+  <ng-template #noData>
+  
+    <p class="text-center text-gray-500">No stock details found.</p>
+  </ng-template>
+</div>

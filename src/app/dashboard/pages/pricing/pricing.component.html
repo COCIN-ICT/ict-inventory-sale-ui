@@ -1,1 +1,61 @@
-<p>pricing works!</p>
+<div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+    Set Price
+  </h2>
+
+  <!-- Display current stock info -->
+  <div *ngIf="availableStock" class="mb-4 text-center">
+    <p class="text-gray-600">
+      <span class="font-semibold">Item:</span> {{ availableStock.name }}
+    </p>
+    <p class="text-gray-600">
+      <span class="font-semibold">Stock ID:</span> {{ availableStock.id }}
+    </p>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="!availableStock" class="text-center text-gray-500 mb-4">
+    Loading stock details...
+  </div>
+
+  <!-- Pricing Form -->
+  <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()" class="space-y-4">
+  <div>
+    <label class="block text-gray-700 font-medium mb-1">Stock</label>
+    <select
+      formControlName="availableStock"
+      class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="" disabled>Select stock</option>
+      <option *ngFor="let stock of stocks" [value]="stock.id">
+        {{ stock.item.name }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-gray-700 font-medium mb-1">Enter Price</label>
+    <input
+      type="number"
+      formControlName="price"
+      placeholder="Enter amount"
+      class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="isSubmitting || pricingForm.invalid"
+    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+  >
+    {{ isSubmitting ? 'Submitting...' : 'Save' }}
+  </button>
+</form>
+
+
+  <!-- Message -->
+  <p *ngIf="message" class="mt-4 text-center font-medium">
+    {{ message }}
+  </p>
+
+</div>

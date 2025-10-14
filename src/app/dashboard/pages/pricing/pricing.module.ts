@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PricingComponent } from './pricing.component';
 
+import { PricingRoutingModule } from './pricing-routing.module';
+import { PricingComponent } from './pricing.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -9,7 +11,10 @@ import { PricingComponent } from './pricing.component';
     PricingComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PricingRoutingModule
   ]
 })
 export class PricingModule { }
