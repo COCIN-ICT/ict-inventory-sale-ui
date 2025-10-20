@@ -1,189 +1,81 @@
-    {{stocks | json}}
+    {{ stores | json}}
     <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
   <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Stock Details</h2>
 
-  <div  *ngIf="stocks; else noData">
+  <div  *ngIf="stores; else noData">
     <!-- Top Info -->
     <div class="grid md:grid-cols-2 gap-4 mb-6 text-gray-700">
       <div>
-        <p><span class="font-semibold">Stock ID:</span> {{ stocks.id }}</p>
-        <p><span class="font-semibold">Store:</span> {{ stocks.store?.name || 'N/A' }}</p>
-        <p><span class="font-semibold">Quantity:</span> {{ stocks.totalQuantity || 0 }}</p>
+        <p><span class="font-semibold">Store ID:</span> {{ stores.id }}</p>
+        <p><span class="font-semibold">Store Name:</span> {{ stores.name || 'N/A' }}</p>
+        <p><span class="font-semibold">Location:</span> {{ stores.location }}</p>
       </div>
       <div>
+        <p><span class="font-semibold">Unit:</span> {{ stores.unit.name || 0 }}</p>
   <p class="mb-3">
-    <span class="font-semibold">Price per Unit:</span>
-    <span class="text-blue-600 text-lg">{{ pricePerUnit | currency:'₦' }}</span>
+    <span class="font-semibold">Store Type:</span>
+    <span class="text-blue-600 text-lg">{{stores.storeType }}</span>
   </p>
 
-  <div class="flex gap-3 justify-start md:justify-end">
-    <button
-      class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition"
-        (click)="openModal()"
-
-    >
-      + Add Price
-    </button>
-
-
-
-<!-- Pricing Modal -->
-<div
-  *ngIf="showAddPriceModal"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-  <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-    <!-- Close Button -->
-    <button
-      class="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-      (click)="closeModal()"
-    >
-      ✕
-    </button>
-
-    <h3 class="text-lg font-semibold mb-4 text-gray-800 text-center">
-      Add New Price
-    </h3>
-
-    <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()" class="space-y-4">
-      <div>
-        <label class="block text-gray-700 font-medium mb-1">Stock</label>
-        <select
-          formControlName="availableStock"
-          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="" disabled>Select stock</option>
-          <option *ngFor="let stock of allStocks" [value]="stock.id">
-            {{ stock.item.name }}
-          </option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-gray-700 font-medium mb-1">Enter Price</label>
-        <input
-          type="number"
-          formControlName="price"
-          placeholder="Enter amount"
-          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <button
-        type="submit"
-        [disabled]="isSubmitting || pricingForm.invalid"
-        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-      >
-        {{ isSubmitting ? 'Submitting...' : 'Save' }}
-      </button>
-    </form>
-  </div>
-</div>
-
-
-
-    <button
-      class="px-4 py-2 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600 transition"
-      (click)="onUpdatePrice()"
-    >
-      ✎ Update Price
-    </button>
-  </div>
+ 
 </div>
 
     </div>
 
     <!-- Tables -->
     <div class="grid md:grid-cols-2 gap-6">
-      <!-- Batches -->
-      <div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Batches</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-200 rounded-lg">
-            <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
-              <tr>
-                <th class="px-4 py-2 border">S/N</th>
-                <th class="px-4 py-2 border">Quantity</th>
-                <th class="px-4 py-2 border">Expiry Date</th>
-                <th class="px-4 py-2 border">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let batch of batches; let i = index"
-                class="text-center hover:bg-gray-50"
-              >
-                <td class="px-4 py-2 border">{{ i + 1 }}</td>
-                <td class="px-4 py-2 border">{{ batch.quantity }}</td>
-                <td class="px-4 py-2 border">{{ batch.expirationDate | date }}</td>
-                <td class="px-4 py-2 border">
-                  <span
-                    class="px-2 py-1 rounded-full text-xs"
-                    [ngClass]="{
-                      'bg-green-100 text-green-800': batch.status === 'Active',
-                      'bg-red-100 text-red-800': batch.status === 'Expired'
-                    }"
-                  >
-                    {{ batch.status }}
-                  </span>
-                </td>
-              </tr>
-              <tr *ngIf="stocks.batches?.length === 0">
-                <td colspan="4" class="text-gray-500 py-3">No batch data available</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <!-- Stocks -->
+  <div>
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Stocks</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-200 rounded-lg">
+        <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+          <tr>
+            <th class="px-4 py-2 border">S/N</th>
+            <!-- <th class="px-4 py-2 border">Stock ID</th> -->
+            <th class="px-4 py-2 border">Item</th>
+            <th class="px-4 py-2 border">Quantity</th>
+            <th class="px-4 py-2 border">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let stock of allStocks; let i = index"
+            class="text-center hover:bg-gray-50"
+          >
+            <td class="px-4 py-2 border">{{ i + 1 }}</td>
+            <!-- <td class="px-4 py-2 border">{{ stock.id }}</td> -->
+            <td class="px-4 py-2 border">{{ stock.item?.name }}</td>
+            <td class="px-4 py-2 border">{{ stock.totalQuantity }}</td>
+            <td class="px-4 py-2 border">
+              <button  [routerLink]="['/home/store/details', stores.id, 'stock', stock.id]"
+                type="button" class="text-red-600 hover:text-red-900" >
+                Open
+              </button>
+            </td>
+          </tr>
 
-      <!-- Promotions -->
-       <div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Promotions</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full border border-gray-200 rounded-lg">
-          <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
-            <tr>
-              <th class="px-4 py-2 border">S/N</th>
-              <th class="px-4 py-2 border">Title</th>
-              <th class="px-4 py-2 border">Start Date</th>
-              <th class="px-4 py-2 border">End Date</th>
-              <th class="px-4 py-2 border">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let promo of promotions; let i = index"
-              class="text-center hover:bg-gray-50"
-            >
-              <td class="px-4 py-2 border">{{ i + 1 }}</td>
-              <td class="px-4 py-2 border">{{ promo.title }}</td>
-              <td class="px-4 py-2 border">{{ promo.startDate | date }}</td>
-              <td class="px-4 py-2 border">{{ promo.endDate | date }}</td>
-              <td class="px-4 py-2 border">
-                <span
-                  class="px-2 py-1 rounded-full text-xs"
-                  [ngClass]="{
-                    'bg-green-100 text-green-800': promo.status === 'Active',
-                    'bg-gray-100 text-gray-700': promo.status === 'Upcoming',
-                    'bg-red-100 text-red-800': promo.status === 'Expired'
-                  }"
-                >
-                  {{ promo.status }}
-                </span>
-              </td>
-            </tr>
-            <tr *ngIf="promotions.length === 0">
-              <td colspan="5" class="text-gray-500 py-3">No promotions available</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          <tr *ngIf="!allStocks || allStocks.length === 0">
+            <td colspan="5" class="text-gray-500 py-3 text-center">
+              No stock data available
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-   
-    </div>
+  </div>
+
+
+<app-stock-transfer></app-stock-transfer>
+
+  
+
+
+</div>
+
 
     <!-- Action Buttons -->
-    <div class="flex justify-end gap-4 mt-8">
+    <!-- <div class="flex justify-end gap-4 mt-8">
       <button
         class="px-5 py-2 border border-gray-400 rounded-lg text-gray-700 hover:bg-gray-100 transition"
       >
@@ -194,7 +86,7 @@
       >
         Create Promotion
       </button>
-    </div>
+    </div> -->
   </div>
 
   <ng-template #noData>

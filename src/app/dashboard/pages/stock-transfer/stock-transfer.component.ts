@@ -37,6 +37,7 @@ export class StockTransferComponent {
     private authService: AuthService
   ) {}
 
+
   ngOnInit(): void {
     this.initializeForm();
     this.loadUserUnit();
@@ -98,23 +99,27 @@ export class StockTransferComponent {
   }
 
    // Automatically determine valid destination stores
-  onSourceTypeSelected(sourceType: 'PRIMARY' | 'SECONDARY'): void {
-    if (sourceType === 'PRIMARY') {
-      // User can transfer from primary to either secondary (same unit) or another primary (different unit)
-      const sameUnitSecondaries = this.secondaryStores.filter(
-        (store) => store.unit.id === this.userUnitId
-      );
+  onSourceStoreSelected(sourceStoreId: number): void {
+  const sourceStore = this.primaryStores.find(s => s.id === +sourceStoreId);
 
-      const otherUnitPrimaries = this.primaryStores.filter(
-        (store) => store.unit.id !== this.userUnitId
-      );
-
-      this.destinationStores = [...sameUnitSecondaries, ...otherUnitPrimaries];
-    } else {
-      this.destinationStores = []; // No transfer from secondary → any
-      this.toast.error('You cannot transfer from a secondary store.');
-    }
+  if (!sourceStore) {
+    this.destinationStores = [];
+    this.toast.error('Invalid source store selected.');
+    return;
   }
+
+  // Determine valid destinations:
+  const sameUnitSecondaries = this.secondaryStores.filter(
+    store => store.unit.id === sourceStore.unit.id
+  );
+
+  const otherUnitPrimaries = this.primaryStores.filter(
+    store => store.unit.id !== sourceStore.unit.id
+  );
+
+  this.destinationStores = [...sameUnitSecondaries, ...otherUnitPrimaries];
+}
+
 
   submitTransfer(): void {
     if (this.transferForm.invalid) {

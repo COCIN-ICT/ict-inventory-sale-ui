@@ -13,7 +13,7 @@ import { Pricing } from '../../../pricing/pricing.model';
   styleUrl: './store-details.component.css'
 })
 export class StoreDetailsComponent {
-  stocks: any = {};
+  stores: any = {};
   allStocks: any[] = [];
   id!: number;
   batches: any[] = [];
@@ -42,29 +42,17 @@ export class StoreDetailsComponent {
     private fb: FormBuilder,
     private pricingService: PricingService,
   ) {}
-
+ 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.pricingForm = this.fb.group({
-          availableStock: ['', Validators.required],
-          price: ['', [Validators.required, Validators.min(1)]],
-        });
     this.loadStoreDetails();
     this.loadStock();
   }
 
   loadStoreDetails() {
-    this.storeService.getStockByStoreId(this.id).subscribe({
+    this.storeService.getStoreById(this.id).subscribe({
       next: (res) => {
-          // Assuming the API returns an array of stock items in that store
-        if (res && Array.isArray(res) && res.length > 0) {
-          this.stocks = res[0]; // take the first one for details
-          this.batches = this.stocks.batches || [];
-          this.promotions = this.stocks.promotions || [];
-          this.pricePerUnit = this.stocks.pricePerUnit || 0;
-        } else {
-          console.warn('No stock found for this store');
-        }
+        this.stores = res;
       },
       error: (err) => {
         console.error('Failed to load store details:', err);
@@ -115,6 +103,10 @@ export class StoreDetailsComponent {
       },
     });
   }
+
+  goToStockDetails(stockId: number) {
+  this.router.navigate(['/stock/details', stockId]);
+}
 
 
 

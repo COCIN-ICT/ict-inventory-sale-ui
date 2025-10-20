@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 import { Store } from "../dashboard/pages/store/store.model";
+import { Stock } from "./stock.service";
 
 const API_URL = `${environment.apiUrl}/store`;
 const API_URL_STOCK = `${environment.apiUrl}/stock`;
@@ -32,12 +33,12 @@ getStockByStoreId(storeId: number): Observable<any[]> {
     return this.http.get<any[]>(`${API_URL_STOCK}/store/${storeId}`);
   }
 
-
+getStock(): Observable<Stock[]> { // Changed from [Store] to Store[]
+    return this.http.get<Stock[]>(API_URL_STOCK);
+  }
 
 // getStoreByDepartmentId(departmentId: number): Observable<Store[]> {
 //     return this.http.get<Store[]>(`${API_URL}/department/${departmentId}`);
 //   }
 
-
-
-}
+  }

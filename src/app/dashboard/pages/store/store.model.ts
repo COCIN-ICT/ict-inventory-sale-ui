@@ -18,3 +18,7 @@ export interface Store {
 
   displayOrder?: number; 
 }
+
+export interface Stock {
+  
+}

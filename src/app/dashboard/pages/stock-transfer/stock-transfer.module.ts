@@ -14,6 +14,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ReactiveFormsModule,
     StockTransferRoutingModule
+  ],
+  exports: [
+    StockTransferComponent
   ]
 })
 export class StockTransferModule { }
