@@ -1,0 +1,34 @@
+<div class="p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-xl font-semibold text-gray-800">Sales Items</h1>
+    <a routerLink="/home/sales-items/create" class="px-4 py-2 text-sm bg-cocin-accent text-gray-900 rounded hover:opacity-90">Create Sales Item</a>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item ID</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales Order ID</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200" *ngIf="(items$ | async) as items">
+        <tr *ngFor="let row of items">
+          <td class="px-4 py-3 text-sm text-gray-700">{{ row.id }}</td>
+          <td class="px-4 py-3 text-sm text-gray-700">{{ row.itemId }}</td>
+          <td class="px-4 py-3 text-sm text-gray-700">{{ row.salesOrderId || '-' }}</td>
+          <td class="px-4 py-3 text-sm text-gray-700">{{ row.quantity }}</td>
+          <td class="px-4 py-3 text-sm text-gray-700">{{ row.createdAt | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="items.length === 0">
+          <td colspan="5" class="px-4 py-6 text-center text-sm text-gray-500">No sales items yet. Create one to get started.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
