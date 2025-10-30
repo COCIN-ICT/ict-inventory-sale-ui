@@ -1,0 +1,120 @@
+/* Sales Promotion Create Component Styles */
+.promotion-form {
+  max-width: 4rem;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-select:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.validation-error {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.validation-warning {
+  color: #d97706;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.validation-info {
+  color: #2563eb;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .button-group {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}
+
+.btn-cancel {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-create {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background-color: #2563eb;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-create:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-create:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

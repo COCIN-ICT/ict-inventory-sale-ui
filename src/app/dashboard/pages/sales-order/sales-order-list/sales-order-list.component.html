@@ -1,0 +1,35 @@
+<div class="p-4">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-medium">Sales Orders</h2>
+    <a routerLink="/home/sales-order/create" class="btn btn-primary">Create</a>
+  </div>
+
+  <table class="min-w-full bg-white">
+    <thead>
+      <tr>
+        <th class="px-4 py-2 text-left">ID</th>
+        <th class="px-4 py-2 text-left">Customer</th>
+        <th class="px-4 py-2 text-left">Total Payable</th>
+        <th class="px-4 py-2 text-left">Total Paid</th>
+        <th class="px-4 py-2 text-left">Balance</th>
+        <th class="px-4 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let so of salesOrders">
+        <td class="px-4 py-2">{{ so.id }}</td>
+        <td class="px-4 py-2">{{ so.customerRequest?.name || so.customerName || '-' }}</td>
+        <td class="px-4 py-2">{{ so.totalPayable ?? (so.paymentsSummary?.totalPayable) }}</td>
+        <td class="px-4 py-2">{{ so.totalPaid ?? (so.paymentsSummary?.totalPaid) }}</td>
+        <td class="px-4 py-2">{{ so.balance ?? (so.paymentsSummary?.balance) }}</td>
+        <td class="px-4 py-2">
+          <button (click)="view(so.id)" class="px-2 py-1 mr-2 text-sm bg-gray-100 rounded">View</button>
+          <button (click)="edit(so.id)" class="px-2 py-1 text-sm bg-blue-600 text-white rounded">Edit</button>
+        </td>
+      </tr>
+      <tr *ngIf="!loading && salesOrders.length === 0">
+        <td colspan="6" class="px-4 py-4 text-center text-gray-500">No sales orders found</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

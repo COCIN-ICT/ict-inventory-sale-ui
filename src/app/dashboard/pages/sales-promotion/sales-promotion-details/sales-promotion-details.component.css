@@ -1,0 +1,128 @@
+/* Sales Promotion Details Component Styles */
+.promotion-details-container {
+  max-width: 4rem;
+  margin: 0 auto;
+}
+
+.details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.details-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.025em;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-back {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-edit {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background-color: #2563eb;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  background-color: #1d4ed8;
+}
+
+.details-section {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.detail-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.discount-type-badge {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem 0;
+  color: #6b7280;
+}
+
+.error-message {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}

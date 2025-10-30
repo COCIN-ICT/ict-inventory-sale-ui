@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
@@ -24,6 +24,24 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { AuthInterceptor } from './auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule  } from '@angular/material/icon';
+import { SalesOrderListComponent } from './dashboard/pages/sales-order/sales-order-list/sales-order-list.component';
+import { SalesOrderCreateComponent } from './dashboard/pages/sales-order/sales-order-create/sales-order-create.component';
+import { SalesOrderEditComponent } from './dashboard/pages/sales-order/sales-order-edit/sales-order-edit.component';
+import { SalesOrderService } from './services/sales-order.service';
+import { SalesCreditListComponent } from './dashboard/pages/sales-credit/sales-credit-list/sales-credit-list.component';
+import { SalesCreditCreateComponent } from './dashboard/pages/sales-credit/sales-credit-create/sales-credit-create.component';
+import { SalesCreditDetailsComponent } from './dashboard/pages/sales-credit/sales-credit-details/sales-credit-details.component';
+import { SalesCreditPendingComponent } from './dashboard/pages/sales-credit/sales-credit-pending/sales-credit-pending.component';
+import { SalesCreditService } from './services/sales-credit.service';
+import { SalesPromotionListComponent } from './dashboard/pages/sales-promotion/sales-promotion-list/sales-promotion-list.component';
+import { SalesPromotionCreateComponent } from './dashboard/pages/sales-promotion/sales-promotion-create/sales-promotion-create.component';
+import { SalesPromotionEditComponent } from './dashboard/pages/sales-promotion/sales-promotion-edit/sales-promotion-edit.component';
+import { SalesPromotionDetailsComponent } from './dashboard/pages/sales-promotion/sales-promotion-details/sales-promotion-details.component';
+import { SalesPromotionByStockComponent } from './dashboard/pages/sales-promotion/sales-promotion-by-stock/sales-promotion-by-stock.component';
+import { SalesPromotionService } from './services/sales-promotion.service';
+import { SalesItemsListComponent } from './dashboard/pages/sales-items/sales-items-list/sales-items-list.component';
+import { SalesItemsCreateComponent } from './dashboard/pages/sales-items/sales-items-create/sales-items-create.component';
+import { SalesItemService } from './services/sales-item.service';
 
 
 @NgModule({
@@ -36,13 +54,29 @@ import { MatIconModule  } from '@angular/material/icon';
     ContentComponent,
     MainComponent,
     EditSupplierComponent,
-    SupplierDetailsComponent
+    SupplierDetailsComponent,
+    SalesOrderListComponent,
+    SalesOrderCreateComponent,
+    SalesOrderEditComponent,
+    SalesCreditListComponent,
+    SalesCreditCreateComponent,
+    SalesCreditDetailsComponent,
+    SalesCreditPendingComponent,
+    SalesPromotionListComponent,
+    SalesPromotionCreateComponent,
+    SalesPromotionEditComponent,
+    SalesPromotionDetailsComponent,
+    SalesPromotionByStockComponent
+    ,
+    SalesItemsListComponent,
+    SalesItemsCreateComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     MatIconModule,
     
@@ -64,7 +98,12 @@ import { MatIconModule  } from '@angular/material/icon';
       multi: true
     },
     provideClientHydration(),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    SalesOrderService,
+    SalesCreditService,
+    SalesPromotionService
+    ,
+    SalesItemService
   ],
   bootstrap: [AppComponent]
 })

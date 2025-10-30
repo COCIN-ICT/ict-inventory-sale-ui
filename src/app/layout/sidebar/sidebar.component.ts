@@ -1,98 +1,70 @@
-
-
-
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  // Main section toggles
+  // Admin group toggles
   isAdminExpanded = false;
-  
-  // Admin subsection toggles
   isUserManagementExpanded = false;
   isSupplierManagementExpanded = false;
   isStoreManagementExpanded = false;
   isPurchaseQuotationsExpanded = false;
+  isSalesOrdersExpanded = false; // <--- added
+  isSalesItemsExpanded = false; // <--- new
+  isSalesCreditExpanded = false; // <--- added
+  isSalesPromotionExpanded = false; // <--- added
   isBankAccountsExpanded = false;
+
+  // Other group toggles
   isPurchaseItemsExpanded = false;
   isProductionOrderExpanded = false;
   isStockTransferExpanded = false;
+
+  // Items management nested toggles
   isItemsManagementExpanded = false;
-  isCustomerManagementExpanded = false;
-  
-  // Items Management nested toggles
   isUnitOfMeasureExpanded = false;
   isItemCategoriesExpanded = false;
   isItemsExpanded = false;
 
-  // Toggle methods for main sections
-  toggleAdmin(): void {
-    this.isAdminExpanded = !this.isAdminExpanded;
-  }
+  // Customer management
+  isCustomerManagementExpanded = false;
 
-  // Toggle methods for admin subsections
-  toggleUserManagement(): void {
-    this.isUserManagementExpanded = !this.isUserManagementExpanded;
-  }
+  constructor(private router: Router) {}
 
-  toggleSupplierManagement(): void {
-    this.isSupplierManagementExpanded = !this.isSupplierManagementExpanded;
-  }
+  // Top-level
+  toggleAdmin(): void { this.isAdminExpanded = !this.isAdminExpanded; }
 
-  toggleStoreManagement(): void {
-    this.isStoreManagementExpanded = !this.isStoreManagementExpanded;
-  }
+  // Admin children
+  toggleUserManagement(): void { this.isUserManagementExpanded = !this.isUserManagementExpanded; }
+  toggleSupplierManagement(): void { this.isSupplierManagementExpanded = !this.isSupplierManagementExpanded; }
+  toggleStoreManagement(): void { this.isStoreManagementExpanded = !this.isStoreManagementExpanded; }
+  togglePurchaseQuotations(): void { this.isPurchaseQuotationsExpanded = !this.isPurchaseQuotationsExpanded; }
+  toggleSalesOrders(): void { this.isSalesOrdersExpanded = !this.isSalesOrdersExpanded; }
+  toggleSalesItems(): void { this.isSalesItemsExpanded = !this.isSalesItemsExpanded; }
+  toggleSalesCredit(): void { this.isSalesCreditExpanded = !this.isSalesCreditExpanded; }
+  toggleSalesPromotion(): void { this.isSalesPromotionExpanded = !this.isSalesPromotionExpanded; }
+  toggleBankAccounts(): void { this.isBankAccountsExpanded = !this.isBankAccountsExpanded; }
 
-  togglePurchaseQuotations(): void {
-    this.isPurchaseQuotationsExpanded = !this.isPurchaseQuotationsExpanded;
-  }
+  // Others
+  togglePurchaseItems(): void { this.isPurchaseItemsExpanded = !this.isPurchaseItemsExpanded; }
+  toggleProductionOrder(): void { this.isProductionOrderExpanded = !this.isProductionOrderExpanded; }
+  toggleStockTransfer(): void { this.isStockTransferExpanded = !this.isStockTransferExpanded; }
 
-  toggleBankAccounts(): void {
-    this.isBankAccountsExpanded = !this.isBankAccountsExpanded;
-  }
+  // Items management nested toggles
+  toggleItemsManagement(): void { this.isItemsManagementExpanded = !this.isItemsManagementExpanded; }
+  toggleUnitOfMeasure(): void { this.isUnitOfMeasureExpanded = !this.isUnitOfMeasureExpanded; }
+  toggleItemCategories(): void { this.isItemCategoriesExpanded = !this.isItemCategoriesExpanded; }
+  toggleItems(): void { this.isItemsExpanded = !this.isItemsExpanded; }
 
-  togglePurchaseItems(): void {
-    this.isPurchaseItemsExpanded = !this.isPurchaseItemsExpanded;
-  }
+  // Customer
+  toggleCustomerManagement(): void { this.isCustomerManagementExpanded = !this.isCustomerManagementExpanded; }
 
-  toggleProductionOrder(): void {
-    this.isProductionOrderExpanded = !this.isProductionOrderExpanded;
-  }
-
-  toggleStockTransfer(): void {
-    this.isStockTransferExpanded = !this.isStockTransferExpanded;
-  }
-
-  toggleItemsManagement(): void {
-    this.isItemsManagementExpanded = !this.isItemsManagementExpanded;
-  }
-
-  toggleCustomerManagement(): void {
-    this.isCustomerManagementExpanded = !this.isCustomerManagementExpanded;
-  }
-
-  // Toggle methods for Items Management nested sections
-  toggleUnitOfMeasure(): void {
-    this.isUnitOfMeasureExpanded = !this.isUnitOfMeasureExpanded;
-  }
-
-  toggleItemCategories(): void {
-    this.isItemCategoriesExpanded = !this.isItemCategoriesExpanded;
-  }
-
-  toggleItems(): void {
-    this.isItemsExpanded = !this.isItemsExpanded;
-  }
-
-  // Logout method
+  // Logout - simple navigation; adapt to your auth flow if needed
   logout(): void {
-    // Add your logout logic here
-    console.log('Logging out...');
-    // Example: this.authService.logout();
-    // this.router.navigate(['/login']);
+    // If you have a logout action/service, call it here instead
+    this.router.navigate(['/login']);
   }
 }
