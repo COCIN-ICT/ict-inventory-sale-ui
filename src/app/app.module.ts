@@ -61,7 +61,7 @@ import { SalesItemService } from './services/sales-item.service';
     EditSupplierComponent,
     SupplierDetailsComponent,
 
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
     SalesOrderListComponent,
     SalesOrderCreateComponent,
     SalesOrderEditComponent,
