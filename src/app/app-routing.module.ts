@@ -5,6 +5,20 @@ import { AllUsersComponent } from './dashboard/pages/all-users/all-users.compone
 import { AuthGuard } from './auth/auth.guard';
 import { EditSupplierComponent } from './dashboard/pages/supplier-management/edit-supplier/edit-supplier.component';
 import { SupplierDetailsComponent } from './dashboard/pages/supplier-management/supplier-details/supplier-details.component';
+import { SalesOrderListComponent } from './dashboard/pages/sales-order/sales-order-list/sales-order-list.component';
+import { SalesOrderCreateComponent } from './dashboard/pages/sales-order/sales-order-create/sales-order-create.component';
+import { SalesOrderEditComponent } from './dashboard/pages/sales-order/sales-order-edit/sales-order-edit.component';
+import { SalesCreditListComponent } from './dashboard/pages/sales-credit/sales-credit-list/sales-credit-list.component';
+import { SalesCreditCreateComponent } from './dashboard/pages/sales-credit/sales-credit-create/sales-credit-create.component';
+import { SalesCreditDetailsComponent } from './dashboard/pages/sales-credit/sales-credit-details/sales-credit-details.component';
+import { SalesCreditPendingComponent } from './dashboard/pages/sales-credit/sales-credit-pending/sales-credit-pending.component';
+import { SalesPromotionListComponent } from './dashboard/pages/sales-promotion/sales-promotion-list/sales-promotion-list.component';
+import { SalesPromotionCreateComponent } from './dashboard/pages/sales-promotion/sales-promotion-create/sales-promotion-create.component';
+import { SalesPromotionEditComponent } from './dashboard/pages/sales-promotion/sales-promotion-edit/sales-promotion-edit.component';
+import { SalesPromotionDetailsComponent } from './dashboard/pages/sales-promotion/sales-promotion-details/sales-promotion-details.component';
+import { SalesPromotionByStockComponent } from './dashboard/pages/sales-promotion/sales-promotion-by-stock/sales-promotion-by-stock.component';
+import { SalesItemsListComponent } from './dashboard/pages/sales-items/sales-items-list/sales-items-list.component';
+import { SalesItemsCreateComponent } from './dashboard/pages/sales-items/sales-items-create/sales-items-create.component';
 
 
 const routes: Routes = [
@@ -60,9 +74,27 @@ const routes: Routes = [
       //purchase order
       //{ path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
 
- 
-   
-     
+      { path: 'sales-order', component: SalesOrderListComponent },
+      { path: 'sales-order/create', component: SalesOrderCreateComponent },
+      { path: 'sales-order/:id/edit', component: SalesOrderEditComponent },
+      { path: 'sales-order/:id', component: SalesOrderEditComponent }, // or view component if added
+
+      // Sales Credit Routes
+      { path: 'sales-credit', component: SalesCreditListComponent },
+      { path: 'sales-credit/create', component: SalesCreditCreateComponent },
+      { path: 'sales-credit/:id', component: SalesCreditDetailsComponent },
+      { path: 'sales-credit/pending', component: SalesCreditPendingComponent },
+
+      // Sales Promotion Routes
+      { path: 'sales-promotion', component: SalesPromotionListComponent },
+      { path: 'sales-promotion/create', component: SalesPromotionCreateComponent },
+      { path: 'sales-promotion/:id', component: SalesPromotionDetailsComponent },
+      { path: 'sales-promotion/:id/edit', component: SalesPromotionEditComponent },
+      { path: 'sales-promotion/by-stock', component: SalesPromotionByStockComponent },
+
+      // Sales Items Routes
+      { path: 'sales-items', component: SalesItemsListComponent },
+      { path: 'sales-items/create', component: SalesItemsCreateComponent },
 
     ]
   },

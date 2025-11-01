@@ -1,0 +1,139 @@
+<div class="container mx-auto px-4 sm:px-6 py-4 sm:py-6 max-w-4xl">
+  <div class="bg-white shadow-xl rounded-lg p-4 sm:p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h4 class="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">Sales Promotion Details</h4>
+      <div class="flex space-x-2">
+        <button (click)="goBack()" 
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-200">
+          Back to List
+        </button>
+        <button (click)="editPromotion()" 
+          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200">
+          Edit Promotion
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-8">
+      <div class="text-gray-500">Loading promotion details...</div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage && !loading" class="bg-red-50 text-red-700 border border-red-200 px-4 py-3 rounded-lg mb-4">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Promotion Details -->
+    <div *ngIf="!loading && promotion" class="space-y-6">
+      <!-- Basic Information -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Promotion ID</label>
+            <div class="text-lg font-semibold text-gray-900">#{{ promotion.id }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
+            <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full" [class]="getStatusColor(promotion.startDate, promotion.endDate)">
+              {{ getStatusText(promotion.startDate, promotion.endDate) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock Information -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-900 mb-4">Stock Information</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Stock ID</label>
+            <div class="text-lg font-semibold text-gray-900">#{{ promotion.stockId }}</div>
+          </div>
+          <div *ngIf="promotion.stock">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Stock Name</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.stock.name }}</div>
+          </div>
+          <div *ngIf="promotion.stock">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Location</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.stock.location }}</div>
+          </div>
+          <div *ngIf="promotion.stock">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Store Type</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.stock.storeType }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Promotion Details -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-900 mb-4">Promotion Details</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Discount Type</label>
+            <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full" [class]="getDiscountTypeColor(promotion.discountType)">
+              {{ promotion.discountType }}
+            </span>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Discount Value</label>
+            <div class="text-lg font-semibold text-gray-900">{{ getDiscountDisplayValue(promotion.discountType, promotion.discountValue) }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Minimum Quantity</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.minimumQuantity }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date Information -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-900 mb-4">Date Information</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Start Date</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.startDate | date:'medium' }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">End Date</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.endDate | date:'medium' }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Created At</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.createdAt | date:'medium' }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Updated At</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.updatedAt | date:'medium' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unit Information (if available) -->
+      <div *ngIf="promotion.stock?.unit" class="bg-gray-50 rounded-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-900 mb-4">Unit Information</h5>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Unit Name</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.stock?.unit?.name }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Description</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.stock?.unit?.description }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Address</label>
+            <div class="text-lg font-semibold text-gray-900">{{ promotion.stock?.unit?.address }}</div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
+            <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full" [class]="promotion.stock?.unit?.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+              {{ promotion.stock?.unit?.active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
