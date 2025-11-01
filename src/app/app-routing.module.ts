@@ -67,8 +67,10 @@ const routes: Routes = [
 
       { path: 'stock-transfer', loadChildren: () => import('./dashboard/pages/stock-transfer/stock-transfer.module').then(m => m.StockTransferModule) },
 
+    
       { path: 'pricing', loadChildren: () => import('./dashboard/pages/pricing/pricing.module').then(m => m.PricingModule) },
 
+      { path: 'stock-detail', loadChildren: () => import('./dashboard/pages/stock-detail/stock-detail.module').then(m => m.StockDetailModule) },
       //purchase order
       //{ path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
 

@@ -20,7 +20,7 @@
         placeholder="Enter department name"
       />
     </div>
-    <p class="mt-2 text-sm text-red-600" *ngIf="form.get('name')?.hasError('required')">
+    <p class="mt-2 text-sm text-red-600" *ngIf="form.get('name')?.touched && form.get('name')?.hasError('required')">
       Name is required
     </p>
   </div>
@@ -35,7 +35,7 @@
       formControlName="departmentHeadId"
       class="block w-full rounded-lg border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500 transition duration-150 ease-in-out p-3 text-gray-900"
     >
-      <option [value]="null">-- N/A --</option>
+      <option [value]="null">Select a department head</option>
       <ng-container *ngFor="let head of departmentHeads">
         <option [value]="head.id">
           {{ head.firstName }} {{ head.lastName }}

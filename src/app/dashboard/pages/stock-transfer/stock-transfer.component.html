@@ -1,92 +1,95 @@
-<div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-    Stock Transfer
-  </h2>
+<!-- Transfer Button -->
+<button 
+  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+  (click)="openTransferModal()">
+  Stock Transfer
+</button>
 
-  <form [formGroup]="transferForm" (ngSubmit)="submitTransfer()" class="space-y-5">
-
-    <!-- Source Type -->
-    <div>
-      <label class="block text-gray-700 font-medium mb-2">Source Type</label>
-      <select
-        class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        (change)="onSourceTypeSelected($any($event.target).value)"
-      >
-        <option value="">Select Source Type</option>
-        <option value="PRIMARY">Primary Store</option>
-        <option value="SECONDARY">Secondary Store</option>
-      </select>
+<!-- Modal -->
+<div 
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  
+  <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6 relative">
+    
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">Stock Transfer</h2>
+      <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
     </div>
 
-    <!-- Item -->
-    <div>
-      <label class="block text-gray-700 font-medium mb-2">Item</label>
-      <select
-        formControlName="itemId"
-        class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-        <option value="">Select Item</option>
-        <option *ngFor="let item of items" [value]="item.id">
-          {{ item.name }}
-        </option>
-      </select>
-      <small *ngIf="transferForm.get('itemId')?.invalid && transferForm.get('itemId')?.touched" class="text-red-500">
-        Please select an item
-      </small>
-    </div>
+    <form [formGroup]="transferForm" (ngSubmit)="submitTransfer()" class="space-y-4">
 
-    <!-- Quantity -->
-    <div>
-      <label class="block text-gray-700 font-medium mb-2">Quantity</label>
-      <input
-        type="number"
-        formControlName="quantity"
-        placeholder="Enter quantity"
-        class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-      <small *ngIf="transferForm.get('quantity')?.invalid && transferForm.get('quantity')?.touched" class="text-red-500">
-        Quantity must be at least 1
-      </small>
-    </div>
+      <!-- Transfer Type -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Transfer Type</label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2">
+            <input 
+              type="radio" 
+              formControlName="transferType" 
+              value="internal" 
+              (change)="onTransferTypeChange()" />
+            <span>Internal</span>
+          </label>
+          <label class="flex items-center gap-2">
+            <input 
+              type="radio" 
+              formControlName="transferType" 
+              value="external" 
+              (change)="onTransferTypeChange()" />
+            <span>External</span>
+          </label>
+        </div>
+      </div>
 
-    <!-- Reason -->
-    <div>
-      <label class="block text-gray-700 font-medium mb-2">Reason</label>
-      <textarea
-        formControlName="reason"
-        rows="3"
-        placeholder="Enter transfer reason"
-        class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      ></textarea>
-      <small *ngIf="transferForm.get('reason')?.invalid && transferForm.get('reason')?.touched" class="text-red-500">
-        Please provide a reason
-      </small>
-    </div>
+      <!-- Quantity -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+        <input 
+          type="number"
+          formControlName="quantity"
+          class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-400"
+          placeholder="Enter quantity" />
+      </div>
 
-    <!-- Destination Store -->
-    <div>
-      <label class="block text-gray-700 font-medium mb-2">Destination Store</label>
-      <select
-        formControlName="destinationStoreId"
-        class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-        <option value="">Select Destination Store</option>
-        <option *ngFor="let store of destinationStores" [value]="store.id">
-          {{ store.name }} ({{ store.storeType }} - {{ store.unit.name }})
-        </option>
-      </select>
-      <small *ngIf="transferForm.get('destinationStoreId')?.invalid && transferForm.get('destinationStoreId')?.touched" class="text-red-500">
-        Please select a destination store
-      </small>
-    </div>
+      <!-- Reason -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+        <textarea
+          formControlName="reason"
+          rows="3"
+          class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-400"
+          placeholder="Enter reason for transfer"></textarea>
+      </div>
 
-    <!-- Submit Button -->
-    <button
-      type="submit"
-      [disabled]="loading || transferForm.invalid"
-      class="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 transition-colors duration-200"
-    >
-      {{ loading ? 'Processing...' : 'Submit Transfer' }}
-    </button>
-  </form>
+      <!-- Destination Store -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Destination Store</label>
+        <select 
+          formControlName="destinationStoreId"
+          class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-blue-400">
+          <option value="">Select destination store</option>
+          <option *ngFor="let store of destinationStores" [value]="store.id">
+            {{ store.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="pt-4 flex justify-end gap-3">
+        <button 
+          type="button"
+          (click)="closeModal()"
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg">
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          [disabled]="transferForm.invalid || loading"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+          {{ loading ? 'Processing...' : 'Transfer' }}
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

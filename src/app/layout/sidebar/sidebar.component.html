@@ -457,37 +457,9 @@
         </ul>
       </li>
 
-      <!-- Stock Transfer - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="toggleStockTransfer()"
-          [class.bg-blue-50]="isStockTransferExpanded"
-          [class.text-blue-600]="isStockTransferExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>sync_alt</mat-icon>
-            </span>
-            Stock Transfer
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isStockTransferExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isStockTransferExpanded, 'max-h-96': isStockTransferExpanded}">
-          <li><a routerLink="/home/stock-transfer" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Stock Transfer</a></li>
-        </ul>
-      </li>
+     
+
+     
 
       <!-- Items Management - Collapsible with Nested Items -->
       <li>

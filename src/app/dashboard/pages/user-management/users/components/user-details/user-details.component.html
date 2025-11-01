@@ -94,27 +94,37 @@
             </ng-container>
           </div>
 
-           <div>
-  <label class="block text-gray-700 font-medium mb-1">Roles</label>
 
-  <!-- Show when not editing -->
-  <ng-container *ngIf="!isEditMode">
-    <p class="text-gray-900 font-bold">{{ user.resolvedRoleNames }}</p>
-  </ng-container>
 
-  <!-- Show when editing -->
-  <ng-container *ngIf="isEditMode">
-    <select 
-      formControlName="roles" 
-      multiple 
-      class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
-      
-      <option *ngFor="let role of roles" [ngValue]="role.id">
-        {{ role.roleName }}
-      </option>
-    </select>
-  </ng-container>
-          </div>
+
+          <div class="flex items-center space-x-3">
+  <div>
+    <span *ngIf="!editRoleMode">
+      {{ userRolesDisplay }}
+    </span>
+
+    <div *ngIf="editRoleMode" class="flex flex-wrap gap-2">
+      <label *ngFor="let role of availableRoles" class="flex items-center space-x-1">
+        <input
+          type="checkbox"
+          [value]="role.id"
+          [checked]="selectedRoleIds.includes(role.id)"
+          (change)="onRoleSelect(role.id, $event)">
+        <span>{{ role.roleName }}</span>
+      </label>
+    </div>
+  </div>
+
+  <button *ngIf="!editRoleMode" (click)="editRoleMode = true" class="text-blue-600">Edit</button>
+  <button type="button" *ngIf="editRoleMode" (click)="updateUserRoles()" class="text-green-600">Update</button>
+</div>
+
+
+
+
+
+
+           
 
 
 
@@ -139,9 +149,9 @@
 
         <div class="flex justify-end space-x-2">
           <ng-container *ngIf="!isEditMode">
-            <button (click)="toggleEditMode()" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
+            <a (click)="toggleEditMode()" type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
               <i class="fas fa-edit mr-2"></i> Edit User
-            </button>
+            </a>
           </ng-container>
 
           <ng-container *ngIf="isEditMode">

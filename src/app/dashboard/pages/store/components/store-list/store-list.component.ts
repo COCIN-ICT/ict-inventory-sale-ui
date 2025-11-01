@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UnitService } from '../../../../../services/unit.service';
 import { StoreFormComponent } from '../store-form/store-form.component';
 import { Department, DepartmentsService } from '../../../../../services/departments.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-store-list',
@@ -26,7 +27,8 @@ export class StoreListComponent implements OnInit {
               public dialog: MatDialog,
               private unitService: UnitService,
               private cdr: ChangeDetectorRef,
-              private departmentService: DepartmentsService) { }
+              private departmentService: DepartmentsService,
+              private router: Router) { }
   ngOnInit(): void {
     this.loadStores();
     this.loadUnits();
@@ -133,6 +135,16 @@ openEditForm(store: Store): void {
     }
   });
 }
+
+
+
+//   openStoreDetails(store: Store): void {
+//   console.log('Store being sent:', store);
+//   this.router.navigate(['/store-details'], { state: { stock: store } });
+// }
+
+
+
 
 
 

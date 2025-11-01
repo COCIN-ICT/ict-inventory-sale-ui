@@ -6,19 +6,28 @@ import { StoreComponent } from './store.component';
 import { StoreFormComponent } from './components/store-form/store-form.component';
 import { StoreListComponent } from './components/store-list/store-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreDetailsComponent } from './components/store-details/store-details.component';
+import { StockDetailsComponent } from './components/stock-details/stock-details.component';
+import { StockTransferModule } from '../stock-transfer/stock-transfer.module';
+import { PricingModule } from "../pricing/pricing.module";
 
 
 @NgModule({
   declarations: [
     StoreComponent,
     StoreFormComponent,
-    StoreListComponent
+    StoreListComponent,
+    StoreDetailsComponent,
+    StockDetailsComponent,
+   
   ],
   imports: [
     CommonModule,
     FormsModule,
-   ReactiveFormsModule,
-    StoreRoutingModule
-  ]
+    ReactiveFormsModule,
+    StoreRoutingModule,
+    StockTransferModule,
+    PricingModule
+]
 })
 export class StoreModule { }

@@ -32,6 +32,13 @@ export class UserService {
     console.log("Sending to backend:", payload);
   return this.http.put<User>(`${API_URL}/${id}`, payload);
 }
+
+  addRolesToUser(userId: number, roleIds: number[]): Observable<any> {
+  const body = { userId, roleIds };
+  return this.http.patch(`${API_URL}`, body);
+}
+
+
  getUserByUsername(username: string): Observable<User> {
   return this.http.get<User>(`${API_URL}/username/${username}`);
 }

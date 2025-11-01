@@ -24,6 +24,10 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { AuthInterceptor } from './auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule  } from '@angular/material/icon';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+
 import { SalesOrderListComponent } from './dashboard/pages/sales-order/sales-order-list/sales-order-list.component';
 import { SalesOrderCreateComponent } from './dashboard/pages/sales-order/sales-order-create/sales-order-create.component';
 import { SalesOrderEditComponent } from './dashboard/pages/sales-order/sales-order-edit/sales-order-edit.component';
@@ -44,6 +48,7 @@ import { SalesItemsCreateComponent } from './dashboard/pages/sales-items/sales-i
 import { SalesItemService } from './services/sales-item.service';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,6 +60,8 @@ import { SalesItemService } from './services/sales-item.service';
     MainComponent,
     EditSupplierComponent,
     SupplierDetailsComponent,
+
+    ConfirmDialogComponent
     SalesOrderListComponent,
     SalesOrderCreateComponent,
     SalesOrderEditComponent,
@@ -70,6 +77,7 @@ import { SalesItemService } from './services/sales-item.service';
     ,
     SalesItemsListComponent,
     SalesItemsCreateComponent
+
   ],
   imports: [
     BrowserModule,
@@ -79,6 +87,8 @@ import { SalesItemService } from './services/sales-item.service';
     FormsModule,
     HttpClientModule,
     MatIconModule,
+    MatDialogModule,
+    MatButtonModule,
     
     
     

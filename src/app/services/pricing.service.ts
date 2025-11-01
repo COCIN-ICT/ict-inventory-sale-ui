@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Pricing as PricingModel } from '../dashboard/pages/pricing/pricing.model';
 
 
-const API_URL = `${environment.apiUrl}/bank-account`;
+const API_URL = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +14,7 @@ export class PricingService {
 
   
   createPricing(pricingModel: PricingModel): Observable<PricingModel> {
-    return this.http.post<PricingModel>(API_URL, pricingModel);
+    return this.http.post<PricingModel>(`${API_URL}/pricing`, pricingModel);
   }
   getPricingByID(id: number): Observable<PricingModel[]> {
     return this.http.get<PricingModel[]>(`${API_URL}/${id}`);
@@ -26,5 +26,9 @@ export class PricingService {
 
   getPricingByStock(stockId: number): Observable<PricingModel[]> {
     return this.http.get<PricingModel[]>(`${API_URL}/stock/${stockId}`);
+  }
+
+  getStock(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_URL}/stock`);
   }
 }

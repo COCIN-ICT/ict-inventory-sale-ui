@@ -25,7 +25,7 @@ export class StockTransferService {
      return this.http.get<Item[]>(`${API_URL}/item`);
    }
 
-   createStockTransfer(data: any): Observable<StockTransfer[]> {
+   transferStock(data: any): Observable<StockTransfer[]> {
     return this.http.post<StockTransfer[]>(`${API_URL}/stock/transfer`, data);
   }
 }
