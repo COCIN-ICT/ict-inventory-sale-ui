@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreDetailsComponent } from './components/store-details/store-details.component';
 import { StockDetailsComponent } from './components/stock-details/stock-details.component';
 import { StockTransferModule } from '../stock-transfer/stock-transfer.module';
+import { PricingModule } from "../pricing/pricing.module";
 
 
 @NgModule({
@@ -23,9 +24,10 @@ import { StockTransferModule } from '../stock-transfer/stock-transfer.module';
   imports: [
     CommonModule,
     FormsModule,
-   ReactiveFormsModule,
+    ReactiveFormsModule,
     StoreRoutingModule,
-    StockTransferModule
-  ]
+    StockTransferModule,
+    PricingModule
+]
 })
 export class StoreModule { }

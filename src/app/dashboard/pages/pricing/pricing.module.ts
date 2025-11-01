@@ -15,6 +15,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     PricingRoutingModule
-  ]
+  ],
+  exports: [
+      PricingComponent
+    ]
 })
 export class PricingModule { }

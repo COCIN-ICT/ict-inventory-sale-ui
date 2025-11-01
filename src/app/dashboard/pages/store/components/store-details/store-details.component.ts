@@ -40,7 +40,7 @@ export class StoreDetailsComponent {
     private toast: ToastService,
     private storeService: StoreService,
     private fb: FormBuilder,
-    private pricingService: PricingService,
+    private pricingService: PricingService
   ) {}
  
   ngOnInit(): void {
@@ -70,8 +70,14 @@ export class StoreDetailsComponent {
 
   onUpdatePrice(){}
 
+  // loadStock(): void {
+  //   this.pricingService.getStock().subscribe({
+  //     next: (stockList) => (this.allStocks = stockList),
+  //     error: (err) => console.log('Failed to load stock', err),
+  //   });
+  // }
   loadStock(): void {
-    this.pricingService.getStock().subscribe({
+    this.storeService.getStockByStoreId(this.id).subscribe({
       next: (stockList) => (this.allStocks = stockList),
       error: (err) => console.log('Failed to load stock', err),
     });

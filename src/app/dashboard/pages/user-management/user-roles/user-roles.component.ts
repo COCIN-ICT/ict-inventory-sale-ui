@@ -4,6 +4,8 @@ import { Role, Permission } from './role.model';
 import { forkJoin } from 'rxjs';
 import { ToastService } from '../../../../services/toast.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-roles',
@@ -29,8 +31,11 @@ export class UserRolesComponent implements OnInit {
 
 
   
-
-  constructor(private rolesService: RolesService, private toast: ToastService, private router: Router) {}
+  constructor(
+    private rolesService: RolesService, 
+    private toast: ToastService, 
+    private router: Router,
+    private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadRoles();
@@ -69,12 +74,10 @@ export class UserRolesComponent implements OnInit {
           this.roles.unshift(createdRole);
           this.toast.success('Role created successfully!');
           // this.successMessage = 'Role and all permissions attached successfully!';
-          this.roleCreated = true;
-          this.resetRoleForm();
-
+         
           // ✅ Auto close modal and clear message after 2.5s
           setTimeout(() => {
-             this.router.navigate(['/home/users-roles']);
+             this.router.navigate(['/home/user-management/user-roles']);
             this.isRoleModalOpen = false;
             // this.successMessage = null;
           }, 1000);
@@ -251,7 +254,12 @@ editRole(role: Role) {
   // });
   // }
     deleteRole(roleId: Role): void {
-    if( !confirm('Are you sure you want to delete this role?')) return;
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Delete role', message: 'Are you sure you want to delete this role?' }
+    });
+
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
 
     //Detach all permissions first from the role
     const detachCalls = (roleId.permissions || []).map(p =>
@@ -278,5 +286,6 @@ editRole(role: Role) {
         });
       }
     })
+  });
+    }
   }
-}

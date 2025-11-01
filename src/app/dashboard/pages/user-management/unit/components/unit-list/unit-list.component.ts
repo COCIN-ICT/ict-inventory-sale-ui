@@ -24,8 +24,9 @@ export class UnitListComponent implements OnInit {
               private departmentService: DepartmentsService) { }
 
   ngOnInit(): void {
-    this.loadUnits();
     this.loadDepartments();
+    this.loadUnits();
+    
   }
 
   onDepartmentSelected(departmentId: string): void {
@@ -48,7 +49,10 @@ export class UnitListComponent implements OnInit {
 
   private loadDepartments(): void {
     this.departmentService.getDepartments().subscribe({
-      next: (deps) => this.departments = deps,
+      next: (deps) => {this.departments = deps;
+        this.loadUnits();
+        
+      },
       error: (err) => console.error('Error loading departments:', err)
     });
   }

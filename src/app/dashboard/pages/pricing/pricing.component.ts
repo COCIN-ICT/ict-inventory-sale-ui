@@ -4,6 +4,7 @@ import { PricingService } from '../../../services/pricing.service';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../../../services/toast.service';
 import { Pricing } from '../pricing/pricing.model';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -13,65 +14,82 @@ import { Pricing } from '../pricing/pricing.model';
 })
 export class PricingComponent {
   pricingForm!: FormGroup;
-  availableStock: any;
-  stocks: any[] = [];
-  isSubmitting = false;
-  message = '';
-
+  stockId!: number;
+  isEditMode = false;
+  buttonLabel = 'Save Price';
   constructor(
     private fb: FormBuilder,
     private pricingService: PricingService,
     private toast: ToastService,
-    private http: HttpClient
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    this.pricingForm = this.fb.group({
-      availableStock: ['', Validators.required],
-      price: ['', [Validators.required, Validators.min(1)]],
-    });
-
-    this.loadStock();
-
+   ngOnInit(): void {
+    this.initializeForm();
+    this.getStockIdFromRoute();
+    this.loadPricingByStockId();
   }
 
-  loadStock(): void {
-    this.pricingService.getStock().subscribe({
-      next: (stock) => (this.stocks = stock),
-      error: (err) => console.log('Failed to load stock', err),
+  initializeForm(): void {
+    this.pricingForm = this.fb.group({
+      price: ['', [Validators.required, Validators.min(1)]],
+    });
+  }
+
+  getStockIdFromRoute(): void {
+    this.stockId = Number(this.route.snapshot.paramMap.get('id'));
+  }
+
+  loadPricingByStockId(): void {
+    this.pricingService.getPricingByStock(this.stockId).subscribe({
+      next: (res) => {
+        if (res && res.length > 0) {
+          this.isEditMode = true;
+          this.buttonLabel = 'Update Price';
+          this.pricingForm.patchValue({ price: res[0].price });
+        }
+      },
+      error: (err) => console.error('Error loading pricing', err),
     });
   }
 
   onSubmit(): void {
-    if(this.pricingForm.invalid) return;
+    if (this.pricingForm.invalid) {
+      this.pricingForm.markAllAsTouched();
+      return;
+    }
 
-    this.isSubmitting = true;
-    this.message = '';
-
+    const formValue = this.pricingForm.value;
     const payload: Pricing = {
-      stockId: this.pricingForm.value.availableStock,
-      price: this.pricingForm.value.price,
+      stockId: this.stockId,
+      price: formValue.price,
     };
 
+    if (this.isEditMode) {
+      this.updatePricing(payload);
+    } else {
+      this.createPricing(payload);
+    }
+  }
+
+  createPricing(payload: Pricing): void {
     this.pricingService.createPricing(payload).subscribe({
-      next: (response) => {
-        this.toast.success('Pricing created successfully');
-        this.pricingForm.reset();
-        this.loadStock();
-        this.isSubmitting = false;
+      next: (res) => {
+        alert('Price saved successfully!');
+        this.isEditMode = true;
+        this.buttonLabel = 'Update Price';
       },
-      error: (err) => {
-        this.toast.error(err.error.message);
-        this.isSubmitting = false;
-      },
+      error: (err) => console.error('Error creating pricing', err),
     });
   }
 
-  
-
-
-
-
-
+  updatePricing(payload: Pricing): void {
+    this.pricingService.updatePricing(this.stockId, payload).subscribe({
+      next: (res) => {
+        alert('Price updated successfully!');
+      },
+      error: (err) => console.error('Error updating pricing', err),
+    });
+  }
 
 }

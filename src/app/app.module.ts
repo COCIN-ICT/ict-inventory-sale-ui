@@ -24,6 +24,9 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { AuthInterceptor } from './auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule  } from '@angular/material/icon';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -36,7 +39,8 @@ import { MatIconModule  } from '@angular/material/icon';
     ContentComponent,
     MainComponent,
     EditSupplierComponent,
-    SupplierDetailsComponent
+    SupplierDetailsComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +49,8 @@ import { MatIconModule  } from '@angular/material/icon';
     ReactiveFormsModule,
     HttpClientModule,
     MatIconModule,
+    MatDialogModule,
+    MatButtonModule,
     
     
     

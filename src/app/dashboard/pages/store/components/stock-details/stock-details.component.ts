@@ -28,8 +28,12 @@ export class StockDetailsComponent {
   
     showAddPriceModal = false;
 
+    store: any;
+    stock: any;
     storeId!: number;
     stockId!: number;
+    storeType: string = '';
+
 
     searchTerm: string = ''; 
   
@@ -51,7 +55,7 @@ export class StockDetailsComponent {
   
     ngOnInit(): void {
         this.storeId = Number(this.route.snapshot.paramMap.get('storeId'));
-        this.stockId = Number(this.route.snapshot.paramMap.get('id'));
+        this.stockId = Number(this.route.snapshot.paramMap.get('stockId'));
 
         console.log('Store ID:', this.storeId);
         console.log('Stock ID:', this.stockId);
@@ -61,7 +65,29 @@ export class StockDetailsComponent {
           });
       this.loadStockDetails();
       this.loadStock();
+
+      this.loadStoreDetails();
     }
+
+    loadStoreDetails(): void {
+      this.storeService.getStoreById(this.storeId).subscribe({
+        next: (res) => {
+          this.store = res;
+          this.storeType = res.storeType || '';
+        },
+        error: (err) => {
+          console.error('Failed to load store details:', err);
+        }
+      });
+    }
+
+    openStockTransferModal() {
+    this.toast.info('Opening Stock Transfer Modal...'); // Placeholder
+  }
+
+  openAddPricingModal() {
+    this.toast.info('Opening Add Pricing Modal...'); // Placeholder
+  }
   
     loadStockDetails() {
   this.storeService.getStockByStoreId(this.storeId).subscribe({

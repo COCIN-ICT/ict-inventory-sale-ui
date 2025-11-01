@@ -14,7 +14,7 @@ export class PricingService {
 
   
   createPricing(pricingModel: PricingModel): Observable<PricingModel> {
-    return this.http.post<PricingModel>(API_URL, pricingModel);
+    return this.http.post<PricingModel>(`${API_URL}/pricing`, pricingModel);
   }
   getPricingByID(id: number): Observable<PricingModel[]> {
     return this.http.get<PricingModel[]>(`${API_URL}/${id}`);
