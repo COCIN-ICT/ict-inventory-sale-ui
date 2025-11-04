@@ -3,7 +3,7 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse
 import { catchError, switchMap, throwError, BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastService } from './services/toast.service';
-import { RefreshTokenService } from './services/refresh-token.service';
+import { AuthLoginService } from './services/auth-login.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     private toastService: ToastService,
-    private refreshTokenService: RefreshTokenService
+    private authLoginService: AuthLoginService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -59,7 +59,7 @@ export class AuthInterceptor implements HttpInterceptor {
       }
 
       // 🔁 Call refresh token service
-      return this.refreshTokenService.refreshToken(refreshToken).pipe(
+      return this.authLoginService.refreshToken(refreshToken).pipe(
         switchMap((response: any) => {
           this.isRefreshing = false;
 

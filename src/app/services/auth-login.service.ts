@@ -10,7 +10,7 @@ const API_URL = `${environment.apiUrl}/auth/refresh`;
 @Injectable({
   providedIn: 'root'
 })
-export class RefreshTokenService {
+export class AuthLoginService {
 
   constructor(private http: HttpClient) { }
 
@@ -22,6 +22,8 @@ export class RefreshTokenService {
 refreshToken(refreshToken: string): Observable<any> {
     return this.http.post<any>(`${API_URL}`, { refreshToken });
   }
+
+  
 
 
 }

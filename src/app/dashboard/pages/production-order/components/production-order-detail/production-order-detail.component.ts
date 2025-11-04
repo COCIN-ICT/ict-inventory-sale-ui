@@ -5,6 +5,7 @@ import { ProductionOrderService } from '../../../../../services/production-order
 import { ProductionInputItemService } from '../../../../../services/production-input-item.service';
 import { ProductionOrderResponse as ProductionOrder } from '../../../../../api/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ItemService } from '../../../../../services/item.service';
 
 
 @Component({
@@ -21,9 +22,12 @@ export class ProductionOrderDetailComponent {
   showAddModal = false;
   addInputItemForm!: FormGroup;
 
+   items: any[] = [];
+
   constructor(
     private productionOrdersService: ProductionOrderService,
     private productionInputItemService: ProductionInputItemService,
+    private itemService: ItemService,
     private toast: ToastService,
     private router: Router,
     private route: ActivatedRoute,
@@ -33,6 +37,7 @@ export class ProductionOrderDetailComponent {
   ngOnInit() {
     this.orderId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadProductionOrder();
+    this.loadItems();
 
     this.addInputItemForm = this.fb.group({
       itemId: ['', Validators.required],
@@ -55,6 +60,19 @@ export class ProductionOrderDetailComponent {
         this.errorMessage = 'Failed to load production order.';
         this.productionOrder = null;
         this.isLoading = false;
+      }
+    });
+  }
+
+  loadItems(): void {
+    this.itemService.getAllItems().subscribe({
+      next: (res: any) => {
+        this.items = res.data || res.result || res || [];
+        console.log('Available items:', this.items);
+      },
+      error: (err) => {
+        console.error('Error loading items', err);
+        this.toast.error('Failed to load items.');
       }
     });
   }
@@ -177,6 +195,11 @@ finishOrder() {
       this.isLoading = false;
     }
   });
+}
+
+canAddItems(): boolean {
+  return this.productionOrder?.status !== 'DISPENSED' && 
+         this.productionOrder?.status !== 'COMPLETED';
 }
 
 

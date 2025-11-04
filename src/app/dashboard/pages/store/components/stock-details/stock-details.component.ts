@@ -89,21 +89,56 @@ export class StockDetailsComponent {
     this.toast.info('Opening Add Pricing Modal...'); // Placeholder
   }
   
-    loadStockDetails() {
+    zloadStockDetails() {
   this.storeService.getStockByStoreId(this.storeId).subscribe({
     next: (res) => {
+    //  this.stocks = res
       console.log('Stock list:', res);
-      const stock = res.find((s: any) => s.id === this.stockId);
+      const list = (res as any).data || res;
+      const stock = list.find((s: any) => s.id === this.stockId);
+      if (stock) {
+        this.stocks = stock;
+        
+        this.batches = stock.batches || [];
+        this.promotions = stock.promotions || [];
+        this.pricePerUnit = stock.pricePerUnit || 0;
+      } else {
+        console.log('Stock list2:', this.stocks);
+        console.warn('Stock not found in store list');
+      }
+    },
+    error: (err) => console.error('Error fetching stock details:', err)
+  });
+}
+
+loadStockDetails() {
+  this.storeService.getStockByStoreId(this.storeId).subscribe({
+    next: (res) => {
+      console.log('Raw stock response:', res);
+
+      // Handle both array or wrapped response
+      const list = (res as any).data || res;
+
+      if (!Array.isArray(list)) {
+        console.error('Expected array but got:', list);
+        return;
+      }
+
+      // Find stock by matching numeric IDs
+      const stock = list.find((s: any) => s.id === +this.stockId);
+
       if (stock) {
         this.stocks = stock;
         this.batches = stock.batches || [];
         this.promotions = stock.promotions || [];
         this.pricePerUnit = stock.pricePerUnit || 0;
+
+        console.log('✅ Found stock details:', this.stocks);
       } else {
-        console.warn('Stock not found in store list');
+        console.warn('⚠️ Stock not found in store list');
       }
     },
-    error: (err) => console.error('Error fetching stock details:', err)
+    error: (err) => console.error('❌ Error fetching stock details:', err)
   });
 }
 
