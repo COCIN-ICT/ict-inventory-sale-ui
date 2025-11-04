@@ -1,65 +1,112 @@
-import { HttpInterceptorFn } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent,HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { catchError, switchMap, throwError, BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastService } from './services/toast.service';
+import { RefreshTokenService } from './services/refresh-token.service';
 
-
-@Injectable() 
+@Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private toastService: ToastService) {}
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+
+  constructor(
+    private router: Router,
+    private toastService: ToastService,
+    private refreshTokenService: RefreshTokenService
+  ) {}
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
+
+    let headers: any = {};
     if (token) {
-      // Don't set Content-Type for FormData requests - let browser set it with boundary
-      const headers: any = {
-        Authorization: `Bearer ${token}`
-      };
-      
-      // Only set Content-Type for non-FormData requests
+      headers['Authorization'] = `Bearer ${token}`;
       if (!(req.body instanceof FormData)) {
         headers['Content-Type'] = 'application/json';
       }
-      
-      req = req.clone({
-        setHeaders: headers
-      });
     }
-    return next.handle(req).pipe(
+
+    const clonedReq = req.clone({ setHeaders: headers });
+
+    return next.handle(clonedReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        //token expired or unauthorized
-        if (error.status === 401 || error.status === 403) {
-          localStorage.removeItem('token');
-          this.toastService.error('Session expired. Please login again.');
-          this.router.navigate(['/login']);
-        }
-        //server error
-        else if (error.status === 500) {
-          console.error('Server error:', error);
+        if (error.status === 401) {
+          // Token expired — try refreshing
+          return this.handle401Error(clonedReq, next);
+        } else if (error.status === 500) {
           this.toastService.error('Server error. Please try again later.');
-        }
-        //network error - connection issues
-        else if (error.status === 0) {
-          console.error('Network error:', error);
-          this.toastService.error('Connection error. Please check your internet connection and try again.');
-        }
-        //other HTTP errors
-        else if (error.status >= 400) {
-          console.error('HTTP error:', error);
+        } else if (error.status === 0) {
+          this.toastService.error('Connection error. Please check your internet connection.');
+        } else if (error.status >= 400) {
           this.toastService.error(`Request failed: ${error.status} ${error.statusText}`);
         }
 
-        // Return the error for components to handle if needed
         return throwError(() => error);
       })
- );
+    );
+  }
+
+  private handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        this.logoutAndRedirect();
+        return throwError(() => new Error('No refresh token available.'));
+      }
+
+      // 🔁 Call refresh token service
+      return this.refreshTokenService.refreshToken(refreshToken).pipe(
+        switchMap((response: any) => {
+          this.isRefreshing = false;
+
+          const newToken = response.token;
+          const newRefresh = response.refreshToken;
+
+          localStorage.setItem('token', newToken);
+          if (newRefresh) {
+            localStorage.setItem('refreshToken', newRefresh);
+          }
+
+          this.refreshTokenSubject.next(newToken);
+
+          // Retry failed request with the new access token
+          return next.handle(
+            req.clone({
+              setHeaders: { Authorization: `Bearer ${newToken}` }
+            })
+          );
+        }),
+        catchError((err) => {
+          this.isRefreshing = false;
+          this.logoutAndRedirect();
+          return throwError(() => err);
+        })
+      );
+    } else {
+      // Wait until refresh completes before retrying
+      return this.refreshTokenSubject.pipe(
+        switchMap((token) => {
+          if (token) {
+            return next.handle(
+              req.clone({
+                setHeaders: { Authorization: `Bearer ${token}` }
+              })
+            );
+          }
+          return throwError(() => new Error('No token after refresh.'));
+        })
+      );
+    }
+  }
+
+  private logoutAndRedirect() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    this.toastService.error('Session expired. Please login again.');
+    this.router.navigate(['/login']);
   }
 }
-    
-
-
-
-// export const authInterceptor: HttpInterceptorFn = (req, next) => {
-//   return next(req);
-// };

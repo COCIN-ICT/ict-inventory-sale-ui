@@ -2,10 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
+// interface AuthResponse {
+//   token: string;
+//   user?: any; // depends on your backend response structure
+// }
+
 interface AuthResponse {
-  token: string;
-  user?: any; // depends on your backend response structure
+  token: string;     // 👈 match your backend field names
+  refreshToken: string;    // 👈 add this
+  user?: any;               // optional user info
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +20,7 @@ interface AuthResponse {
 export class AuthService {
   private userKey = 'currentUser';
   private tokenKey = 'token';
+  private refreshKey = 'refreshToken';
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +34,9 @@ export class AuthService {
     if (response.token) {
       localStorage.setItem(this.tokenKey, response.token);
     }
+    if (response.refreshToken) {
+      localStorage.setItem(this.refreshKey, response.refreshToken);
+    }
     if (response.user) {
       localStorage.setItem(this.userKey, JSON.stringify(response.user));
     }
@@ -34,6 +45,10 @@ export class AuthService {
   // 🟢 Get token
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+   getRefreshToken(): string | null {
+    return localStorage.getItem(this.refreshKey);
   }
 
   // 🟢 Get current user
@@ -55,6 +70,9 @@ export class AuthService {
   // 🟢 Logout
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshKey);
     localStorage.removeItem(this.userKey);
   }
+
+
 }
