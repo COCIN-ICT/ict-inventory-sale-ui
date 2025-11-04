@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 // interface AuthResponse {
 //   token: string;
@@ -22,7 +23,7 @@ export class AuthService {
   private tokenKey = 'token';
   private refreshKey = 'refreshToken';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // 🟢 Login and store both token & user data
   login(username: string, password: string) {
@@ -68,10 +69,47 @@ export class AuthService {
   }
 
   // 🟢 Logout
-  logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.refreshKey);
-    localStorage.removeItem(this.userKey);
+  // logout(): void {
+  //   localStorage.removeItem(this.tokenKey);
+  //   localStorage.removeItem(this.refreshKey);
+  //   localStorage.removeItem(this.userKey);
+  // }
+
+  // src/app/auth/auth.service.ts
+
+logout() {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
+
+      // 1️⃣ Call backend logout API
+      this.http.post(`${environment.apiUrl}/auth/logout`, {}, { headers })
+        .subscribe({
+          next: () => {
+            console.log('✅ Logged out successfully');
+            this.clearAuthData();
+          },
+          error: (err) => {
+            console.error('Logout failed:', err);
+            this.clearAuthData(); // Clear anyway
+          }
+        });
+    } else {
+      this.clearAuthData();
+    }
+  }
+
+  private clearAuthData() {
+    // 2️⃣ Clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('currentUser');
+
+    // 3️⃣ Redirect to login
+    this.router.navigate(['/login']);
   }
 
 

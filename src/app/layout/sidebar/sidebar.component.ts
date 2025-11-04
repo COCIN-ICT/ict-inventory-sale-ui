@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -32,7 +33,7 @@ export class SidebarComponent {
   // Customer management
   isCustomerManagementExpanded = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   // Top-level
   toggleAdmin(): void { this.isAdminExpanded = !this.isAdminExpanded; }
@@ -67,4 +68,10 @@ export class SidebarComponent {
     // If you have a logout action/service, call it here instead
     this.router.navigate(['/login']);
   }
+
+  // sidebar.component.ts
+onLogout() {
+  this.authService.logout();
+}
+
 }

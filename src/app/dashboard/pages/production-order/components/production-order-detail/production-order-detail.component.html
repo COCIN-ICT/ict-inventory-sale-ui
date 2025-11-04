@@ -124,12 +124,32 @@
         </tbody>
       </table>
 
+
+
       <button
+  (click)="openAddModal()"
+  class="px-4 py-2 rounded-lg text-white transition"
+  [ngClass]="{
+    'bg-gray-600 hover:bg-gray-700': canAddItems(),
+    'bg-gray-400 cursor-not-allowed opacity-70': !canAddItems()
+  }"
+  [disabled]="!canAddItems()"
+  [title]="!canAddItems() ? 'Order is under processing and items cannot be added' : ''"
+>
+  Add Input Items
+</button>
+
+
+
+
+
+
+      <!-- <button
         (click)="openAddModal()"
         class="mt-4 bg-gray-600 px-4 py-2 text-white rounded-lg hover:bg-gray-700 transition"
       >
         Add Input Item
-      </button>
+      </button> -->
     </div>
 
     <!-- Output Items placeholder -->
@@ -150,14 +170,19 @@
     <h2 class="text-xl font-bold mb-4">Add Input Item</h2>
 
     <form [formGroup]="addInputItemForm" (ngSubmit)="submitAddInputItem()">
+      
+      <!-- ✅ Updated Item Dropdown -->
       <div class="mb-4">
-        <label class="block text-sm font-medium mb-1">Item ID</label>
-        <input
-          type="number"
+        <label class="block text-sm font-medium mb-1">Select Item</label>
+        <select
           formControlName="itemId"
           class="w-full border border-gray-300 rounded px-3 py-2"
-          placeholder="Enter Item ID"
-        />
+        >
+          <option value="">-- Choose an item --</option>
+          <option *ngFor="let item of items" [value]="item.id">
+            {{ item.name }}
+          </option>
+        </select>
       </div>
 
       <div class="mb-4">
