@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PurchaseOrderService } from '../../../../../services/purchase-order.service';
@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './purchase-order-create.component.html',
   styleUrls: ['./purchase-order-create.component.css']
 })
-export class PurchaseOrderCreateComponent {
+export class PurchaseOrderCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,

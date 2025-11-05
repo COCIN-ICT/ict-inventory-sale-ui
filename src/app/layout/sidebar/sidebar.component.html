@@ -7,18 +7,139 @@
     <span class="text-lg">
       <mat-icon>dashboard</mat-icon>
     </span> 
-    Dashboard
+    Overview
   </a>
 
-  <!-- 1. Purchase -->
-  <a routerLink="/home/purchase" 
-     routerLinkActive="bg-blue-100 text-blue-600" 
-     class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
-    <span class="text-lg">
-      <mat-icon>shopping_cart</mat-icon>
-    </span> 
-    Purchase
-  </a>
+  <!-- 1. Purchase - Collapsible Section -->
+  <div>
+    <button 
+      type="button"
+      (click)="togglePurchase()"
+      [class.bg-blue-50]="isPurchaseExpanded"
+      [class.text-blue-600]="isPurchaseExpanded"
+      class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+      <span class="flex items-center gap-3">
+        <span class="text-lg">
+          <mat-icon>shopping_cart</mat-icon>
+        </span>
+        Purchase
+      </span>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        class="h-4 w-4 transition-transform duration-200" 
+        [class.rotate-180]="isPurchaseExpanded"
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <ul 
+      class="ml-4 space-y-1 overflow-hidden transition-all duration-300"
+      [ngClass]="{'max-h-0': !isPurchaseExpanded, 'max-h-[2000px]': isPurchaseExpanded}">
+
+      <!-- Purchase Quotations - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="togglePurchaseQuotations()"
+          [class.bg-blue-50]="isPurchaseQuotationsExpanded"
+          [class.text-blue-600]="isPurchaseQuotationsExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>request_quote</mat-icon>
+            </span>
+            Purchase Quotations
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isPurchaseQuotationsExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isPurchaseQuotationsExpanded, 'max-h-96': isPurchaseQuotationsExpanded}">
+          <li><a routerLink="/home/purchase-quotation/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Purchase Quotations</a></li>
+          <li><a routerLink="/home/purchase-quotation/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Purchase Quotation</a></li>
+        </ul>
+      </li>
+
+      <!-- Purchase Orders - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="togglePurchaseOrders()"
+          [class.bg-blue-50]="isPurchaseOrdersExpanded"
+          [class.text-blue-600]="isPurchaseOrdersExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>shopping_bag</mat-icon>
+            </span>
+            Purchase Orders
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isPurchaseOrdersExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isPurchaseOrdersExpanded, 'max-h-96': isPurchaseOrdersExpanded}">
+          <li><a routerLink="/home/purchase-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Purchase Orders</a></li>
+          <li><a routerLink="/home/purchase-order/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Purchase Order</a></li>
+          <li><a routerLink="/home/purchase-order/vetting" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Vetting</a></li>
+        </ul>
+      </li>
+
+      <!-- Purchase Items - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="togglePurchaseItems()"
+          [class.bg-blue-50]="isPurchaseItemsExpanded"
+          [class.text-blue-600]="isPurchaseItemsExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>shopping_cart</mat-icon>
+            </span>
+            Purchase Items
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isPurchaseItemsExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isPurchaseItemsExpanded, 'max-h-96': isPurchaseItemsExpanded}">
+          <li><a routerLink="/home/purchase-item" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Purchase Items</a></li>
+        </ul>
+      </li>
+
+    </ul>
+  </div>
 
   <!-- 2. Production -->
   <a routerLink="/home/production-order" 
@@ -30,15 +151,171 @@
     Production
   </a>
 
-  <!-- 3. Point of Sale -->
-  <a routerLink="/home/point-of-sale" 
-     routerLinkActive="bg-blue-100 text-blue-600" 
-     class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
-    <span class="text-lg">
-      <mat-icon>point_of_sale</mat-icon>
-    </span> 
-    Point of Sale
-  </a>
+  <!-- 3. Point of Sale - Collapsible Section -->
+  <div>
+    <button 
+      type="button"
+      (click)="togglePointOfSale()"
+      [class.bg-blue-50]="isPointOfSaleExpanded"
+      [class.text-blue-600]="isPointOfSaleExpanded"
+      class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+      <span class="flex items-center gap-3">
+        <span class="text-lg">
+          <mat-icon>point_of_sale</mat-icon>
+        </span>
+        Point of Sale
+      </span>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        class="h-4 w-4 transition-transform duration-200" 
+        [class.rotate-180]="isPointOfSaleExpanded"
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <ul 
+      class="ml-4 space-y-1 overflow-hidden transition-all duration-300"
+      [ngClass]="{'max-h-0': !isPointOfSaleExpanded, 'max-h-[2000px]': isPointOfSaleExpanded}">
+
+      <!-- Sales Orders - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesOrders()"
+          [class.bg-blue-50]="isSalesOrdersExpanded"
+          [class.text-blue-600]="isSalesOrdersExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>receipt_long</mat-icon>
+            </span>
+            Sales Orders
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesOrdersExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesOrdersExpanded, 'max-h-96': isSalesOrdersExpanded}">
+          <li><a routerLink="/home/sales-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Orders</a></li>
+          <li><a routerLink="/home/sales-order/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Order</a></li>
+        </ul>
+      </li>
+
+      <!-- Sales Items - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesItems()"
+          [class.bg-blue-50]="isSalesItemsExpanded"
+          [class.text-blue-600]="isSalesItemsExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>inventory</mat-icon>
+            </span>
+            Sales Items
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesItemsExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesItemsExpanded, 'max-h-96': isSalesItemsExpanded}">
+          <li><a routerLink="/home/sales-items" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Items</a></li>
+          <li><a routerLink="/home/sales-items/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Item</a></li>
+        </ul>
+      </li>
+
+      <!-- Sales Credit - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesCredit()"
+          [class.bg-blue-50]="isSalesCreditExpanded"
+          [class.text-blue-600]="isSalesCreditExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>credit_card</mat-icon>
+            </span>
+            Sales Credit
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesCreditExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesCreditExpanded, 'max-h-96': isSalesCreditExpanded}">
+          <li><a routerLink="/home/sales-credit" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Credits</a></li>
+          <li><a routerLink="/home/sales-credit/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Credit</a></li>
+          <li><a routerLink="/home/sales-credit/pending" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Pending Credits</a></li>
+        </ul>
+      </li>
+
+      <!-- Sales Promotion - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesPromotion()"
+          [class.bg-blue-50]="isSalesPromotionExpanded"
+          [class.text-blue-600]="isSalesPromotionExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>local_offer</mat-icon>
+            </span>
+            Sales Promotion
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesPromotionExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesPromotionExpanded, 'max-h-96': isSalesPromotionExpanded}">
+          <li><a routerLink="/home/sales-promotion" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Promotions</a></li>
+          <li><a routerLink="/home/sales-promotion/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Promotion</a></li>
+          <li><a routerLink="/home/sales-promotion/by-stock" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Promotions by Stock</a></li>
+        </ul>
+      </li>
+
+    </ul>
+  </div>
 
   <!-- 4. Credit Management -->
   <a routerLink="/home/credit-management" 
@@ -194,173 +471,6 @@
         </ul>
       </li>
 
-      <!-- Purchase Quotations - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="togglePurchaseQuotations()"
-          [class.bg-blue-50]="isPurchaseQuotationsExpanded"
-          [class.text-blue-600]="isPurchaseQuotationsExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>request_quote</mat-icon>
-            </span>
-            Purchase Quotations
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isPurchaseQuotationsExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isPurchaseQuotationsExpanded, 'max-h-96': isPurchaseQuotationsExpanded}">
-          <li><a routerLink="/home/purchase-quotation/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Purchase Quotations</a></li>
-          <li><a routerLink="/home/purchase-quotation/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Purchase Quotation</a></li>
-        </ul>
-      </li>
-
-      <!-- Sales Orders - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="toggleSalesOrders()"
-          [class.bg-blue-50]="isSalesOrdersExpanded"
-          [class.text-blue-600]="isSalesOrdersExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>receipt_long</mat-icon>
-            </span>
-            Sales Orders
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isSalesOrdersExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isSalesOrdersExpanded, 'max-h-96': isSalesOrdersExpanded}">
-          <li><a routerLink="/home/sales-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Orders</a></li>
-          <li><a routerLink="/home/sales-order/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Order</a></li>
-        </ul>
-      </li>
-
-      <!-- Sales Items - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="toggleSalesItems()"
-          [class.bg-blue-50]="isSalesItemsExpanded"
-          [class.text-blue-600]="isSalesItemsExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>inventory</mat-icon>
-            </span>
-            Sales Items
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isSalesItemsExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isSalesItemsExpanded, 'max-h-96': isSalesItemsExpanded}">
-          <li><a routerLink="/home/sales-items" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Items</a></li>
-          <li><a routerLink="/home/sales-items/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Item</a></li>
-        </ul>
-      </li>
-
-      <!-- Sales Credit Management - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="toggleSalesCredit()"
-          [class.bg-blue-50]="isSalesCreditExpanded"
-          [class.text-blue-600]="isSalesCreditExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>credit_card</mat-icon>
-            </span>
-            Sales Credit
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isSalesCreditExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isSalesCreditExpanded, 'max-h-96': isSalesCreditExpanded}">
-          <li><a routerLink="/home/sales-credit" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Credits</a></li>
-          <li><a routerLink="/home/sales-credit/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Credit</a></li>
-          <li><a routerLink="/home/sales-credit/pending" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Pending Credits</a></li>
-        </ul>
-      </li>
-
-      <!-- Sales Promotion Management - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="toggleSalesPromotion()"
-          [class.bg-blue-50]="isSalesPromotionExpanded"
-          [class.text-blue-600]="isSalesPromotionExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>local_offer</mat-icon>
-            </span>
-            Sales Promotion
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isSalesPromotionExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isSalesPromotionExpanded, 'max-h-96': isSalesPromotionExpanded}">
-          <li><a routerLink="/home/sales-promotion" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Promotions</a></li>
-          <li><a routerLink="/home/sales-promotion/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Promotion</a></li>
-          <li><a routerLink="/home/sales-promotion/by-stock" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Promotions by Stock</a></li>
-        </ul>
-      </li>
-
       <!-- Bank Accounts Management - Collapsible -->
       <li>
         <button 
@@ -390,38 +500,6 @@
           class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
           [ngClass]="{'max-h-0': !isBankAccountsExpanded, 'max-h-96': isBankAccountsExpanded}">
           <li><a routerLink="/home/bank-account" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Bank Accounts</a></li>
-        </ul>
-      </li>
-
-      <!-- Purchase Items - Collapsible -->
-      <li>
-        <button 
-          type="button"
-          (click)="togglePurchaseItems()"
-          [class.bg-blue-50]="isPurchaseItemsExpanded"
-          [class.text-blue-600]="isPurchaseItemsExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>shopping_cart</mat-icon>
-            </span>
-            Purchase Items
-          </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isPurchaseItemsExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isPurchaseItemsExpanded, 'max-h-96': isPurchaseItemsExpanded}">
-          <li><a routerLink="/home/purchase-item" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Purchase Items</a></li>
         </ul>
       </li>
 
