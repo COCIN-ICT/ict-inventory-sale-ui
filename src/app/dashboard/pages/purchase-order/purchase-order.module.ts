@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { PurchaseOrderRoutingModule } from './purchase-order-routing.module';
 import { PurchaseOrderComponent } from './purchase-order.component';
 import { PurchaseOrderCreateComponent } from './components/purchase-order-create/purchase-order-create.component';
@@ -31,6 +32,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     PurchaseOrderRoutingModule,
     MatIconModule,
     MatButtonModule,
