@@ -67,9 +67,9 @@ export class UnitFormComponent implements OnInit {
     const payload: Unit = this.form.value;
     this.unitService.createUnit(payload).subscribe({
       next:(created) => {
-        this.units.unshift(created);
+        //this.units.unshift(created);
         this.toast.success('Unit created successfully!');
-        this.close();
+        this.dialogRef.close(true);
       },
       error: err => {
         console.error('Create failed:', err);
