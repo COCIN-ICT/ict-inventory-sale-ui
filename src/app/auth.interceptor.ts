@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { catchError, switchMap, throwError, BehaviorSubject, Observable } from 'rxjs';
+import { catchError, switchMap, throwError, BehaviorSubject, Observable, filter, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastService } from './services/toast.service';
 import { AuthLoginService } from './services/auth-login.service';
@@ -32,7 +32,6 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(clonedReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Token expired — try refreshing
           return this.handle401Error(clonedReq, next);
         } else if (error.status === 500) {
           this.toastService.error('Server error. Please try again later.');
@@ -58,7 +57,6 @@ export class AuthInterceptor implements HttpInterceptor {
         return throwError(() => new Error('No refresh token available.'));
       }
 
-      // 🔁 Call refresh token service
       return this.authLoginService.refreshToken(refreshToken).pipe(
         switchMap((response: any) => {
           this.isRefreshing = false;
@@ -71,9 +69,10 @@ export class AuthInterceptor implements HttpInterceptor {
             localStorage.setItem('refreshToken', newRefresh);
           }
 
+          // Broadcast new token to waiting requests BEFORE retrying
           this.refreshTokenSubject.next(newToken);
 
-          // Retry failed request with the new access token
+          // Retry the original request
           return next.handle(
             req.clone({
               setHeaders: { Authorization: `Bearer ${newToken}` }
@@ -82,22 +81,22 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
         catchError((err) => {
           this.isRefreshing = false;
+          this.refreshTokenSubject.next(null);
           this.logoutAndRedirect();
           return throwError(() => err);
         })
       );
     } else {
-      // Wait until refresh completes before retrying
+      // Wait for refresh to complete, then retry with new token
       return this.refreshTokenSubject.pipe(
+        filter(token => token !== null), // Wait until we get a real token
+        take(1), // Take only the first non-null value
         switchMap((token) => {
-          if (token) {
-            return next.handle(
-              req.clone({
-                setHeaders: { Authorization: `Bearer ${token}` }
-              })
-            );
-          }
-          return throwError(() => new Error('No token after refresh.'));
+          return next.handle(
+            req.clone({
+              setHeaders: { Authorization: `Bearer ${token}` }
+            })
+          );
         })
       );
     }
@@ -105,7 +104,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private logoutAndRedirect() {
     localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('refreshToken');
     this.toastService.error('Session expired. Please login again.');
     this.router.navigate(['/login']);
   }

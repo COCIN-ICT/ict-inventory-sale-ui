@@ -13,26 +13,26 @@ import { Department, DepartmentsService } from '../../../../../../services/depar
 })
 export class UnitListComponent implements OnInit {
   units: Unit[] = [];
-  departments: Department[] = [];
-  selectedDepartmentId: number | null = null;
+  // departments: Department[] = [];
+  // selectedDepartmentId: number | null = null;
   searchTerm: string = '';
   originalUnits: Unit[] = [];
 
   constructor(private unitService: UnitService, 
               private toast: ToastService,
               public dialog: MatDialog,
-              private departmentService: DepartmentsService) { }
+) { }
 
   ngOnInit(): void {
-    this.loadDepartments();
+    
     this.loadUnits();
     
   }
 
-  onDepartmentSelected(departmentId: string): void {
-    this.selectedDepartmentId = departmentId ? parseInt(departmentId, 10) : null;
-    this.applyFilters();
-  }
+  // onDepartmentSelected(departmentId: string): void {
+  //   this.selectedDepartmentId = departmentId ? parseInt(departmentId, 10) : null;
+  //   this.applyFilters();
+  // }
 
   private loadUnits(): void {
     this.unitService.getUnits().subscribe({
@@ -47,27 +47,38 @@ export class UnitListComponent implements OnInit {
     });
   }
 
-  private loadDepartments(): void {
-    this.departmentService.getDepartments().subscribe({
-      next: (deps) => {this.departments = deps;
-        this.loadUnits();
+  // private loadDepartments(): void {
+  //   this.departmentService.getDepartments().subscribe({
+  //     next: (deps) => {this.departments = deps;
+  //       this.loadUnits();
         
-      },
-      error: (err) => console.error('Error loading departments:', err)
-    });
-  }
+  //     },
+  //     error: (err) => console.error('Error loading departments:', err)
+  //   });
+  // }
 
   searchList(): void {
     this.applyFilters();
   }
 
+  // private applyFilters(): void {
+  //   let filteredUnits = [...this.originalUnits];
+
+  //   if (this.selectedDepartmentId) {
+  //     filteredUnits = filteredUnits.filter(unit => 
+  //       unit.departmentId === this.selectedDepartmentId || unit.department?.id === this.selectedDepartmentId);
+  //   }
+
+  //   if (this.searchTerm) {
+  //     filteredUnits = filteredUnits.filter(unit => 
+  //       unit.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+  //   }
+
+  //   this.units = filteredUnits;
+  // }
+
   private applyFilters(): void {
     let filteredUnits = [...this.originalUnits];
-
-    if (this.selectedDepartmentId) {
-      filteredUnits = filteredUnits.filter(unit => 
-        unit.departmentId === this.selectedDepartmentId || unit.department?.id === this.selectedDepartmentId);
-    }
 
     if (this.searchTerm) {
       filteredUnits = filteredUnits.filter(unit => 
