@@ -4,8 +4,16 @@
     <div class="mb-8">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Items</h1>
-          <p class="text-gray-600">Manage all items in the system</p>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            <span *ngIf="viewMode === 'all'">Items</span>
+            <span *ngIf="viewMode === 'active'">Active Items</span>
+            <span *ngIf="viewMode === 'low-stock'">Low Stock Items</span>
+          </h1>
+          <p class="text-gray-600">
+            <span *ngIf="viewMode === 'all'">Manage all items in the system</span>
+            <span *ngIf="viewMode === 'active'">View and manage active items</span>
+            <span *ngIf="viewMode === 'low-stock'">View items with low stock levels</span>
+          </p>
         </div>
       </div>
     </div>
@@ -30,8 +38,16 @@
     <!-- Items List -->
     <div class="bg-white rounded-lg shadow-md">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">All Items</h2>
-        <p class="text-sm text-gray-600 mt-1">View and manage all items</p>
+        <h2 class="text-xl font-semibold text-gray-900">
+          <span *ngIf="viewMode === 'all'">All Items</span>
+          <span *ngIf="viewMode === 'active'">Active Items</span>
+          <span *ngIf="viewMode === 'low-stock'">Low Stock Items</span>
+        </h2>
+        <p class="text-sm text-gray-600 mt-1">
+          <span *ngIf="viewMode === 'all'">View and manage all items</span>
+          <span *ngIf="viewMode === 'active'">View and manage active items</span>
+          <span *ngIf="viewMode === 'low-stock'">View items with low stock levels</span>
+        </p>
       </div>
 
       <!-- Loading State -->

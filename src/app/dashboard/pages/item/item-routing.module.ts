@@ -8,6 +8,8 @@ import { ItemDetailsComponent } from './item-details/item-details.component';
 const routes: Routes = [
   { path: '', redirectTo: 'all', pathMatch: 'full' },
   { path: 'all', component: AllItemsComponent },
+  { path: 'active', component: AllItemsComponent },
+  { path: 'low-stock', component: AllItemsComponent },
   { path: 'create', component: CreateItemComponent },
   { path: 'edit/:id', component: EditItemComponent },
   { path: 'view/:id', component: ItemDetailsComponent }

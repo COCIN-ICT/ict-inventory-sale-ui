@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { ItemService, ItemResponse, ItemType } from '../../../../services/item.service';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-all-items',
   templateUrl: './all-items.component.html',
   styleUrl: './all-items.component.css'
 })
-export class AllItemsComponent implements OnInit {
+export class AllItemsComponent implements OnInit, OnDestroy {
   items: ItemResponse[] = [];
   loading = false;
   errorMessage = '';
@@ -15,16 +17,51 @@ export class AllItemsComponent implements OnInit {
   changingStatus: { [key: number]: boolean } = {};
   showDeleteModal = false;
   itemToDelete: ItemResponse | null = null;
-  statusFilter: 'all' | 'active' | 'inactive' = 'all';
+  statusFilter: 'all' | 'active' | 'inactive' | 'low-stock' = 'all';
   ItemType = ItemType; // Make enum available in template
+  viewMode: 'all' | 'active' | 'low-stock' = 'all';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private itemService: ItemService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    // Determine view mode from route
+    this.updateViewModeFromRoute();
     this.loadItems();
+    
+    // Subscribe to route changes to update view mode when navigating
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.updateViewModeFromRoute();
+        this.loadItems();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private updateViewModeFromRoute(): void {
+    const url = this.router.url;
+    if (url.includes('/active')) {
+      this.viewMode = 'active';
+      this.statusFilter = 'active';
+    } else if (url.includes('/low-stock')) {
+      this.viewMode = 'low-stock';
+      this.statusFilter = 'all'; // Will filter in loadItems
+    } else {
+      this.viewMode = 'all';
+      this.statusFilter = 'all';
+    }
   }
 
   loadItems() {
@@ -32,17 +69,29 @@ export class AllItemsComponent implements OnInit {
     this.errorMessage = '';
 
     let observable;
-    if (this.statusFilter === 'all') {
+    if (this.viewMode === 'active') {
+      observable = this.itemService.getItemsByStatus(true);
+    } else if (this.viewMode === 'low-stock') {
+      // For low-stock, get all items and filter client-side
+      // Note: This assumes items have a stock/quantity property. Adjust based on your API response.
       observable = this.itemService.getAllItems();
     } else {
-      const isActive = this.statusFilter === 'active';
-      observable = this.itemService.getItemsByStatus(isActive);
+      observable = this.itemService.getAllItems();
     }
 
     observable.subscribe({
       next: (response: ItemResponse[]) => {
         console.log('Items response:', response);
-        this.items = response || [];
+        let filteredItems = response || [];
+        
+        // Filter for low-stock items if needed
+        if (this.viewMode === 'low-stock') {
+          // Filter items - adjust logic based on your data structure
+          // Assuming items might have stock-related properties, or we show all active items for now
+          filteredItems = filteredItems.filter(item => item.isActive);
+        }
+        
+        this.items = filteredItems;
         this.loading = false;
       },
       error: (error) => {

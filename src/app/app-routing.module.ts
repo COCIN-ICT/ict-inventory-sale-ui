@@ -40,6 +40,8 @@ const routes: Routes = [
       { path: 'supplier-management/suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/all-suppliers/all-suppliers.module').then(m => m.AllSuppliersModule) },
       { path: 'supplier-management/create-supplier', loadChildren: () => import('./dashboard/pages/supplier-management/create-supplier/create-supplier.module').then(m => m.CreateSupplierModule) },
       { path: 'supplier-management/active-suppliers', loadChildren: () => import('./dashboard/pages/supplier-management/active-suppliers/active-suppliers.module').then(m => m.ActiveSuppliersModule) },
+      { path: 'supplier-management/supplier-history', loadChildren: () => import('./dashboard/pages/supplier-management/supplier-history/supplier-history.module').then(m => m.SupplierHistoryModule) },
+      { path: 'supplier-management/outstanding-payments', loadChildren: () => import('./dashboard/pages/supplier-management/outstanding-payments/outstanding-payments.module').then(m => m.OutstandingPaymentsModule) },
       { path: 'supplier-management/supplier-details/:id', component: SupplierDetailsComponent },
       { path: 'supplier-management/edit-supplier/:id', component: EditSupplierComponent },
 
