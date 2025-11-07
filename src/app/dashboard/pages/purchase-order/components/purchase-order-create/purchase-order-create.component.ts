@@ -76,21 +76,9 @@ export class PurchaseOrderCreateComponent implements OnInit {
 
     // Construct payload to match API - use locally stored items and quotations
     const payload = {
-      status: this.form.value.status,
-      orderDate: this.form.value.orderDate,
-      subTotal: this.form.value.subTotal,
-      totalAmount: this.form.value.totalAmount,
-      quotations: this.addedQuotations.map(q => ({
-        supplierId: q.supplierId,
-        amount: q.amount
-      })),
-      items: this.addedItems.map(i => ({
-        itemId: i.itemId,
-        quantity: i.quantity,
-        unitPrice: i.unitPrice
-      }))
+    
     };
-
+console.log('Submitting purchase order with payload:', payload);
     this.orderService.createOrder(payload).subscribe({
       next: (res: any) => {
         this.loading = false;
