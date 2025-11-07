@@ -162,6 +162,23 @@ approveOrder() {
 }
 
 // Dispense
+// dispenseOrder() {
+//   if (!this.productionOrder) return;
+//   this.isLoading = true;
+
+//   this.productionOrdersService.dispenseProductionOrder(this.orderId).subscribe({
+//     next: () => {
+//       this.toast.success('Order dispensed successfully!');
+//       this.loadProductionOrder();
+//     },
+//     error: (err) => {
+//       console.error('Error dispensing order', err);
+//       this.toast.error('Failed to dispense order.');
+//       this.isLoading = false;
+//     }
+//   });
+// }
+
 dispenseOrder() {
   if (!this.productionOrder) return;
   this.isLoading = true;
@@ -169,6 +186,10 @@ dispenseOrder() {
   this.productionOrdersService.dispenseProductionOrder(this.orderId).subscribe({
     next: () => {
       this.toast.success('Order dispensed successfully!');
+      if (this.productionOrder) {
+        this.productionOrder.status = 'DISPENSED';
+      }
+      // Also reload for accuracy
       this.loadProductionOrder();
     },
     error: (err) => {
@@ -178,6 +199,7 @@ dispenseOrder() {
     }
   });
 }
+
 
 // Finish
 finishOrder() {
