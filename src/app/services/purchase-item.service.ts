@@ -41,4 +41,8 @@ export class PurchaseItemService {
   getPurchaseItems(): Observable<PurchaseItem[]> {
     return this.http.get<PurchaseItem[]>(API_URL);
   }
+
+  deletePurchaseItem(id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/${id}`);
+  }
 }

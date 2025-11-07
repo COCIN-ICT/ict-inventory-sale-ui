@@ -12,26 +12,6 @@ export class PurchaseOrderListComponent implements OnInit {
   purchaseOrders: any[] = [];
   isLoading = false;
 
-  // Modal states
-  showClearModal = false;
-  showReceiveModal = false;
-  
-  // Clear modal data
-  clearId: number = 0;
-  
-  // Receive modal data
-  receivePayload = {
-    purchaseOrderId: 0,
-    receiveItems: [
-      {
-        purchaseItemId: 0,
-        quantityReceived: 0,
-        quantityDamaged: 0,
-        expirationDate: ''
-      }
-    ]
-  };
-
   constructor(
     private router: Router,
     private purchaseOrderService: PurchaseOrderService,
@@ -56,115 +36,58 @@ export class PurchaseOrderListComponent implements OnInit {
     });
   }
 
-  goToDetails(order: any): void {
-    this.router.navigate(['/home/purchase-order/details', order.id]);
-  }
-
-  goToCreate(): void {
-    this.router.navigate(['/home/purchase-order/create']);
-  }
-
-  goToVetting(): void {
-    this.router.navigate(['/home/purchase-order/vetting']);
-  }
-
-  // Clear Modal Methods
-  openClearModal(order: any): void {
-    this.clearId = order.id;
-    this.showClearModal = true;
-  }
-
-  closeClearModal(): void {
-    this.showClearModal = false;
-    this.clearId = 0;
-  }
-
-  clearOrder(): void {
-    if (!this.clearId) {
-      this.toast.error('Please enter a valid Purchase Order ID');
-      return;
-    }
-
-    this.purchaseOrderService.clearOrder(this.clearId).subscribe({
+  createPurchaseOrder(): void {
+    // According to Swagger, items and quotations are optional arrays
+    // Try with empty object first (like production orders)
+    const payload: any = {};
+    
+    console.log('Creating purchase order with payload:', payload);
+    
+    this.purchaseOrderService.createOrder(payload).subscribe({
       next: (res: any) => {
-        this.toast.success('Purchase order cleared successfully');
-        this.closeClearModal();
-        this.loadPurchaseOrders(); // Refresh the list
+        const id = res.id || res.data?.id;
+        console.log('Purchase Order created successfully!', res);
+        this.toast.success('Purchase Order created successfully');
+        this.router.navigate([`/home/purchase-order/details/${id}`]);
       },
       error: (err: any) => {
-        this.toast.error(err?.error?.message || err?.message || 'Failed to clear purchase order');
-      }
-    });
-  }
-
-  // Receive Modal Methods
-  openReceiveModal(order: any): void {
-    this.receivePayload.purchaseOrderId = order.id;
-    this.showReceiveModal = true;
-  }
-
-  closeReceiveModal(): void {
-    this.showReceiveModal = false;
-    this.resetReceivePayload();
-  }
-
-  resetReceivePayload(): void {
-    this.receivePayload = {
-      purchaseOrderId: 0,
-      receiveItems: [
-        {
-          purchaseItemId: 0,
-          quantityReceived: 0,
-          quantityDamaged: 0,
-          expirationDate: ''
+        console.error('Error creating purchase order:', err);
+        console.error('Full error object:', JSON.stringify(err, null, 2));
+        console.error('Error details:', {
+          status: err.status,
+          statusText: err.statusText,
+          error: err.error,
+          errorType: typeof err.error,
+          errorKeys: err.error ? Object.keys(err.error) : [],
+          message: err.message,
+          url: err.url
+        });
+        
+        // The error object is empty {}, so the backend might have validation issues
+        // Try to show a helpful message
+        let errorMessage = 'Failed to create purchase order. Please check the console for details.';
+        
+        // Check if there's any error information
+        if (err.error) {
+          if (typeof err.error === 'string' && err.error.length > 0) {
+            errorMessage = err.error;
+          } else if (err.error && typeof err.error === 'object') {
+            const errorKeys = Object.keys(err.error);
+            if (errorKeys.length > 0) {
+              errorMessage = JSON.stringify(err.error);
+            } else {
+              errorMessage = 'Bad Request: The server rejected the request. This might be a validation error.';
+            }
+          }
         }
-      ]
-    };
-  }
-
-  addReceiveItem(): void {
-    this.receivePayload.receiveItems.push({
-      purchaseItemId: 0,
-      quantityReceived: 0,
-      quantityDamaged: 0,
-      expirationDate: ''
-    });
-  }
-
-  removeReceiveItem(index: number): void {
-    if (this.receivePayload.receiveItems.length > 1) {
-      this.receivePayload.receiveItems.splice(index, 1);
-    }
-  }
-
-  receiveOrder(): void {
-    if (!this.receivePayload.purchaseOrderId) {
-      this.toast.error('Please enter a valid Purchase Order ID');
-      return;
-    }
-
-    if (this.receivePayload.receiveItems.length === 0) {
-      this.toast.error('Please add at least one item to receive');
-      return;
-    }
-
-    // Validate receive items
-    for (let item of this.receivePayload.receiveItems) {
-      if (!item.purchaseItemId || item.quantityReceived <= 0) {
-        this.toast.error('Please fill in all required fields for receive items');
-        return;
-      }
-    }
-
-    this.purchaseOrderService.receiveOrder(this.receivePayload).subscribe({
-      next: (res: any) => {
-        this.toast.success('Items received successfully');
-        this.closeReceiveModal();
-        this.loadPurchaseOrders(); // Refresh the list
-      },
-      error: (err: any) => {
-        this.toast.error(err?.error?.message || err?.message || 'Failed to receive items');
+        
+        this.toast.error(errorMessage);
       }
     });
+  }
+
+  navigateToDetails(id: number): void {
+    console.log("Navigating to purchase order details...");
+    this.router.navigate([`/home/purchase-order/details/${id}`]);
   }
 }

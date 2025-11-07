@@ -1,221 +1,79 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-7xl mx-auto">
-    <div class="mb-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Purchase Orders</h1>
-          <p class="text-gray-600">Manage and track all purchase orders</p>
-        </div>
-        <div class="flex space-x-3">
-          <button 
-            (click)="goToCreate()" 
-            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Create Purchase Order
-          </button>
-          <button 
-            (click)="goToVetting()" 
-            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-            Vetting
-          </button>
-        </div>
-      </div>
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+  <div class="bg-white shadow-2xl rounded-xl p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Purchase Orders</h2>
+      <button
+        class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
+        (click)="createPurchaseOrder()"
+      >
+        + Add New Order
+      </button>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md">
-      <div *ngIf="isLoading" class="p-8 text-center">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <p class="mt-2 text-gray-600">Loading purchase orders...</p>
-      </div>
-
-      <div *ngIf="!isLoading && purchaseOrders.length === 0" class="p-8 text-center">
-        <div class="text-gray-400 mb-4">
-          <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No Purchase Orders</h3>
-        <p class="text-gray-600 mb-4">Get started by creating your first purchase order.</p>
-        <button 
-          (click)="goToCreate()" 
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          Create Purchase Order
-        </button>
-      </div>
-
-      <div *ngIf="!isLoading && purchaseOrders.length > 0" class="overflow-x-auto">
-        <table class="min-w-full border border-gray-200 shadow-md rounded-lg">
-          <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
-            <tr>
-              <th class="px-6 py-3 text-left border-b">Order #</th>
-              <th class="px-6 py-3 text-left border-b">Supplier</th>
-              <th class="px-6 py-3 text-left border-b">Date</th>
-              <th class="px-6 py-3 text-left border-b">Status</th>
-              <th class="px-6 py-3 text-left border-b">Actions</th>
-              <th class="px-6 py-3 text-right border-b">Total</th>
+    <!-- Orders Table -->
+    <div class="mt-4">
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Existing Orders</h3>
+      <div class="overflow-x-auto rounded-lg shadow-sm">
+        <table class="min-w-full bg-white">
+          <thead class="bg-blue-50">
+            <tr class="text-gray-600 text-sm uppercase text-left">
+              <th class="px-6 py-3 font-semibold">ID</th>
+              <th class="px-6 py-3 font-semibold">Status</th>
+              <th class="px-6 py-3 font-semibold">Date</th>
+              <th class="px-6 py-3 font-semibold">Unit</th>
+              <th class="px-6 py-3 font-semibold">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200">
-            <tr *ngFor="let order of purchaseOrders" class="hover:bg-gray-50 transition cursor-pointer" (click)="goToDetails(order)">
-              <td class="px-6 py-4">{{ order.id }}</td>
-              <td class="px-6 py-4">{{ $any(order).supplier?.name || $any(order).createdBy?.username || '-' }}</td>
-              <td class="px-6 py-4">{{ order.orderDate | date }}</td>
-              <td class="px-6 py-4">
-                <span class="px-2 py-1 text-xs font-medium rounded-full border"
+          <tbody>
+            <tr
+              *ngFor="let order of purchaseOrders"
+              class="border-b hover:bg-blue-50 transition"
+            >
+              <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                {{ order.id }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                <span class="px-2 py-1 text-xs font-medium rounded-full"
                   [ngClass]="{
-                    'bg-green-100 text-green-700 border-green-200': order.status === 'APPROVED' || order.status === 'COMPLETED' || order.status === 'CLEARED',
-                    'bg-yellow-100 text-yellow-700 border-yellow-200': order.status === 'PENDING' || order.status === 'VETTED',
-                    'bg-red-100 text-red-700 border-red-200': order.status === 'REJECTED' || order.status === 'CANCELLED'
+                    'bg-green-100 text-green-700': order.status === 'APPROVED' || order.status === 'COMPLETED' || order.status === 'CLEARED',
+                    'bg-yellow-100 text-yellow-700': order.status === 'PENDING' || order.status === 'VETTED',
+                    'bg-blue-100 text-blue-700': order.status === 'VETTED',
+                    'bg-red-100 text-red-700': order.status === 'REJECTED' || order.status === 'CANCELLED'
                   }">
                   {{ order.status }}
                 </span>
               </td>
-              <td class="px-6 py-4">
-                <div class="flex space-x-2">
-                  <button 
-                    (click)="goToDetails(order); $event.stopPropagation()" 
-                    class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    View Details
-                  </button>
-                  <button 
-                    (click)="openClearModal(order); $event.stopPropagation()" 
-                    class="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700">
-                    Clear
-                  </button>
-                  <button 
-                    (click)="openReceiveModal(order); $event.stopPropagation()" 
-                    class="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700">
-                    Receive
-                  </button>
-                </div>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ order.orderDate | date:'mediumDate' }}
               </td>
-              <td class="px-6 py-4 text-right font-semibold">{{ order.totalAmount | currency }}</td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ order.unit?.name || '-' }}
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <button 
+                  class="bg-green-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-green-600 transition"
+                  (click)="navigateToDetails(order.id || 0)"
+                >
+                  Open
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Clear Modal -->
-<div *ngIf="showClearModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
-    <h3 class="text-lg font-semibold mb-4">Clear Purchase Order</h3>
-    <div class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Order ID</label>
-        <input 
-          type="number" 
-          [(ngModel)]="clearId" 
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-          placeholder="Enter Purchase Order ID" />
-      </div>
+    <!-- No Data -->
+    <div *ngIf="!isLoading && purchaseOrders.length === 0" class="text-center py-4 text-gray-500">
+      No orders found.
     </div>
-    <div class="mt-6 flex justify-end gap-3">
-      <button 
-        type="button" 
-        (click)="closeClearModal()" 
-        class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200">
-        Cancel
-      </button>
-      <button 
-        type="button" 
-        (click)="clearOrder()" 
-        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-        Clear Purchase Order
-      </button>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading purchase orders...</p>
     </div>
   </div>
 </div>
 
-<!-- Receive Modal -->
-<div *ngIf="showReceiveModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-    <h3 class="text-lg font-semibold mb-4">Receive Items</h3>
-    <div class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Order ID</label>
-        <input 
-          type="number" 
-          [(ngModel)]="receivePayload.purchaseOrderId" 
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-          placeholder="Enter Purchase Order ID" />
-      </div>
-      
-      <div class="space-y-4">
-        <div *ngFor="let item of receivePayload.receiveItems; let i = index" class="p-4 border rounded-md">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Purchase Item ID</label>
-              <input 
-                type="number" 
-                [(ngModel)]="item.purchaseItemId" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                placeholder="Item ID" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Quantity Received</label>
-              <input 
-                type="number" 
-                min="0" 
-                step="0.001" 
-                [(ngModel)]="item.quantityReceived" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                placeholder="0" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Quantity Damaged</label>
-              <input 
-                type="number" 
-                min="0" 
-                step="0.001" 
-                [(ngModel)]="item.quantityDamaged" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                placeholder="0" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Expiration Date</label>
-              <input 
-                type="datetime-local" 
-                [(ngModel)]="item.expirationDate" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-          </div>
-          <div class="mt-3 text-right">
-            <button 
-              type="button" 
-              (click)="removeReceiveItem(i)" 
-              class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600" 
-              [disabled]="receivePayload.receiveItems.length === 1">
-              Remove
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <div>
-        <button 
-          type="button" 
-          (click)="addReceiveItem()" 
-          class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200">
-          + Add Item
-        </button>
-      </div>
-    </div>
-    
-    <div class="mt-6 flex justify-end gap-3">
-      <button 
-        type="button" 
-        (click)="closeReceiveModal()" 
-        class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200">
-        Cancel
-      </button>
-      <button 
-        type="button" 
-        (click)="receiveOrder()" 
-        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-        Approve
-      </button>
-    </div>
-  </div>
-</div>
