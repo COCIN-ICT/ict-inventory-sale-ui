@@ -45,6 +45,7 @@ export class SupplierService {
   }
 
   toggleSupplierStatus(id: number) {
-    return this.http.put<Supplier>(`${environment.apiUrl}/supplier/${id}`, {});
+    // Use PATCH method as per API specification for changing status
+    return this.http.patch<Supplier>(`${environment.apiUrl}/supplier/${id}`, {});
   }
 } 
