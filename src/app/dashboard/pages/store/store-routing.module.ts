@@ -12,7 +12,7 @@ const routes: Routes = [{
   children: [
     { path: '', component: StoreListComponent},
     { path: 'details/:id', component: StoreDetailsComponent },
-    { path: 'details/:storeId/stock/:id', component: StockDetailsComponent }
+    { path: 'details/:storeId/stock/:stockId', component: StockDetailsComponent }
   ] }];
 
 @NgModule({
