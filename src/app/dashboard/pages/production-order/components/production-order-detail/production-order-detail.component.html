@@ -1,3 +1,4 @@
+
 <div class="w-full mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
   <!-- Loader -->
   <div *ngIf="isLoading" class="text-center py-8">
@@ -36,7 +37,7 @@
             'bg-yellow-100 text-yellow-700': productionOrder.status === 'PENDING',
             'bg-blue-100 text-blue-700': productionOrder.status === 'VETTED',
             'bg-purple-100 text-purple-700': productionOrder.status === 'APPROVED',
-            'bg-indigo-100 text-indigo-700': productionOrder.status === 'DISPENSED',
+            'bg-indigo-100 text-indigo-700': productionOrder.status === 'CLEARED',
             'bg-red-100 text-red-700': productionOrder.status === 'CANCELLED'
           }"
         >
@@ -86,17 +87,18 @@
 
       <!-- Dispensed -> Finish -->
       <button
-        *ngIf="productionOrder.status === 'DISPENSED'"
-        (click)="finishOrder()"
+        *ngIf="productionOrder.status === 'CLEARED'"
+        (click)="openFinishModal()"
         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
         [disabled]="isLoading"
       >
         Finish Order
       </button>
     </div>
+    
 
     <!-- Input Items -->
-    <div>
+    <div *ngIf="productionOrder.status !== 'COMPLETED'">
       <h3 class="text-lg font-bold text-gray-700 mt-6 mb-2">Input Items</h3>
       <table class="w-full border-collapse border border-gray-200">
         <thead>
@@ -124,20 +126,20 @@
         </tbody>
       </table>
 
-
-
+    <div>
       <button
-  (click)="openAddModal()"
-  class="px-4 py-2 rounded-lg text-white transition"
-  [ngClass]="{
-    'bg-gray-600 hover:bg-gray-700': canAddItems(),
-    'bg-gray-400 cursor-not-allowed opacity-70': !canAddItems()
-  }"
-  [disabled]="!canAddItems()"
-  [title]="!canAddItems() ? 'Order is under processing and items cannot be added' : ''"
->
-  Add Input Items
-</button>
+        (click)="openAddModal()"
+        class="px-4 py-2 rounded-lg text-white transition"
+        [ngClass]="{
+          'bg-gray-600 hover:bg-gray-700': canAddItems(),
+          'bg-gray-400 cursor-not-allowed opacity-70': !canAddItems()
+        }"
+        [disabled]="!canAddItems()"
+        [title]="!canAddItems() ? 'Order is under processing and items cannot be added' : ''"
+      >
+        Add Input Items
+      </button>
+    </div>
 
 
 
@@ -156,6 +158,32 @@
     <div>
       <h3 class="text-lg font-bold text-gray-700 mt-6">Output Items</h3>
       <!-- Similar table for output items -->
+
+      <table class="w-full border-collapse border border-gray-200">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border px-4 py-2 text-left">Item Id</th>
+            <th class="border px-4 py-2 text-left">Item Name</th>
+            <th class="border px-4 py-2 text-left">Quantity</th>
+            <th class="border px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of productionOrder.outputItems" class="border-b hover:bg-blue-50 transition">
+            <td class="px-4 py-2">{{ item.id }}</td>
+            <td class="px-4 py-2">{{ item?.item?.name }}</td>
+            <td class="px-4 py-2">{{ item.quantity }}</td>
+            <td class="px-4 py-2">
+              <button
+                (click)="deleteInputItem(item.id!)"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -214,3 +242,114 @@
     </form>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div
+  *ngIf="showFinishModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Finish Production Order</h2>
+      <button (click)="closeFinishModal()" class="text-gray-500 hover:text-gray-700">
+        <span class="text-xl font-semibold">&times;</span>
+      </button>
+    </div>
+    <p class="text-sm text-gray-600 mb-4">Add produced items to complete the production order</p>
+
+    <form [formGroup]="finishOrderForm" (ngSubmit)="$event.preventDefault()">
+      <h3 class="text-lg font-semibold mb-3">Add New Item</h3>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Item *</label>
+        <select
+          formControlName="newItemId"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+        >
+          <option value="">-- Select produced item --</option>
+          <option *ngFor="let item of items" [value]="item.id">
+            {{ item.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Quantity *</label>
+        <input
+          type="number"
+          formControlName="newQuantity"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+          placeholder="Enter quantity"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Cost Price *</label>
+        <input
+          type="number"
+          formControlName="newCostPrice"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+          placeholder="Cost Price *"
+        />
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-medium mb-1">Expiration date (optional)</label>
+        <input
+          type="date"
+          formControlName="newExpirationDate"
+          class="w-full border border-gray-300 rounded px-3 py-2"
+        />
+      </div>
+
+      <button
+        type="button"
+        (click)="addItemToList()"
+        [disabled]="finishOrderForm.invalid"
+        class="w-full px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 mb-4"
+      >
+        Add to List
+      </button>
+      
+      <div *ngIf="producedItemsList.length > 0" class="mb-4 border p-3 rounded bg-gray-50 max-h-40 overflow-y-auto">
+        <h4 class="text-sm font-semibold mb-2 text-gray-700">Produced Items:</h4>
+        <ul class="list-disc ml-5 text-sm space-y-1">
+          <li *ngFor="let item of producedItemsList">
+            <strong>{{ item.itemName }}</strong> (Qty: {{ item.quantity }})
+          </li>
+        </ul>
+      </div>
+
+      <button
+        type="button"
+        (click)="submitFinishOrder()"
+        [disabled]="isLoading || producedItemsList.length === 0"
+        class="w-full px-4 py-2 rounded text-white transition"
+        [ngClass]="{
+          'bg-green-600 hover:bg-green-700': producedItemsList.length > 0,
+          'bg-gray-400 cursor-not-allowed opacity-70': producedItemsList.length === 0
+        }"
+      >
+        <span *ngIf="!isLoading">Confirm Finish Order</span>
+        <span *ngIf="isLoading">Submitting...</span>
+      </button>
+
+    </form>
+  </div>
+</div>
+
+
+
