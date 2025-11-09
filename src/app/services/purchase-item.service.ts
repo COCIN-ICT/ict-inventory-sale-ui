@@ -32,13 +32,25 @@ export class PurchaseItemService {
     return this.http.post<PurchaseItemResponse>(`${environment.apiUrl}/purchase/item`, payload);
   }
 
-  getItemsByPurchaseOrder(orderId: number): Observable<{ purchaseOrderId: number, items: PurchaseItem[] }> {
-    return this.http.get<{ purchaseOrderId: number, items: PurchaseItem[] }>(
-      `${API_URL}/purchase-orders/${orderId}/items`
+  getItemsByPurchaseOrder(orderId: number): Observable<PurchaseItem[]> {
+    return this.http.get<PurchaseItem[]>(
+      `${API_URL}/purchase-order/${orderId}`
     );
   }
 
   getPurchaseItems(): Observable<PurchaseItem[]> {
     return this.http.get<PurchaseItem[]>(API_URL);
+  }
+
+  updatePurchaseItem(id: number, item: PurchaseItem): Observable<PurchaseItem> {
+    return this.http.put<PurchaseItem>(`${API_URL}/${id}`, item);
+  }
+
+  createBulkPurchaseItems(items: PurchaseItem[]): Observable<PurchaseItem[]> {
+    return this.http.post<PurchaseItem[]>(`${API_URL}/bulk`, items);
+  }
+
+  deletePurchaseItem(id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/${id}`);
   }
 }

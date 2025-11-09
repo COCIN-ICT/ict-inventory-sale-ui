@@ -12,26 +12,6 @@ export class PurchaseOrderListComponent implements OnInit {
   purchaseOrders: any[] = [];
   isLoading = false;
 
-  // Modal states
-  showClearModal = false;
-  showReceiveModal = false;
-  
-  // Clear modal data
-  clearId: number = 0;
-  
-  // Receive modal data
-  receivePayload = {
-    purchaseOrderId: 0,
-    receiveItems: [
-      {
-        purchaseItemId: 0,
-        quantityReceived: 0,
-        quantityDamaged: 0,
-        expirationDate: ''
-      }
-    ]
-  };
-
   constructor(
     private router: Router,
     private purchaseOrderService: PurchaseOrderService,
@@ -56,115 +36,89 @@ export class PurchaseOrderListComponent implements OnInit {
     });
   }
 
-  goToDetails(order: any): void {
-    this.router.navigate(['/home/purchase-order/details', order.id]);
-  }
-
-  goToCreate(): void {
-    this.router.navigate(['/home/purchase-order/create']);
-  }
-
-  goToVetting(): void {
-    this.router.navigate(['/home/purchase-order/vetting']);
-  }
-
-  // Clear Modal Methods
-  openClearModal(order: any): void {
-    this.clearId = order.id;
-    this.showClearModal = true;
-  }
-
-  closeClearModal(): void {
-    this.showClearModal = false;
-    this.clearId = 0;
-  }
-
-  clearOrder(): void {
-    if (!this.clearId) {
-      this.toast.error('Please enter a valid Purchase Order ID');
-      return;
-    }
-
-    this.purchaseOrderService.clearOrder(this.clearId).subscribe({
+  createPurchaseOrder(): void {
+    // Create payload matching API structure with empty arrays
+    // Based on API spec: items and quotations are arrays
+    const payload = {};
+    
+    console.log('=== Creating Purchase Order ===');
+    console.log('Payload being sent:', JSON.stringify(payload, null, 2));
+    console.log('Method: POST');
+    console.log('Content-Type: application/json');
+    
+    this.purchaseOrderService.createOrder(payload).subscribe({
       next: (res: any) => {
-        this.toast.success('Purchase order cleared successfully');
-        this.closeClearModal();
-        this.loadPurchaseOrders(); // Refresh the list
-      },
-      error: (err: any) => {
-        this.toast.error(err?.error?.message || err?.message || 'Failed to clear purchase order');
-      }
-    });
-  }
-
-  // Receive Modal Methods
-  openReceiveModal(order: any): void {
-    this.receivePayload.purchaseOrderId = order.id;
-    this.showReceiveModal = true;
-  }
-
-  closeReceiveModal(): void {
-    this.showReceiveModal = false;
-    this.resetReceivePayload();
-  }
-
-  resetReceivePayload(): void {
-    this.receivePayload = {
-      purchaseOrderId: 0,
-      receiveItems: [
-        {
-          purchaseItemId: 0,
-          quantityReceived: 0,
-          quantityDamaged: 0,
-          expirationDate: ''
+        
+        const id = res.id || res.data?.id || res.result?.id;
+        console.log('Extracted ID:', id);
+        
+        this.toast.success('Purchase Order created successfully');
+        if (id) {
+          this.router.navigate([`/home/purchase-order/details/${id}`]);
+        } else {
+          this.toast.error('Order created but ID not found. Please refresh the list.');
+          this.loadPurchaseOrders();
         }
-      ]
-    };
-  }
-
-  addReceiveItem(): void {
-    this.receivePayload.receiveItems.push({
-      purchaseItemId: 0,
-      quantityReceived: 0,
-      quantityDamaged: 0,
-      expirationDate: ''
-    });
-  }
-
-  removeReceiveItem(index: number): void {
-    if (this.receivePayload.receiveItems.length > 1) {
-      this.receivePayload.receiveItems.splice(index, 1);
-    }
-  }
-
-  receiveOrder(): void {
-    if (!this.receivePayload.purchaseOrderId) {
-      this.toast.error('Please enter a valid Purchase Order ID');
-      return;
-    }
-
-    if (this.receivePayload.receiveItems.length === 0) {
-      this.toast.error('Please add at least one item to receive');
-      return;
-    }
-
-    // Validate receive items
-    for (let item of this.receivePayload.receiveItems) {
-      if (!item.purchaseItemId || item.quantityReceived <= 0) {
-        this.toast.error('Please fill in all required fields for receive items');
-        return;
-      }
-    }
-
-    this.purchaseOrderService.receiveOrder(this.receivePayload).subscribe({
-      next: (res: any) => {
-        this.toast.success('Items received successfully');
-        this.closeReceiveModal();
-        this.loadPurchaseOrders(); // Refresh the list
       },
       error: (err: any) => {
-        this.toast.error(err?.error?.message || err?.message || 'Failed to receive items');
+        console.error('=== ERROR: Purchase Order Creation Failed ===');
+        console.error('Error object:', err);
+        console.error('Error status:', err.status);
+        console.error('Error statusText:', err.statusText);
+        console.error('Error URL:', err.url);
+        console.error('Error message:', err.message);
+        console.error('Error error property:', err.error);
+        console.error('Error error type:', typeof err.error);
+        
+        if (err.error) {
+          console.error('Error.error details:');
+          if (typeof err.error === 'string') {
+            console.error('Error.error is a string:', err.error);
+          } else if (typeof err.error === 'object') {
+            console.error('Error.error keys:', Object.keys(err.error));
+            console.error('Error.error full:', JSON.stringify(err.error, null, 2));
+            
+            // Try to extract validation errors
+            if (err.error.errors) {
+              console.error('Validation errors:', err.error.errors);
+            }
+            if (err.error.message) {
+              console.error('Error message:', err.error.message);
+            }
+            if (err.error.error) {
+              console.error('Error error:', err.error.error);
+            }
+          }
+        }
+        
+        // Extract error message for user
+        let errorMessage = 'Failed to create purchase order.';
+        if (err.error) {
+          if (typeof err.error === 'string' && err.error.length > 0) {
+            errorMessage = err.error;
+          } else if (err.error && typeof err.error === 'object') {
+            if (err.error.message) {
+              errorMessage = err.error.message;
+            } else if (err.error.error) {
+              errorMessage = err.error.error;
+            } else if (Object.keys(err.error).length > 0) {
+              errorMessage = JSON.stringify(err.error);
+            } else {
+              errorMessage = `Bad Request (${err.status}): The server rejected the request. Check console for details.`;
+            }
+          }
+        } else {
+          errorMessage = `HTTP ${err.status}: ${err.statusText || 'Bad Request'}`;
+        }
+        
+        console.error('Final error message to show user:', errorMessage);
+        this.toast.error(errorMessage);
       }
     });
+  }
+
+  navigateToDetails(id: number): void {
+    console.log("Navigating to purchase order details...");
+    this.router.navigate([`/home/purchase-order/details/${id}`]);
   }
 }

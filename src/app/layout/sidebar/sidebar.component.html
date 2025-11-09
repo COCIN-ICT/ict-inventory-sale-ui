@@ -72,38 +72,16 @@
         </ul>
       </li>
 
-      <!-- Purchase Orders - Collapsible (moved from Admin) -->
+      <!-- Purchase Orders - Direct Link (like Production) -->
       <li>
-        <button 
-          type="button"
-          (click)="togglePurchaseOrders()"
-          [class.bg-blue-50]="isPurchaseOrdersExpanded"
-          [class.text-blue-600]="isPurchaseOrdersExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>shopping_bag</mat-icon>
-            </span>
-            Purchase Orders
+        <a routerLink="/home/purchase-order" 
+           routerLinkActive="bg-blue-50 text-blue-600" 
+           class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">
+          <span class="text-lg">
+            <mat-icon>shopping_bag</mat-icon>
           </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isPurchaseOrdersExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isPurchaseOrdersExpanded, 'max-h-96': isPurchaseOrdersExpanded}">
-          <li><a routerLink="/home/purchase-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Purchase Orders</a></li>
-          <li><a routerLink="/home/purchase-order/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Purchase Order</a></li>
-          <li><a routerLink="/home/purchase-order/vetting" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Vetting</a></li>
-        </ul>
+          Purchase Orders
+        </a>
       </li>
 
       <!-- Purchase Items - Collapsible (moved from Admin) -->

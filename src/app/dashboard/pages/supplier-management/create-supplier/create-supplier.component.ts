@@ -56,7 +56,7 @@ export class CreateSupplierComponent {
           
           // Redirect to suppliers list after 2 seconds
           setTimeout(() => {
-            this.router.navigate(['/home/supplier-management/supplier']);
+            this.router.navigate(['/home/supplier-management/suppliers']);
           }, 2000);
         },
         error: (error) => {
