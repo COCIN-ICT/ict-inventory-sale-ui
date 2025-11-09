@@ -43,8 +43,8 @@ export class ProductionOrderService {
   return this.http.patch(`${API_URL}/approve/${id}`, {});
   }
 
-  finishProductionOrder(id: number) {
-    return this.http.patch(`${API_URL}/finish/${id}`, {});
+  finishProductionOrder(id: number,  payload: any = {}) {
+    return this.http.patch(`${API_URL}/finish/${id}`, payload);
   }
 
   dispenseProductionOrder(id: number) {

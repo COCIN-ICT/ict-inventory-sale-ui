@@ -22,6 +22,12 @@ export class ProductionOrderDetailComponent {
   showAddModal = false;
   addInputItemForm!: FormGroup;
 
+  // ✅ START: New Code for Finish Modal
+  showFinishModal: boolean = false; // Controls the new modal's visibility
+  finishOrderForm!: FormGroup;     // Form group for the new modal
+  producedItemsList: any[] = [];    // An array to hold items added in the modal
+  // ✅ END: New Code
+
    items: any[] = [];
 
   constructor(
@@ -42,7 +48,103 @@ export class ProductionOrderDetailComponent {
     this.addInputItemForm = this.fb.group({
       itemId: ['', Validators.required],
       quantity: ['', [Validators.required, Validators.min(1)]],
-    })
+    });
+
+    this.finishOrderForm = this.fb.group({
+      newItemId: ['', Validators.required],
+      newQuantity: ['', [Validators.required, Validators.min(1)]],
+      newCostPrice: ['', [Validators.required, Validators.min(0.01)]], // From your modal image
+      newExpirationDate: [''] // Optional, as per your image
+    });
+  }
+
+  openFinishModal() {
+    if (!this.productionOrder) return;
+    this.producedItemsList = []; 
+    this.finishOrderForm.reset();
+    this.showFinishModal = true;
+  }
+
+closeFinishModal() {  
+  this.showFinishModal = false;
+}
+
+addItemToList() {
+    if (this.finishOrderForm.invalid) {
+      this.toast.error('Please fill in all required item details.');
+      return;
+    }
+
+    const formValue = this.finishOrderForm.value;
+    const selectedItem = this.items.find(item => item.id == formValue.newItemId);
+
+    const newItem = {
+      // Data we need for the list and final payload
+      itemId: formValue.newItemId,
+      quantity: formValue.newQuantity,
+      expirationDate: formValue.newExpirationDate || null, // Handle empty date
+      
+      // Extra data to display in the UI (optional)
+      itemName: selectedItem ? selectedItem.name : 'Unknown',
+      costPrice: formValue.newCostPrice
+    };
+
+    this.producedItemsList.push(newItem);
+    this.toast.success(`${newItem.itemName} added to list.`);
+
+    // Reset the form fields for the next item
+    this.finishOrderForm.reset({
+      newItemId: '',
+      newQuantity: '',
+      newCostPrice: '',
+      newExpirationDate: ''
+    });
+    // Mark as pristine to reset validation state
+    this.finishOrderForm.markAsPristine();
+    this.finishOrderForm.markAsUntouched();
+  }
+
+
+  submitFinishOrder() {
+    if (this.producedItemsList.length === 0) {
+      this.toast.error('You must add at least one produced item.');
+      return;
+    }
+
+    this.isLoading = true;
+
+    // Transform the local list to match the API payload
+    const apiItems = this.producedItemsList.map(item => {
+      return {
+        productionOrderId: this.orderId, // Add the order ID
+        itemId: Number(item.itemId),
+        quantity: Number(item.quantity),
+        expirationDate: item.expirationDate
+      };
+    });
+
+    // Create the final payload object
+    const payload = {
+      items: apiItems
+    };
+
+    console.log('Submitting Finish Order with payload:', payload);
+
+    // Call the *service* method
+    // Note: Your 'productionOrdersService.finishProductionOrder'
+    // must be updated to accept this payload.
+    this.productionOrdersService.finishProductionOrder(this.orderId, payload).subscribe({
+      next: () => {
+        this.toast.success('Order finished successfully!');
+        this.closeFinishModal();
+        this.loadProductionOrder(); // Reloads the page to show "COMPLETED"
+      },
+      error: (err) => {
+        console.error('Error finishing order', err);
+        this.toast.error('Failed to finish order.');
+        this.isLoading = false;
+      }
+    });
   }
 
   loadProductionOrder(): void {
@@ -221,8 +323,10 @@ finishOrder() {
 
 canAddItems(): boolean {
   return this.productionOrder?.status !== 'DISPENSED' && 
-         this.productionOrder?.status !== 'COMPLETED';
+           this.productionOrder?.status !== 'CLEARED' && // ⬅️ ADD THIS
+           this.productionOrder?.status !== 'COMPLETED';
 }
+
 
 
 
