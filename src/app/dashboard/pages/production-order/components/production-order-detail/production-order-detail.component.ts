@@ -215,6 +215,12 @@ addItemToList() {
 
 
   deleteInputItem(itemId: number) {
+     if (!confirm('Are you sure you want to delete this production item?')) {
+      return;
+    }
+
+
+
     this.productionInputItemService.deleteInputItem(itemId).subscribe({
       next: () => {
         this.toast.success('Input item deleted.');
