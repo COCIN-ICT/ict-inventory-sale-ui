@@ -10,63 +10,46 @@
       </button>
     </div>
 
-    <!-- Filter and Search Section -->
-    <div class="mb-6 flex gap-4">
-      <div>
-        <label class="block">
-          <span class="text-sm font-medium text-gray-700">Filter by Department</span>
-          <select
-            class="mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64"
-            (change)="onDepartmentSelected($any($event.target).value)"
-          >
-            <option value="">All Departments</option>
-            <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
-          </select>
-        </label>
-      </div>
-      <div>
-        <label class="block">
-          <span class="text-sm font-medium text-gray-700">Search by Unit Name</span>
-          <input
-            type="text"
-            [(ngModel)]="searchTerm"
-            (input)="searchList()"
-            class="mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64"
-            placeholder="e.g., Printing Press"
-          />
-        </label>
-      </div>
+    <!-- Search Section -->
+    <div class="mb-6">
+      <label class="block">
+        <span class="text-sm font-medium text-gray-700">Search by Unit Name</span>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="searchList()"
+          class="mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-64"
+          placeholder="e.g., Printing Press"
+        />
+      </label>
     </div>
 
     <table class="w-full">
       <thead class="bg-gray-100">
         <tr>
-         
           <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ID</th>
           <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
           <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Description</th>
           <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Address</th>
-          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Department</th>
           <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let unit of units" class="border-t">
-         
           <td class="px-4 py-2 text-sm text-gray-600">{{ unit.id }}</td>
           <td class="px-4 py-2 text-sm text-gray-600">{{ unit.name }}</td>
           <td class="px-4 py-2 text-sm text-gray-600">{{ unit.description }}</td>
           <td class="px-4 py-2 text-sm text-gray-600">{{ unit.address }}</td>
-          <td class="px-4 py-2 text-sm text-gray-600">{{ unit.department?.name || 'N/A' }}</td>
           <td class="px-4 py-2 text-sm text-gray-600 flex gap-2">
-             <!-- Status toggle -->
+            <!-- Status toggle -->
             <button
               class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200"
               [ngClass]="unit.active ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-green-600 text-white hover:bg-green-700'"
+              [disabled]="toggleInProgress.has(unit.id!)"
               (click)="toggleUnitStatus(unit)">
               {{ unit.active ? 'Deactivate' : 'Activate' }}
             </button>
-              <!-- Edit button -->
+            <!-- Edit button -->
             <button
               class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all duration-200"
               (click)="openEditForm(unit)"

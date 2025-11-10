@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { Observable, tap, throwError } from 'rxjs';
 
 // interface AuthResponse {
 //   token: string;
@@ -32,6 +33,14 @@ export class AuthService {
 
   // 🟢 Save login data after successful login
   saveAuthData(response: AuthResponse): void {
+
+    console.log('💾 Saving auth data:', { 
+    hasToken: !!response.token, 
+    hasRefreshToken: !!response.refreshToken 
+  });
+  
+
+  
     if (response.token) {
       localStorage.setItem(this.tokenKey, response.token);
     }
@@ -50,6 +59,23 @@ export class AuthService {
 
    getRefreshToken(): string | null {
     return localStorage.getItem(this.refreshKey);
+  }
+
+  refreshToken(): Observable<AuthResponse> {
+    const refreshToken = this.getRefreshToken();
+
+      if (!refreshToken) {
+    return throwError(() => new Error('No refresh token available'));
+  }
+
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
+    .pipe(
+      // 🟢 Save new tokens after refresh
+      tap(response => {
+        console.log('💾 Saving refreshed tokens...');
+        this.saveAuthData(response);
+      })
+    );
   }
 
   // 🟢 Get current user

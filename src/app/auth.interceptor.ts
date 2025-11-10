@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { catchError, switchMap, throwError, BehaviorSubject, Observable } from 'rxjs';
+import { catchError, switchMap, throwError, BehaviorSubject, Observable, filter, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastService } from './services/toast.service';
 import { AuthLoginService } from './services/auth-login.service';
+import { AuthService } from './auth/auth.service';
 
+interface AuthResponse {
+  token: string;     // 👈 match your backend field names
+  refreshToken: string;    // 👈 add this
+  user?: any;               // optional user info
+}
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -13,28 +19,26 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     private toastService: ToastService,
-    private authLoginService: AuthLoginService
+    private authService: AuthService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
 
-    let headers: any = {};
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-      if (!(req.body instanceof FormData)) {
-        headers['Content-Type'] = 'application/json';
-      }
-    }
-
-    const clonedReq = req.clone({ setHeaders: headers });
+    const clonedReq = token
+      ? req.clone({
+          setHeaders: { Authorization: `Bearer ${token}` },
+        })
+      : req;
 
     return next.handle(clonedReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // Token expired — try refreshing
-          return this.handle401Error(clonedReq, next);
-        } else if (error.status === 500) {
+        if (error.status === 401 && !req.url.includes('/auth/refresh')) {
+          console.warn(' Token expired — attempting refresh...');
+          return this.handle401Error(req, next);
+        }
+
+        if (error.status === 500) {
           this.toastService.error('Server error. Please try again later.');
         } else if (error.status === 0) {
           this.toastService.error('Connection error. Please check your internet connection.');
@@ -52,60 +56,69 @@ export class AuthInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      const refreshToken = localStorage.getItem('refreshToken');
+      const refreshToken = this.authService.getRefreshToken();
       if (!refreshToken) {
         this.logoutAndRedirect();
         return throwError(() => new Error('No refresh token available.'));
       }
 
-      // 🔁 Call refresh token service
-      return this.authLoginService.refreshToken(refreshToken).pipe(
-        switchMap((response: any) => {
+      return this.authService.refreshToken().pipe(
+        switchMap((response: AuthResponse) => {
           this.isRefreshing = false;
 
-          const newToken = response.token;
-          const newRefresh = response.refreshToken;
+          // // ✅ Adjust key names to match backend response
+          // const newToken = response.token || response.accessToken;
+          // const newRefresh = response.refreshToken;
 
-          localStorage.setItem('token', newToken);
-          if (newRefresh) {
-            localStorage.setItem('refreshToken', newRefresh);
-          }
+          // if (!newToken) {
+          //   console.error('❌ No access token returned from refresh endpoint.');
+          //   this.logoutAndRedirect();
+          //   return throwError(() => new Error('No token returned.'));
+          // }
 
-          this.refreshTokenSubject.next(newToken);
+          // // ✅ Save both tokens
+          // localStorage.setItem('token', newToken);
+          // if (newRefresh) {
+          //   localStorage.setItem('refreshToken', newRefresh);
+          // }
 
-          // Retry failed request with the new access token
+          // ✅ Notify waiting requests
+          this.refreshTokenSubject.next(response.token);
+
+          // ✅ Retry the original failed request with new token
           return next.handle(
             req.clone({
-              setHeaders: { Authorization: `Bearer ${newToken}` }
+              setHeaders: { Authorization: `Bearer ${response.token}` },
             })
           );
         }),
         catchError((err) => {
+          console.error('❌ Refresh token failed:', err);
           this.isRefreshing = false;
+          this.refreshTokenSubject.next(null);
           this.logoutAndRedirect();
           return throwError(() => err);
         })
       );
     } else {
-      // Wait until refresh completes before retrying
+      // Wait for refresh to complete
       return this.refreshTokenSubject.pipe(
+        filter((token) => token !== null),
+        take(1),
         switchMap((token) => {
-          if (token) {
-            return next.handle(
-              req.clone({
-                setHeaders: { Authorization: `Bearer ${token}` }
-              })
-            );
-          }
-          return throwError(() => new Error('No token after refresh.'));
+          return next.handle(
+            req.clone({
+              setHeaders: { Authorization: `Bearer ${token}` },
+            })
+          );
         })
       );
     }
   }
 
   private logoutAndRedirect() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
+    this.authService.logout();
+    
     this.toastService.error('Session expired. Please login again.');
     this.router.navigate(['/login']);
   }

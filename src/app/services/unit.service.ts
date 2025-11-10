@@ -27,14 +27,24 @@ export class UnitService {
     return this.http.post<Unit>(API_URL, unit);
   }
 
+
+    changeUnitStatus(id: number): Observable<Unit> {
+    return this.http.patch<Unit>(`${API_URL}/change-status/${id}`, {})}; 
   
   updateUnit(id: number, unit: { name: string; description: string; address: string; unitHeadId?: number; departmentId: number }): Observable<Unit> {
     return this.http.put<Unit>(`${API_URL}/${id}`, unit);
   }
 
-  changeUnitStatus(id: number, status: 'active' | 'deactivate'): Observable<Unit> {
-    return this.http.patch<Unit>(`${API_URL}/change-status/${id}`, {status});
-  }
+  // changeUnitStatus(id: number, status: 'active' | 'deactivate'): Observable<Unit> {
+  //   return this.http.patch<Unit>(`${API_URL}/change-status/${id}`, {status});
+  // }
+
+  //   changeUnitStatus(id: number): Observable<void> {
+  //   return this.http.patch<void>(`${API_URL}/change-status/${id}`, null);
+  // }
+
+
+  
 
   
   getUnitsByDepartment(id: number): Observable<Unit[]> {
