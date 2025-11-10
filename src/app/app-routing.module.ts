@@ -98,8 +98,12 @@ const routes: Routes = [
       { path: 'sales-items', component: SalesItemsListComponent },
       { path: 'sales-items/create', component: SalesItemsCreateComponent },
 
+
+       { path: 'customers', loadChildren: () => import('./dashboard/pages/customers/customers.module').then(m => m.CustomersModule) },
+
     ]
   },
+ 
   
 
   //{ path: 'production-order', loadChildren: () => import('./dashboard/pages/production-order/production-order.module').then(m => m.ProductionOrderModule) },
