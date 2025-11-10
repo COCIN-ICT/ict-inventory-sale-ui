@@ -44,16 +44,31 @@ export class AuthEffects {
           }),
           catchError(error => {
             console.error('Login failed', error);
+            console.error('Error status:', error.status);
+            console.error('Error body:', error.error);
+            console.error('Error URL:', error.url);
 
             let errorMessage = 'Login failed. Please try again.';
             if (error.error) {
               if (typeof error.error === 'string') errorMessage = error.error;
               else if (error.error.message) errorMessage = error.error.message;
               else if (error.error.details) errorMessage = error.error.details;
-            } else if (error.status === 401) errorMessage = 'Unauthorized. Please check your credentials.';
-            else if (error.status === 500) errorMessage = 'Server error. Please try again later.';
-            else if (error.status === 0) errorMessage = 'Network error. Please check your connection.';
-            else if (error.status === 422) errorMessage = 'Validation error. Please check your input.';
+              else if (Object.keys(error.error).length === 0 && error.status === 404) {
+                // Backend is receiving request but returning 404 - likely authentication failure
+                errorMessage = 'Invalid username or password. Please check your credentials.';
+              }
+            } else if (error.status === 401) {
+              errorMessage = 'Unauthorized. Please check your credentials.';
+            } else if (error.status === 404) {
+              // Check if backend is reachable - if we got here, proxy is working but endpoint/auth failed
+              errorMessage = 'Invalid username or password. Please check your credentials.';
+            } else if (error.status === 500) {
+              errorMessage = 'Server error. Please try again later.';
+            } else if (error.status === 0) {
+              errorMessage = 'Network error. Please check your connection and ensure the backend server is running.';
+            } else if (error.status === 422) {
+              errorMessage = 'Validation error. Please check your input.';
+            }
 
             return of(AuthActions.loginFailure({ error: errorMessage }));
           })

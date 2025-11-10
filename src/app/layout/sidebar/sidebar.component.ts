@@ -12,7 +12,6 @@ export class SidebarComponent {
   isUserManagementExpanded = false;
   isSupplierManagementExpanded = false;
   isStoreManagementExpanded = false;
-  isPurchaseQuotationsExpanded = false;
   isPurchaseOrdersExpanded = false;
   isSalesOrdersExpanded = false; // <--- added
   isSalesItemsExpanded = false; // <--- new
@@ -21,9 +20,7 @@ export class SidebarComponent {
   isBankAccountsExpanded = false;
 
   // Other group toggles
-  isPurchaseExpanded = false;
   isPointOfSaleExpanded = false;
-  isPurchaseItemsExpanded = false;
   isProductionOrderExpanded = false;
   isStockTransferExpanded = false;
 
@@ -45,7 +42,6 @@ export class SidebarComponent {
   toggleUserManagement(): void { this.isUserManagementExpanded = !this.isUserManagementExpanded; }
   toggleSupplierManagement(): void { this.isSupplierManagementExpanded = !this.isSupplierManagementExpanded; }
   toggleStoreManagement(): void { this.isStoreManagementExpanded = !this.isStoreManagementExpanded; }
-  togglePurchaseQuotations(): void { this.isPurchaseQuotationsExpanded = !this.isPurchaseQuotationsExpanded; }
   togglePurchaseOrders(): void { this.isPurchaseOrdersExpanded = !this.isPurchaseOrdersExpanded; }
   toggleSalesOrders(): void { this.isSalesOrdersExpanded = !this.isSalesOrdersExpanded; }
   toggleSalesItems(): void { this.isSalesItemsExpanded = !this.isSalesItemsExpanded; }
@@ -54,9 +50,7 @@ export class SidebarComponent {
   toggleBankAccounts(): void { this.isBankAccountsExpanded = !this.isBankAccountsExpanded; }
 
   // Others
-  togglePurchase(): void { this.isPurchaseExpanded = !this.isPurchaseExpanded; }
   togglePointOfSale(): void { this.isPointOfSaleExpanded = !this.isPointOfSaleExpanded; }
-  togglePurchaseItems(): void { this.isPurchaseItemsExpanded = !this.isPurchaseItemsExpanded; }
   toggleProductionOrder(): void { this.isProductionOrderExpanded = !this.isProductionOrderExpanded; }
   toggleStockTransfer(): void { this.isStockTransferExpanded = !this.isStockTransferExpanded; }
 

@@ -78,7 +78,8 @@
               "buildTarget": "pims:build:production"
             },
             "development": {
-              "buildTarget": "pims:build:development"
+              "buildTarget": "pims:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
