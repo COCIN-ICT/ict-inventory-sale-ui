@@ -25,7 +25,27 @@ export class StockTransferService {
      return this.http.get<Item[]>(`${API_URL}/item`);
    }
 
-   transferStock(data: any): Observable<StockTransfer[]> {
-    return this.http.post<StockTransfer[]>(`${API_URL}/stock/transfer`, data);
+  //  transferStock(payload: any): Observable<StockTransfer[]> {
+  //   return this.http.post<StockTransfer[]>(`${API_URL}/stock/transfer`, payload);
+  // }
+
+   transferStock(payload: any): Observable<StockTransfer> {
+    return this.http.post<any>(`${API_URL}/stock/transfer`, payload).pipe(
+      map((res) => {
+        // normalize response: backend may return an object or an array
+        if (Array.isArray(res)) {
+          return res[0] as StockTransfer;
+        }
+        return res as StockTransfer;
+      })
+    );
   }
+
+  approveStockTransfer(transferId: number): Observable<any> {
+    return this.http.patch(`${API_URL}/stock/transfer/approve/${transferId}`, {}); 
+}
+
+receiveStockTransfer(transferId: number): Observable<any> {
+  return this.http.patch(`${API_URL}/stock/transfer/receive/${transferId}`, {});  
+}
 }

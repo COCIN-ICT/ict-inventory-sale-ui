@@ -22,8 +22,8 @@
     </div>
 
     <!-- STOCK TRANSFER -->
-    <app-pricing *ngIf="storeType === 'SECONDARY' "></app-pricing>
-   <app-stock-transfer *ngIf="storeType === 'PRIMARY'"></app-stock-transfer>
+    <app-pricing *ngIf="storeType === 'SECONDARY'" [stockId]="stockId" ></app-pricing>
+   <app-stock-transfer *ngIf="storeType === 'PRIMARY'" [itemId]="stocks?.item?.id" (transferCompleted)="loadStockDetails()"></app-stock-transfer>
 
     <!-- Tables -->
     <div class="grid md:grid-cols-2 gap-6">

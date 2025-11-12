@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../../services/toast.service';
 import { ItemService } from '../../../services/item.service';
@@ -46,6 +46,15 @@ export class StockTransferComponent {
 
   isExternalTransfer = false;
   loading = false;
+
+
+  createdTransferId: number | null = null;
+  isTransferCreated = false;
+  isTransferApproved = false;
+
+  @Input() itemId: number | null = null;
+  @Output() transferCompleted = new EventEmitter<void>();
+
 
 
   constructor(
@@ -106,11 +115,22 @@ export class StockTransferComponent {
   }
 
   openTransferModal(): void {
+    this.resetModalState();
     this.isModalOpen = true;
   }
 
   closeModal(): void {
+    this.resetModalState();
     this.isModalOpen = false;
+  }
+
+  resetModalState(): void {
+    this.transferForm.reset({ transferType: 'internal', quantity: 1 });
+    this.isExternalTransfer = false;
+    this.applyInternalTransferLogic();
+    this.createdTransferId = null;
+    this.isTransferCreated = false;
+    this.isTransferApproved = false;
   }
 
   onTransferTypeChange(): void {
@@ -140,31 +160,76 @@ export class StockTransferComponent {
       return;
     }
 
+    // Check if itemId is available from the Input
+  if (!this.itemId) {
+    this.toast.error('Cannot proceed: Item ID is missing.');
+    return;
+  }
+
     const payload = {
       ...this.transferForm.value,
-      itemId: this.getItemIdFromURL()
+      itemId: this.itemId
     };
 
     this.loading = true;
     this.stockTransferService.transferStock(payload).subscribe({
-      next: () => {
+      next: (response) => {
         this.toast.success('Stock transfer successful!');
-        this.closeModal();
-        this.transferForm.reset({ transferType: 'internal', quantity: 1 });
-        this.isExternalTransfer = false;
-        this.applyInternalTransferLogic();
+        //this.closeModal();
+        this.createdTransferId = (response as any).id;
+        this.isTransferCreated = true;
+        
+        // this.transferForm.reset({ transferType: 'internal', quantity: 1 });
+        // this.isExternalTransfer = false;
+        // this.applyInternalTransferLogic();
       },
       error: () => this.toast.error('Failed to complete transfer.'),
       complete: () => (this.loading = false)
     });
   }
 
-  getItemIdFromURL(): number {
-    const url = window.location.pathname; // e.g. /home/store/details/10/stock/1
-    const parts = url.split('/');
-    const itemId = Number(parts[parts.length - 1]);
-    return itemId;
+  approveTransfer(): void {
+    if (!this.createdTransferId) {
+        this.toast.error('No pending transfer ID found.');
+        return;
+    }
+    this.loading = true;
+    // Call the PATCH endpoint for approval
+    this.stockTransferService.approveStockTransfer(this.createdTransferId).subscribe({
+        next: () => {
+            this.toast.success('Stock transfer successfully approved! Ready for receiving.');
+            this.isTransferApproved = true;
+            
+        },
+        error: () => this.toast.error('Failed to approve transfer.'),
+        complete: () => (this.loading = false)
+    });
   }
+
+  receiveTransfer(): void {
+    if (!this.createdTransferId) {
+        this.toast.error('No transfer ID found for receiving.');
+        return;
+    }
+    this.loading = true;
+    // Call the PATCH endpoint for receiving: /stock/transfer/receive/{id}
+    this.stockTransferService.receiveStockTransfer(this.createdTransferId).subscribe({
+        next: () => {
+            this.toast.success('Stock successfully received! Transfer complete.');
+            this.transferCompleted.emit();
+            this.closeModal(); // <-- FINAL STEP: Close the modal
+        },
+        error: () => this.toast.error('Failed to receive stock.'),
+        complete: () => (this.loading = false)
+    });
+  }
+
+  // getItemIdFromURL(): number {
+  //   const url = window.location.pathname; // e.g. /home/store/details/10/stock/1
+  //   const parts = url.split('/');
+  //   const itemId = Number(parts[parts.length - 1]);
+  //   return itemId;
+  // }
 
 
   /*
