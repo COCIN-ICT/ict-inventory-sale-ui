@@ -82,6 +82,12 @@ export class StockDetailsComponent {
     }
 
     openStockTransferModal() {
+       const itemId = this.stocks?.item?.id || this.stockId;
+  
+  if (!itemId) {
+    this.toast.error('Item ID not found');
+    return;
+  }
     this.toast.info('Opening Stock Transfer Modal...'); // Placeholder
   }
 

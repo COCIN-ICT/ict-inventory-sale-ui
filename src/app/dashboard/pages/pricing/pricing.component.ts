@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PricingService } from '../../../services/pricing.service';
 import { HttpClient } from '@angular/common/http';
@@ -14,9 +14,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PricingComponent {
   pricingForm!: FormGroup;
-  stockId!: number;
+ // stockId!: number;
   isEditMode = false;
   buttonLabel = 'Save Price';
+
+  @Input() stockId!: number;
   constructor(
     private fb: FormBuilder,
     private pricingService: PricingService,
@@ -26,8 +28,16 @@ export class PricingComponent {
 
    ngOnInit(): void {
     this.initializeForm();
-    this.getStockIdFromRoute();
-    this.loadPricingByStockId();
+    // this.getStockIdFromRoute();
+    // this.loadPricingByStockId();
+
+   // Step 1: Check if a valid stockId was passed via the @Input()
+    if (this.stockId && this.stockId > 0) {
+      this.loadPricingByStockId(); 
+    } else {
+      // Log an error, but prevent the erroneous API call with ID 0
+      console.warn('PricingComponent: Stock ID is missing or invalid. Skipping API call.');
+    }
   }
 
   initializeForm(): void {
@@ -36,9 +46,9 @@ export class PricingComponent {
     });
   }
 
-  getStockIdFromRoute(): void {
-    this.stockId = Number(this.route.snapshot.paramMap.get('id'));
-  }
+  // getStockIdFromRoute(): void {
+  //   this.stockId = Number(this.route.snapshot.paramMap.get('id'));
+  // }
 
   loadPricingByStockId(): void {
     this.pricingService.getPricingByStock(this.stockId).subscribe({
@@ -59,6 +69,12 @@ export class PricingComponent {
       return;
     }
 
+    // Add guard clause in case user submits before initialization is complete (just in case)
+    if (!this.stockId || this.stockId <= 0) {
+      this.toast.error('Cannot save: Stock ID is missing.');
+      return;
+    }
+
     const formValue = this.pricingForm.value;
     const payload: Pricing = {
       stockId: this.stockId,
@@ -75,7 +91,7 @@ export class PricingComponent {
   createPricing(payload: Pricing): void {
     this.pricingService.createPricing(payload).subscribe({
       next: (res) => {
-        alert('Price saved successfully!');
+        this.toast.success('Price saved successfully!');
         this.isEditMode = true;
         this.buttonLabel = 'Update Price';
       },

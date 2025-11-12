@@ -111,7 +111,11 @@ export class StoreDetailsComponent {
   }
 
   goToStockDetails(stockId: number) {
-  this.router.navigate(['/stock/details', stockId]);
+    const storeId = this.id;
+
+    this.router.navigate(['stock', stockId], { relativeTo: this.route });
+   // this.router.navigate(['/stock/details', storeId, 'stock', stockId]);
+  //this.router.navigate(['/stock/details', stockId]);
 }
 
 

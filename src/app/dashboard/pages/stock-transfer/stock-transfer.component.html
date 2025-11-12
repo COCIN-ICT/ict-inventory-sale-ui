@@ -17,9 +17,12 @@
       <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
     </div>
 
-    <form [formGroup]="transferForm" (ngSubmit)="submitTransfer()" class="space-y-4">
-
-      <!-- Transfer Type -->
+    <form 
+      [formGroup]="transferForm" 
+      (ngSubmit)="submitTransfer()" 
+      class="space-y-4"
+      *ngIf="!isTransferCreated"> 
+      
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Transfer Type</label>
         <div class="flex gap-4">
@@ -42,7 +45,6 @@
         </div>
       </div>
 
-      <!-- Quantity -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
         <input 
@@ -52,7 +54,6 @@
           placeholder="Enter quantity" />
       </div>
 
-      <!-- Reason -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
         <textarea
@@ -62,7 +63,6 @@
           placeholder="Enter reason for transfer"></textarea>
       </div>
 
-      <!-- Destination Store -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Destination Store</label>
         <select 
@@ -75,7 +75,6 @@
         </select>
       </div>
 
-      <!-- Buttons -->
       <div class="pt-4 flex justify-end gap-3">
         <button 
           type="button"
@@ -91,5 +90,59 @@
         </button>
       </div>
     </form>
+    
+    <div *ngIf="isTransferCreated && !isTransferApproved"> 
+        <div class="text-center py-8">
+            <svg class="w-16 h-16 mx-auto text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <p class="text-lg text-gray-800 font-medium mb-2">
+                Transfer Request Submitted!
+            </p>
+            <p class="text-gray-500 mb-6">
+                Transfer ID: **#{{ createdTransferId }}** is pending approval.
+            </p>
+            
+            <button
+                type="button"
+                (click)="approveTransfer()"
+                [disabled]="loading"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-150 ease-in-out">
+                {{ loading ? 'Approving...' : 'Approve Transfer Now' }}
+            </button>
+            
+            <button
+                type="button"
+                (click)="closeModal()"
+                class="w-full mt-3 text-sm text-gray-500 hover:text-gray-700 py-2">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="isTransferCreated && isTransferApproved">
+        <div class="text-center py-8">
+            <svg class="w-16 h-16 mx-auto text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+            <p class="text-lg text-gray-800 font-medium mb-2">
+                Transfer Approved!
+            </p>
+            <p class="text-gray-500 mb-6">
+                Transfer ID: **#{{ createdTransferId }}** is ready to be received.
+            </p>
+            
+            <button
+                type="button"
+                (click)="receiveTransfer()"
+                [disabled]="loading"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-150 ease-in-out">
+                {{ loading ? 'Receiving...' : 'Receive Stock Now' }}
+            </button>
+            
+            <button
+                type="button"
+                (click)="closeModal()"
+                class="w-full mt-3 text-sm text-gray-500 hover:text-gray-700 py-2">
+                Close
+            </button>
+        </div>
+    </div>
   </div>
 </div>
