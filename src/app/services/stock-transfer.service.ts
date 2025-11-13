@@ -41,11 +41,15 @@ export class StockTransferService {
     );
   }
 
+  pendingStockTransfers(): Observable<StockTransfer[]> {
+    return this.http.get<StockTransfer[]>(`${API_URL}/stock/transfer`);
+  }
+
   approveStockTransfer(transferId: number): Observable<any> {
     return this.http.patch(`${API_URL}/stock/transfer/approve/${transferId}`, {}); 
-}
+  }
 
-receiveStockTransfer(transferId: number): Observable<any> {
-  return this.http.patch(`${API_URL}/stock/transfer/receive/${transferId}`, {});  
-}
+  receiveStockTransfer(transferId: number): Observable<any> {
+    return this.http.patch(`${API_URL}/stock/transfer/receive/${transferId}`, {});  
+  }
 }
