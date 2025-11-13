@@ -45,6 +45,17 @@ export class PendingStockTransferComponent implements OnInit {
 
   approveTransfer(transferId: number): void {
     this.loading = true;
+    this.stockTransferService.approveStockTransfer(transferId).subscribe({
+        next: () => {
+            this.toast.success('Stock transfer approved successfully');
+            this.loadTransfers();
+            
+        },
+      error: () => {
+        this.loading = false;
+        this.toast.error('Failed to approve transfer');
+      },
+    });
     // this.storeService.updateStockTransferStatus(transferId, 'APPROVED').subscribe({
     //   next: () => {
     //     this.toast.success('Stock transfer approved successfully');
@@ -57,8 +68,22 @@ export class PendingStockTransferComponent implements OnInit {
     // });
   }
 
+  
+
   receiveTransfer(transferId: number): void {
     this.loading = true;
+
+    this.stockTransferService.receiveStockTransfer(transferId).subscribe({
+        next: () => {
+            this.toast.success('Stock transfer marked as received');
+            this.loadTransfers();
+            
+        },
+      error: () => {
+        this.loading = false;
+        this.toast.error('Failed to receive transfer');
+      },
+    });
     // this.storeService.updateStockTransferStatus(transferId, 'RECEIVED').subscribe({
     //   next: () => {
     //     this.toast.success('Stock transfer marked as received');

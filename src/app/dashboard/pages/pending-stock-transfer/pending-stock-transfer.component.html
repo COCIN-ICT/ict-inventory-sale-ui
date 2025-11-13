@@ -37,20 +37,28 @@
           <th class="p-2 border">ID</th>
           <th class="p-2 border">Item</th>
           <th class="p-2 border">Quantity</th>
-          <th class="p-2 border">From</th>
-          <th class="p-2 border">To</th>
+          <th class="p-2 border">From Store</th>
+          <th class="p-2 border">To Store </th>
+          <th class="p-2 border">Requested by</th>
+          <th class="p-2 border">Reason </th>
           <th class="p-2 border">Status</th>
+          <th class="p-2 border">Created</th>
+          <th class="p-2 border">Last Updated</th>
           <th class="p-2 border">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let transfer of pendingTransfers" class="hover:bg-gray-50">
           <td class="p-2 border">{{ transfer.id }}</td>
-          <td class="p-2 border">{{ transfer.itemName }}</td>
+          <td class="p-2 border">{{ transfer.item.name }}</td>
           <td class="p-2 border">{{ transfer.quantity }}</td>
-          <td class="p-2 border">{{ transfer.fromStore?.name }}</td>
-          <td class="p-2 border">{{ transfer.toStore?.name }}</td>
+          <td class="p-2 border">{{ transfer.sourceStore.name }}</td>
+          <td class="p-2 border">{{ transfer.destinationStore.name }}</td>
+          <td class="p-2 border">{{ transfer.initiatedBy.username }}</td>
+          <td class="p-2 border">{{ transfer.reason }}</td>
           <td class="p-2 border">{{ transfer.status }}</td>
+          <td class="p-2 border">{{ transfer.createdAt }}</td>
+          <td class="p-2 border">{{ transfer.updatedAt }}</td>
           <td class="p-2 border text-center">
             <button
               (click)="approveTransfer(transfer.id)"
@@ -77,20 +85,28 @@
           <th class="p-2 border">ID</th>
           <th class="p-2 border">Item</th>
           <th class="p-2 border">Quantity</th>
-          <th class="p-2 border">From</th>
-          <th class="p-2 border">To</th>
+          <th class="p-2 border">From Store</th>
+          <th class="p-2 border">To Store </th>
+          <th class="p-2 border">Requested by</th>
+          <th class="p-2 border">Reason </th>
           <th class="p-2 border">Status</th>
+          <th class="p-2 border">Created</th>
+          <th class="p-2 border">Last Updated</th>
           <th class="p-2 border">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let transfer of approvedTransfers" class="hover:bg-gray-50">
           <td class="p-2 border">{{ transfer.id }}</td>
-          <td class="p-2 border">{{ transfer.itemName }}</td>
+          <td class="p-2 border">{{ transfer.item.name }}</td>
           <td class="p-2 border">{{ transfer.quantity }}</td>
-          <td class="p-2 border">{{ transfer.fromStore?.name }}</td>
-          <td class="p-2 border">{{ transfer.toStore?.name }}</td>
+          <td class="p-2 border">{{ transfer.sourceStore.name }}</td>
+          <td class="p-2 border">{{ transfer.destinationStore.name }}</td>
+          <td class="p-2 border">{{ transfer.initiatedBy.username }}</td>
+          <td class="p-2 border">{{ transfer.reason }}</td>
           <td class="p-2 border">{{ transfer.status }}</td>
+          <td class="p-2 border">{{ transfer.createdAt }}</td>
+          <td class="p-2 border">{{ transfer.updatedAt }}</td>
           <td class="p-2 border text-center">
             <button
               (click)="receiveTransfer(transfer.id)"
