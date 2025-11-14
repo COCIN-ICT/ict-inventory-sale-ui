@@ -100,6 +100,8 @@ const routes: Routes = [
 
 
        { path: 'customers', loadChildren: () => import('./dashboard/pages/customers/customers.module').then(m => m.CustomersModule) },
+       //pending stock transfer
+       { path: 'pending-stock-transfer', loadChildren: () => import('./dashboard/pages/pending-stock-transfer/pending-stock-transfer.module').then(m => m.PendingStockTransferModule) },
 
     ]
   },

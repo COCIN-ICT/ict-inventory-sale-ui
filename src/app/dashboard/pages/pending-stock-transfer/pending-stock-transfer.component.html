@@ -1,0 +1,127 @@
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Stock Transfers</h2>
+
+  <!-- Tabs -->
+  <div class="flex space-x-4 border-b border-gray-300 mb-6">
+    <button
+      class="pb-2 px-4 text-lg font-medium transition-all"
+      [class.border-b-4]="activeTab === 'PENDING'"
+      [class.border-blue-500]="activeTab === 'PENDING'"
+      [class.text-blue-600]="activeTab === 'PENDING'"
+      [class.text-gray-600]="activeTab !== 'PENDING'"
+      (click)="setActiveTab('PENDING')"
+    >
+      Pending Transfers
+    </button>
+
+    <button
+      class="pb-2 px-4 text-lg font-medium transition-all"
+      [class.border-b-4]="activeTab === 'APPROVED'"
+      [class.border-green-500]="activeTab === 'APPROVED'"
+      [class.text-green-600]="activeTab === 'APPROVED'"
+      [class.text-gray-600]="activeTab !== 'APPROVED'"
+      (click)="setActiveTab('APPROVED')"
+    >
+      Approved Transfers
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-gray-600">Loading stock transfers...</div>
+
+  <!-- Pending Transfers Table -->
+  <div *ngIf="!loading && activeTab === 'PENDING'">
+    <table class="w-full border-collapse border border-gray-300">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 border">ID</th>
+          <th class="p-2 border">Item</th>
+          <th class="p-2 border">Quantity</th>
+          <th class="p-2 border">From Store</th>
+          <th class="p-2 border">To Store </th>
+          <th class="p-2 border">Requested by</th>
+          <th class="p-2 border">Reason </th>
+          <th class="p-2 border">Status</th>
+          <th class="p-2 border">Created</th>
+          <th class="p-2 border">Last Updated</th>
+          <th class="p-2 border">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transfer of pendingTransfers" class="hover:bg-gray-50">
+          <td class="p-2 border">{{ transfer.id }}</td>
+          <td class="p-2 border">{{ transfer.item.name }}</td>
+          <td class="p-2 border">{{ transfer.quantity }}</td>
+          <td class="p-2 border">{{ transfer.sourceStore.name }}</td>
+          <td class="p-2 border">{{ transfer.destinationStore.name }}</td>
+          <td class="p-2 border">{{ transfer.initiatedBy.username }}</td>
+          <td class="p-2 border">{{ transfer.reason }}</td>
+          <td class="p-2 border">{{ transfer.status }}</td>
+          <td class="p-2 border">{{ transfer.createdAt }}</td>
+          <td class="p-2 border">{{ transfer.updatedAt }}</td>
+          <td class="p-2 border text-center">
+            <button
+              (click)="approveTransfer(transfer.id)"
+              class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+            >
+              Approve
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="!pendingTransfers.length">
+          <td colspan="7" class="text-center p-3 text-gray-500">
+            No pending stock transfers found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Approved Transfers Table -->
+  <div *ngIf="!loading && activeTab === 'APPROVED'">
+    <table class="w-full border-collapse border border-gray-300">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 border">ID</th>
+          <th class="p-2 border">Item</th>
+          <th class="p-2 border">Quantity</th>
+          <th class="p-2 border">From Store</th>
+          <th class="p-2 border">To Store </th>
+          <th class="p-2 border">Requested by</th>
+          <th class="p-2 border">Reason </th>
+          <th class="p-2 border">Status</th>
+          <th class="p-2 border">Created</th>
+          <th class="p-2 border">Last Updated</th>
+          <th class="p-2 border">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transfer of approvedTransfers" class="hover:bg-gray-50">
+          <td class="p-2 border">{{ transfer.id }}</td>
+          <td class="p-2 border">{{ transfer.item.name }}</td>
+          <td class="p-2 border">{{ transfer.quantity }}</td>
+          <td class="p-2 border">{{ transfer.sourceStore.name }}</td>
+          <td class="p-2 border">{{ transfer.destinationStore.name }}</td>
+          <td class="p-2 border">{{ transfer.initiatedBy.username }}</td>
+          <td class="p-2 border">{{ transfer.reason }}</td>
+          <td class="p-2 border">{{ transfer.status }}</td>
+          <td class="p-2 border">{{ transfer.createdAt }}</td>
+          <td class="p-2 border">{{ transfer.updatedAt }}</td>
+          <td class="p-2 border text-center">
+            <button
+              (click)="receiveTransfer(transfer.id)"
+              class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+            >
+              Mark as Received
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="!approvedTransfers.length">
+          <td colspan="7" class="text-center p-3 text-gray-500">
+            No approved stock transfers found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
