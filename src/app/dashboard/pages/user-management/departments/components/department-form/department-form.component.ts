@@ -55,18 +55,18 @@ export class DepartmentFormComponent implements OnInit {
 
     const payload: NewDepartment = this.form.value;
 
-    if(this.isEditMode && this.data?.id){
-      //update
-      this.departmentsService.updateDepartment(this.data.id, payload).subscribe({
-        next: (updated) => this.dialogRef.close(updated),
-        error: () => this.toast.error('Error updating department')
-       });
-      } else {
-        this.departmentsService.createDepartment(payload).subscribe({
-          next: (created) => this.dialogRef.close(created),
-          error: () => this.toast.error('Error creating department')
-        });
-      }
+    if (this.isEditMode && this.data?.id) {
+  this.departmentsService.updateDepartment(this.data.id, payload).subscribe({
+    next: (updated) => this.dialogRef.close({ action: 'update', data: updated }),
+    error: () => this.toast.error('Error updating department')
+  });
+} else {
+  this.departmentsService.createDepartment(payload).subscribe({
+    next: (created) => this.dialogRef.close({ action: 'create', data: created }),
+    error: () => this.toast.error('Error creating department')
+  });
+}
+
     }
     close(): void {
       this.dialogRef.close(false);

@@ -1,103 +1,63 @@
-<div class="p-8 bg-white rounded-2xl shadow-2xl max-w-2xl mx-auto">
-  <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+<div class="p-8 bg-white rounded-3xl shadow-2xl max-w-3xl mx-auto animate-fadeIn">
+  <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">
     {{ isEditMode ? 'Edit Unit' : 'Create Unit' }}
   </h2>
 
-  <form [formGroup]="form" class="space-y-6">
+  <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
     <!-- Name -->
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Name</label>
-      <input
-        type="text"
-        formControlName="name"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        placeholder="Enter unit name"
-      />
-      <p *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
-         class="text-red-500 text-xs mt-1">
-        Name is required
-      </p>
+      <input type="text" formControlName="name" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl" placeholder="Enter unit name" />
+      <p *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-xs mt-1">Name is required</p>
     </div>
 
     <!-- Description -->
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Description</label>
-      <input
-        type="text"
-        formControlName="description"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        placeholder="Enter description"
-      />
-      <p *ngIf="form.get('description')?.invalid && form.get('description')?.touched"
-         class="text-red-500 text-xs mt-1">
-        Description is required
-      </p>
+      <input type="text" formControlName="description" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl" placeholder="Enter description" />
+      <p *ngIf="form.get('description')?.invalid && form.get('description')?.touched" class="text-red-500 text-xs mt-1">Description is required</p>
     </div>
 
     <!-- Address -->
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Address</label>
-      <input
-        type="text"
-        formControlName="address"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        placeholder="Enter address"
-      />
-      <p *ngIf="form.get('address')?.invalid && form.get('address')?.touched"
-         class="text-red-500 text-xs mt-1">
-        Address is required
-      </p>
-    </div>
-
-    <!-- Unit Head ID -->
-    <div>
-      <label class="block text-sm font-semibold text-gray-700 mb-1">Unit Head ID (Optional)</label>
-      <input
-        type="number"
-        formControlName="unitHeadId"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        placeholder="Enter unit head ID"
-      />
+      <input type="text" formControlName="address" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl" placeholder="Enter address" />
+      <p *ngIf="form.get('address')?.invalid && form.get('address')?.touched" class="text-red-500 text-xs mt-1">Address is required</p>
     </div>
 
     <!-- Department -->
     <div>
       <label class="block text-sm font-semibold text-gray-700 mb-1">Department</label>
-      <select
-        formControlName="departmentId"
-        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
-      >
-        <option value="">Select Department</option>
-        <option *ngFor="let dept of departments" [value]="dept.id">
-          {{ dept.name }}
-        </option>
+      <select formControlName="departmentId" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white">
+        <option value="">Select department</option>
+        <option *ngFor="let dept of departments" [ngValue]="dept.id">
+  {{ dept.name }}
+</option>
+
       </select>
-      <p *ngIf="form.get('departmentId')?.invalid && form.get('departmentId')?.touched"
-         class="text-red-500 text-xs mt-1">
-        Department is required
-      </p>
+      <p *ngIf="form.get('departmentId')?.invalid && form.get('departmentId')?.touched" class="text-red-500 text-xs mt-1">Department is required</p>
+    </div>
+
+    <!-- Unit Head (dropdown) -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Unit Head</label>
+      <select formControlName="unitHeadId" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white">
+        <option value="">Select unit head</option>
+        <option *ngFor="let head of unitHeadOptions" [ngValue]="head.id">
+  {{ head.name }}
+</option>
+
+      </select>
     </div>
 
     <!-- Actions -->
-    <div class="flex justify-end gap-4 pt-6">
-      <button
-        type="button"
-        (click)="close()"
-        class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition font-medium"
-      >
-        Cancel
-      </button>
-      <button
-        type="button"
-        [disabled]="form.invalid"
-        (click)="isEditMode ? updateUnit() : createUnit()"
-        class="px-5 py-2.5 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-        [ngClass]="isEditMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'"
-      >
+    <div class="md:col-span-2 flex justify-end gap-4 pt-6">
+      <button type="button" (click)="close()" class="px-5 py-2.5 bg-gray-200 rounded-xl">Cancel</button>
+
+      <button type="button" (click)="isEditMode ? updateUnit() : createUnit()" class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl">
         {{ isEditMode ? 'Update' : 'Create' }}
       </button>
     </div>
-
   </form>
 </div>

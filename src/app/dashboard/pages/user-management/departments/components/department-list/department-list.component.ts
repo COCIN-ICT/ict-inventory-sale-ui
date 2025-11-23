@@ -41,11 +41,17 @@ successMessage: any;
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        
-        this.loadDepartments(); // Reload departments after form submission
-      }
-    });
+  if (!result) return;
+
+  if (result.action === 'update') {
+    this.loadDepartments();
+  }
+
+  if (result.action === 'create') {
+    this.loadDepartments();
+  }
+});
+
   }
 
   deleteDepartment(departmentId: number): void {

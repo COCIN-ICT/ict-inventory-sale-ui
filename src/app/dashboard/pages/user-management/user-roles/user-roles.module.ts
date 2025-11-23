@@ -7,11 +7,14 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { SharedModule } from '../../../../shared/shared.module';
+
 
 
 @NgModule({
   declarations: [
-    UserRolesComponent
+    UserRolesComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -20,6 +23,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatSelectModule,
     MatFormFieldModule,
     MatChipsModule,
+    SharedModule
   ]
 })
 export class UserRolesModule { }
