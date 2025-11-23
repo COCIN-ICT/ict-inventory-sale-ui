@@ -34,9 +34,10 @@ export class AuthService {
   // 🟢 Save login data after successful login
   saveAuthData(response: AuthResponse): void {
 
-    console.log('💾 Saving auth data:', { 
+    console.log(' Saving auth data:', { 
     hasToken: !!response.token, 
-    hasRefreshToken: !!response.refreshToken 
+    hasRefreshToken: !!response.refreshToken,
+    refreshTokenPreview: response.refreshToken?.substring(0, 20) + '...'  
   });
   
 
@@ -44,9 +45,14 @@ export class AuthService {
     if (response.token) {
       localStorage.setItem(this.tokenKey, response.token);
     }
-    if (response.refreshToken) {
-      localStorage.setItem(this.refreshKey, response.refreshToken);
-    }
+    // if (response.refreshToken) {
+    //   localStorage.setItem(this.refreshKey, response.refreshToken);
+    // }
+     if (response.refreshToken && response.refreshToken.trim() !== '') {
+    localStorage.setItem(this.refreshKey, response.refreshToken);
+  } else {
+    console.warn('⚠️ No new refresh token in response - keeping existing one');
+  }
     if (response.user) {
       localStorage.setItem(this.userKey, JSON.stringify(response.user));
     }

@@ -117,9 +117,9 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private logoutAndRedirect() {
-    this.authService.logout();
-    
+    console.log('🚪 Session expired - logging out...');
     this.toastService.error('Session expired. Please login again.');
-    this.router.navigate(['/login']);
+    this.authService.logout();
+    //this.router.navigate(['/login']);
   }
 }

@@ -46,6 +46,8 @@ import { SalesPromotionService } from './services/sales-promotion.service';
 import { SalesItemsListComponent } from './dashboard/pages/sales-items/sales-items-list/sales-items-list.component';
 import { SalesItemsCreateComponent } from './dashboard/pages/sales-items/sales-items-create/sales-items-create.component';
 import { SalesItemService } from './services/sales-item.service';
+import { PrettyPermissionPipe } from './pipes/pretty-permission.pipe';
+import { SharedModule } from './shared/shared.module';
 
 
 
@@ -76,7 +78,8 @@ import { SalesItemService } from './services/sales-item.service';
     SalesPromotionByStockComponent
     ,
     SalesItemsListComponent,
-    SalesItemsCreateComponent
+    SalesItemsCreateComponent,
+    
 
   ],
   imports: [
@@ -89,6 +92,7 @@ import { SalesItemService } from './services/sales-item.service';
     MatIconModule,
     MatDialogModule,
     MatButtonModule,
+    SharedModule,
     
     
     
