@@ -122,7 +122,7 @@ export class AuthEffects {
             try {
               const parsed = JSON.parse(savedUser);
               const token = localStorage.getItem('token');
-              const refresh = localStorage.getItem('refresh_token');
+              const refresh = localStorage.getItem('refreshToken');
               const user = { ...parsed };
               return of(AuthActions.loginSuccess({ token: token || '', refreshToken: refresh || '', user }));
             } catch (error) {

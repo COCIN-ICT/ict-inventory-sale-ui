@@ -4,17 +4,11 @@ import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { Observable, tap, throwError } from 'rxjs';
 
-// interface AuthResponse {
-//   token: string;
-//   user?: any; // depends on your backend response structure
-// }
-
 interface AuthResponse {
-  token: string;     // 👈 match your backend field names
-  refreshToken: string;    // 👈 add this
-  user?: any;               // optional user info
+  token: string;
+  refreshToken: string;
+  user?: any;
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -26,106 +20,89 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // 🟢 Login and store both token & user data
+  /** LOGIN */
   login(username: string, password: string) {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { username, password });
+    return this.http.post<AuthResponse>(
+      `${environment.apiUrl}/auth/login`,
+      { username, password }
+    );
   }
 
-  // 🟢 Save login data after successful login
+  /** SAVE AUTH DATA */
   saveAuthData(response: AuthResponse): void {
-
-    console.log(' Saving auth data:', { 
-    hasToken: !!response.token, 
-    hasRefreshToken: !!response.refreshToken,
-    refreshTokenPreview: response.refreshToken?.substring(0, 20) + '...'  
-  });
-  
-
-  
     if (response.token) {
       localStorage.setItem(this.tokenKey, response.token);
     }
-    // if (response.refreshToken) {
-    //   localStorage.setItem(this.refreshKey, response.refreshToken);
-    // }
-     if (response.refreshToken && response.refreshToken.trim() !== '') {
-    localStorage.setItem(this.refreshKey, response.refreshToken);
-  } else {
-    console.warn('⚠️ No new refresh token in response - keeping existing one');
-  }
+
+    // ⛑ Avoid overwriting refreshToken with empty string
+    if (response.refreshToken && response.refreshToken.trim() !== '') {
+      localStorage.setItem(this.refreshKey, response.refreshToken);
+    }
+
     if (response.user) {
       localStorage.setItem(this.userKey, JSON.stringify(response.user));
     }
   }
 
-  // 🟢 Get token
+  /** GET TOKEN */
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
-   getRefreshToken(): string | null {
+  getRefreshToken(): string | null {
     return localStorage.getItem(this.refreshKey);
   }
 
+  /** REFRESH TOKEN */
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = this.getRefreshToken();
 
-      if (!refreshToken) {
-    return throwError(() => new Error('No refresh token available'));
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+
+    return this.http
+      .post<AuthResponse>(
+        `${environment.apiUrl}/auth/refresh`,
+        { refreshToken }
+      )
+      .pipe(
+        tap(response => {
+          this.saveAuthData(response);
+        })
+      );
   }
 
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
-    .pipe(
-      // 🟢 Save new tokens after refresh
-      tap(response => {
-        console.log('💾 Saving refreshed tokens...');
-        this.saveAuthData(response);
-      })
-    );
-  }
-
-  // 🟢 Get current user
+  /** GET USER */
   getUser(): any {
     const user = localStorage.getItem(this.userKey);
     return user ? JSON.parse(user) : null;
   }
 
-   getUserUnit() {
+  getUserUnit() {
     const user = this.getUser();
     return user ? user.unit : null;
   }
 
-  // 🟢 Check login status
   isLoggedIn(): boolean {
     return !!localStorage.getItem(this.tokenKey);
   }
 
-  // 🟢 Logout
-  // logout(): void {
-  //   localStorage.removeItem(this.tokenKey);
-  //   localStorage.removeItem(this.refreshKey);
-  //   localStorage.removeItem(this.userKey);
-  // }
-
-  // src/app/auth/auth.service.ts
-
-logout() {
-    const token = localStorage.getItem('token');
+  /** LOGOUT */
+  logout() {
+    const token = this.getToken();
 
     if (token) {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`
       });
 
-      // 1️⃣ Call backend logout API
       this.http.post(`${environment.apiUrl}/auth/logout`, {}, { headers })
         .subscribe({
           next: () => {
-            console.log('✅ Logged out successfully');
             this.clearAuthData();
           },
-          error: (err) => {
-            console.error('Logout failed:', err);
+          error: () => {
             this.clearAuthData(); // Clear anyway
           }
         });
@@ -134,15 +111,12 @@ logout() {
     }
   }
 
+  /** CLEAR AUTH DATA */
   private clearAuthData() {
-    // 2️⃣ Clear local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshKey);
+    localStorage.removeItem(this.userKey);
 
-    // 3️⃣ Redirect to login
     this.router.navigate(['/login']);
   }
-
-
 }
