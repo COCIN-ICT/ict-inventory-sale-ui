@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PurchaseOrderService } from '../../../../../services/purchase-order.service';
 import { ToastService } from '../../../../../services/toast.service';
+import { BudgetService } from '../../../../../services/budget.service';
+import { UnitService } from '../../../../../services/unit.service';
 
 @Component({
   selector: 'app-purchase-order-list',
@@ -11,20 +13,68 @@ import { ToastService } from '../../../../../services/toast.service';
 export class PurchaseOrderListComponent implements OnInit {
   purchaseOrders: any[] = [];
   isLoading = false;
+  selectedStatus: string = 'all'; // 'all', 'PENDING', 'VETTED', 'APPROVED', 'RECEIVED', 'COMPLETED', 'CLEARED', 'CANCELLED', 'REJECTED'
+
+  // Modal state
+  showBudgetModal = false;
+  budgets: any[] = [];
+  filteredBudgets: any[] = [];
+  selectedBudget: any = null;
+  budgetLineItemId: number | null = null;
+  isLoadingBudgets = false;
+  isLoadingBudgetDetails = false;
+
+  // Filters
+  selectedUnitId: number | null = null;
+  selectedYear: number = new Date().getFullYear();
+  selectedBudgetType: string = 'EXPENDITURE';
+  units: any[] = [];
+  years: number[] = [];
 
   constructor(
     private router: Router,
     private purchaseOrderService: PurchaseOrderService,
-    private toast: ToastService
-  ) { }
+    private toast: ToastService,
+    private budgetService: BudgetService,
+    private unitService: UnitService
+  ) {
+    // Generate years array (current year ± 5 years)
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      this.years.push(i);
+    }
+  }
 
   ngOnInit(): void {
     this.loadPurchaseOrders();
+    this.loadUnits();
+  }
+
+  loadUnits(): void {
+    this.unitService.getUnits().subscribe({
+      next: (res: any) => {
+        this.units = res?.data || res || [];
+      },
+      error: (err: any) => {
+        console.error('Failed to load units:', err);
+      }
+    });
   }
 
   loadPurchaseOrders(): void {
     this.isLoading = true;
-    this.purchaseOrderService.getAllOrders().subscribe({
+    
+    let request: any;
+    
+    if (this.selectedStatus === 'all') {
+      request = this.purchaseOrderService.getAllOrders();
+    } else if (this.selectedStatus === 'pending') {
+      request = this.purchaseOrderService.getPendingOrders();
+    } else {
+      request = this.purchaseOrderService.getOrdersByStatus(this.selectedStatus);
+    }
+
+    request.subscribe({
       next: (res: any) => {
         this.purchaseOrders = res?.data || res || [];
         this.isLoading = false;
@@ -36,23 +86,99 @@ export class PurchaseOrderListComponent implements OnInit {
     });
   }
 
+  onStatusFilterChange(): void {
+    this.loadPurchaseOrders();
+  }
+
+  openBudgetModal(): void {
+    this.showBudgetModal = true;
+    this.selectedBudget = null;
+    this.budgetLineItemId = null;
+    this.loadBudgets();
+  }
+
+  closeBudgetModal(): void {
+    this.showBudgetModal = false;
+    this.selectedBudget = null;
+    this.budgetLineItemId = null;
+    this.selectedUnitId = null;
+    this.selectedYear = new Date().getFullYear();
+    this.selectedBudgetType = 'EXPENDITURE';
+  }
+
+  loadBudgets(): void {
+    this.isLoadingBudgets = true;
+    this.budgetService.getAllBudgets().subscribe({
+      next: (res: any) => {
+        this.budgets = res?.data || res || [];
+        this.applyFilters();
+        this.isLoadingBudgets = false;
+      },
+      error: (err: any) => {
+        this.toast.error(err?.error?.message || err?.message || 'Failed to load budgets');
+        this.isLoadingBudgets = false;
+      }
+    });
+  }
+
+  applyFilters(): void {
+    let filtered = [...this.budgets];
+
+    // Filter by year
+    if (this.selectedYear) {
+      filtered = filtered.filter(b => b.year === this.selectedYear);
+    }
+
+    // Filter by budget type
+    if (this.selectedBudgetType) {
+      filtered = filtered.filter(b => b.budgetType === this.selectedBudgetType);
+    }
+
+    // Filter by unit (if budget has unit property)
+    if (this.selectedUnitId) {
+      filtered = filtered.filter(b => b.unit?.id === this.selectedUnitId || b.unitId === this.selectedUnitId);
+    }
+
+    this.filteredBudgets = filtered;
+  }
+
+  onFilterChange(): void {
+    this.applyFilters();
+  }
+
+  selectBudget(budget: any): void {
+    this.isLoadingBudgetDetails = true;
+    this.budgetService.getBudgetById(budget.id).subscribe({
+      next: (res: any) => {
+        this.selectedBudget = res?.data || res || budget;
+        // Set budgetLineItemId from the budget object
+        this.budgetLineItemId = this.selectedBudget.budgetLineItemId || null;
+        this.isLoadingBudgetDetails = false;
+      },
+      error: (err: any) => {
+        this.toast.error(err?.error?.message || err?.message || 'Failed to load budget details');
+        this.selectedBudget = budget;
+        this.budgetLineItemId = budget.budgetLineItemId || null;
+        this.isLoadingBudgetDetails = false;
+      }
+    });
+  }
+
   createPurchaseOrder(): void {
-    // Create payload matching API structure with empty arrays
-    // Based on API spec: items and quotations are arrays
-    const payload = {};
-    
-    console.log('=== Creating Purchase Order ===');
-    console.log('Payload being sent:', JSON.stringify(payload, null, 2));
-    console.log('Method: POST');
-    console.log('Content-Type: application/json');
+    if (!this.budgetLineItemId) {
+      this.toast.error('Please select a budget and ensure budgetLineItemId is set');
+      return;
+    }
+
+    const payload = {
+      budgetLineItemId: this.budgetLineItemId
+    };
     
     this.purchaseOrderService.createOrder(payload).subscribe({
       next: (res: any) => {
-        
         const id = res.id || res.data?.id || res.result?.id;
-        console.log('Extracted ID:', id);
-        
         this.toast.success('Purchase Order created successfully');
+        this.closeBudgetModal();
         if (id) {
           this.router.navigate([`/home/purchase-order/details/${id}`]);
         } else {
@@ -61,64 +187,13 @@ export class PurchaseOrderListComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error('=== ERROR: Purchase Order Creation Failed ===');
-        console.error('Error object:', err);
-        console.error('Error status:', err.status);
-        console.error('Error statusText:', err.statusText);
-        console.error('Error URL:', err.url);
-        console.error('Error message:', err.message);
-        console.error('Error error property:', err.error);
-        console.error('Error error type:', typeof err.error);
-        
-        if (err.error) {
-          console.error('Error.error details:');
-          if (typeof err.error === 'string') {
-            console.error('Error.error is a string:', err.error);
-          } else if (typeof err.error === 'object') {
-            console.error('Error.error keys:', Object.keys(err.error));
-            console.error('Error.error full:', JSON.stringify(err.error, null, 2));
-            
-            // Try to extract validation errors
-            if (err.error.errors) {
-              console.error('Validation errors:', err.error.errors);
-            }
-            if (err.error.message) {
-              console.error('Error message:', err.error.message);
-            }
-            if (err.error.error) {
-              console.error('Error error:', err.error.error);
-            }
-          }
-        }
-        
-        // Extract error message for user
-        let errorMessage = 'Failed to create purchase order.';
-        if (err.error) {
-          if (typeof err.error === 'string' && err.error.length > 0) {
-            errorMessage = err.error;
-          } else if (err.error && typeof err.error === 'object') {
-            if (err.error.message) {
-              errorMessage = err.error.message;
-            } else if (err.error.error) {
-              errorMessage = err.error.error;
-            } else if (Object.keys(err.error).length > 0) {
-              errorMessage = JSON.stringify(err.error);
-            } else {
-              errorMessage = `Bad Request (${err.status}): The server rejected the request. Check console for details.`;
-            }
-          }
-        } else {
-          errorMessage = `HTTP ${err.status}: ${err.statusText || 'Bad Request'}`;
-        }
-        
-        console.error('Final error message to show user:', errorMessage);
+        const errorMessage = err?.error?.message || err?.message || 'Failed to create purchase order';
         this.toast.error(errorMessage);
       }
     });
   }
 
   navigateToDetails(id: number): void {
-    console.log("Navigating to purchase order details...");
     this.router.navigate([`/home/purchase-order/details/${id}`]);
   }
 }

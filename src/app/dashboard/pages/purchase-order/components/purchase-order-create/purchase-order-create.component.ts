@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { PurchaseOrderService } from '../../../../../services/purchase-order.service';
 import { ToastService } from '../../../../../services/toast.service';
 import { ItemService, ItemResponse } from '../../../../../services/item.service';
@@ -74,18 +75,72 @@ export class PurchaseOrderCreateComponent implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
 
-    // Construct payload to match API - use locally stored items and quotations
-    const payload = {
-    
+    // Construct payload to match API - use form fields only for order creation
+    const orderPayload: any = {
+      status: this.form.value.status,
+      orderDate: this.form.value.orderDate,
+      subTotal: this.form.value.subTotal,
+      totalAmount: this.form.value.totalAmount
     };
-console.log('Submitting purchase order with payload:', payload);
-    this.orderService.createOrder(payload).subscribe({
-      next: (res: any) => {
-        this.loading = false;
-        this.successMessage = 'Purchase order created successfully';
-        this.toast.success('Purchase order created');
-        // Navigate to purchase order list page
-        this.router.navigate(['/home/purchase-order']);
+
+    console.log('Submitting purchase order with payload:', orderPayload);
+
+    this.orderService.createOrder(orderPayload).subscribe({
+      next: (order: any) => {
+        const id = order?.id || order?.data?.id || order?.result?.id;
+        if (!id) {
+          this.loading = false;
+          this.toast.error('Purchase order created but no id returned');
+          return;
+        }
+
+        // Build child calls
+        const itemCalls = (this.addedItems || []).map(i => {
+          // map local item shape to API expected request
+          const req = {
+            itemId: i.itemId,
+            quantity: i.quantity,
+            unitPrice: i.unitPrice,
+            purchaseOrderId: id
+          };
+          return this.purchaseItemService.createPurchaseItemWithRequest(req);
+        });
+
+        const quotationCalls = (this.addedQuotations || []).map(q => {
+          const payload = {
+            supplierId: q.supplierId,
+            amount: q.amount,
+            purchaseOrderId: id
+          } as any;
+          if (q.invoiceFile) {
+            // use createPurchaseQuotationForOrder to handle files
+            return this.purchaseQuotationService.createPurchaseQuotationForOrder({ ...payload, invoiceFile: q.invoiceFile });
+          }
+          return this.purchaseQuotationService.createPurchaseQuotationForOrder({ ...payload });
+        });
+
+        const allCalls = [...itemCalls, ...quotationCalls];
+
+        if (allCalls.length === 0) {
+          this.loading = false;
+          this.toast.success('Purchase order created');
+          this.router.navigate(['/home/purchase-order']);
+          return;
+        }
+
+        forkJoin(allCalls).subscribe({
+          next: () => {
+            this.loading = false;
+            this.toast.success('Purchase order and children created successfully');
+            this.router.navigate(['/home/purchase-order']);
+          },
+          error: (err) => {
+            this.loading = false;
+            this.toast.error('Order created but failed to add items/quotations');
+            // Still navigate to list, or you might want to show details to resolve issues
+            this.router.navigate(['/home/purchase-order']);
+          }
+        });
       },
       error: (err: any) => {
         this.loading = false;

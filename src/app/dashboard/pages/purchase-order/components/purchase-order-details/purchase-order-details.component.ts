@@ -170,6 +170,9 @@ export class PurchaseOrderDetailsComponent implements OnInit {
   // Vet Order
   vetOrder(): void {
     if (!this.order) return;
+    if (!confirm('Are you sure you want to vet this purchase order?')) {
+      return;
+    }
     this.isLoading = true;
 
     this.purchaseOrderService.vetOrder(this.orderId).subscribe({
@@ -180,6 +183,77 @@ export class PurchaseOrderDetailsComponent implements OnInit {
       error: (err: any) => {
         console.error('Error vetting order', err);
         this.toast.error(err?.error?.message || err?.message || 'Failed to vet order.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Receive Order
+  receiveOrder(): void {
+    if (!this.order) return;
+    if (!confirm('Are you sure you want to receive this purchase order?')) {
+      return;
+    }
+    this.isLoading = true;
+
+    const payload = {
+      purchaseOrderId: this.orderId
+    };
+
+    this.purchaseOrderService.receiveOrder(payload).subscribe({
+      next: () => {
+        this.toast.success('Order received successfully!');
+        this.loadOrderDetails(this.orderId);
+      },
+      error: (err: any) => {
+        console.error('Error receiving order', err);
+        this.toast.error(err?.error?.message || err?.message || 'Failed to receive order.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Clear Order
+  clearOrder(): void {
+    if (!this.order) return;
+    if (!confirm('Are you sure you want to clear this purchase order?')) {
+      return;
+    }
+    this.isLoading = true;
+
+    this.purchaseOrderService.clearOrder(this.orderId).subscribe({
+      next: () => {
+        this.toast.success('Order cleared successfully!');
+        this.loadOrderDetails(this.orderId);
+      },
+      error: (err: any) => {
+        console.error('Error clearing order', err);
+        this.toast.error(err?.error?.message || err?.message || 'Failed to clear order.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Approve Order
+  approveOrder(): void {
+    if (!this.order) return;
+    if (!confirm('Are you sure you want to approve this purchase order?')) {
+      return;
+    }
+    this.isLoading = true;
+
+    const payload = {
+      purchaseOrderId: this.orderId
+    };
+
+    this.purchaseOrderService.approveOrder(payload).subscribe({
+      next: () => {
+        this.toast.success('Order approved successfully!');
+        this.loadOrderDetails(this.orderId);
+      },
+      error: (err: any) => {
+        console.error('Error approving order', err);
+        this.toast.error(err?.error?.message || err?.message || 'Failed to approve order.');
         this.isLoading = false;
       }
     });
@@ -231,5 +305,9 @@ export class PurchaseOrderDetailsComponent implements OnInit {
 
   viewQuotation(quotationId: number): void {
     this.router.navigate(['/home/purchase-quotation', quotationId]);
+  }
+
+  goBackToList(): void {
+    this.router.navigate(['/home/purchase-order/list']);
   }
 }
