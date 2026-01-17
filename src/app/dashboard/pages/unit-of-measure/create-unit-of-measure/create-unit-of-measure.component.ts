@@ -105,4 +105,8 @@ export class CreateUnitOfMeasureComponent implements OnInit {
     }
     return '';
   }
+
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
 } 

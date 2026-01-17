@@ -61,4 +61,8 @@ export class AllUnitOfMeasuresComponent implements OnInit {
       minute: '2-digit'
     });
   }
+
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
 } 

@@ -134,4 +134,8 @@ export class EditUnitOfMeasureComponent implements OnInit {
     }
     return '';
   }
+
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
 } 

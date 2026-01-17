@@ -13,27 +13,7 @@
    
   <!-- 1. Purchase - Collapsible Section -->
   <div>
-    <button 
-      type="button"
     
-      class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
-      <span class="flex items-center gap-3">
-        <span class="text-lg">
-          <mat-icon>shopping_cart</mat-icon>
-        </span>
-        Purchase
-      </span>
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        class="h-4 w-4 transition-transform duration-200" 
-        
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-
     <ul 
       class="ml-4 space-y-1 overflow-hidden transition-all duration-300"
       >
@@ -80,6 +60,18 @@
             <mat-icon>shopping_bag</mat-icon>
           </span>
           Purchase Orders
+        </a>
+      </li>
+
+      <!-- Budget - Direct Link -->
+      <li>
+        <a routerLink="/home/budget" 
+           routerLinkActive="bg-blue-50 text-blue-600" 
+           class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">
+          <span class="text-lg">
+            <mat-icon>account_balance_wallet</mat-icon>
+          </span>
+          Budget
         </a>
       </li>
 
@@ -538,137 +530,16 @@
 
      
 
-      <!-- Items Management - Collapsible with Nested Items -->
+      <!-- Items Management - Direct Link -->
       <li>
-        <button 
-          type="button"
-          (click)="toggleItemsManagement()"
-          [class.bg-blue-50]="isItemsManagementExpanded"
-          [class.text-blue-600]="isItemsManagementExpanded"
-          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-          <span class="flex items-center gap-3">
-            <span class="text-lg">
-              <mat-icon>inventory_2</mat-icon>
-            </span>
-            Items Management
+        <a routerLink="/home/items-management" 
+           routerLinkActive="bg-blue-50 text-blue-600" 
+           class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">
+          <span class="text-lg">
+            <mat-icon>inventory_2</mat-icon>
           </span>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-4 w-4 transition-transform duration-200" 
-            [class.rotate-180]="isItemsManagementExpanded"
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-
-        <!-- Items Management Submenu -->
-        <ul 
-          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-          [ngClass]="{'max-h-0': !isItemsManagementExpanded, 'max-h-[600px]': isItemsManagementExpanded}">
-          
-          <!-- Unit of Measure - Nested Collapsible -->
-          <li>
-            <button 
-              type="button"
-              (click)="toggleUnitOfMeasure()"
-              [class.bg-blue-50]="isUnitOfMeasureExpanded"
-              [class.text-blue-600]="isUnitOfMeasureExpanded"
-              class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-              <span class="flex items-center gap-3">
-                <span class="text-lg">
-                  <mat-icon>straighten</mat-icon>
-                </span>
-                Unit of Measure
-              </span>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                class="h-4 w-4 transition-transform duration-200" 
-                [class.rotate-180]="isUnitOfMeasureExpanded"
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            
-            <ul 
-              class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-              [ngClass]="{'max-h-0': !isUnitOfMeasureExpanded, 'max-h-96': isUnitOfMeasureExpanded}">
-              <li><a routerLink="/home/unit-of-measure/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Unit of Measures</a></li>
-              <li><a routerLink="/home/unit-of-measure/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Unit of Measure</a></li>
-            </ul>
-          </li>
-
-          <!-- Item Categories - Nested Collapsible -->
-          <li>
-            <button 
-              type="button"
-              (click)="toggleItemCategories()"
-              [class.bg-blue-50]="isItemCategoriesExpanded"
-              [class.text-blue-600]="isItemCategoriesExpanded"
-              class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-              <span class="flex items-center gap-3">
-                <span class="text-lg">
-                  <mat-icon>category</mat-icon>
-                </span>
-                Item Categories
-              </span>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                class="h-4 w-4 transition-transform duration-200" 
-                [class.rotate-180]="isItemCategoriesExpanded"
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            
-            <ul 
-              class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-              [ngClass]="{'max-h-0': !isItemCategoriesExpanded, 'max-h-96': isItemCategoriesExpanded}">
-              <li><a routerLink="/home/item-category/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Item Categories</a></li>
-              <li><a routerLink="/home/item-category/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Item Category</a></li>
-            </ul>
-          </li>
-
-          <!-- Items - Nested Collapsible -->
-          <li>
-            <button 
-              type="button"
-              (click)="toggleItems()"
-              [class.bg-blue-50]="isItemsExpanded"
-              [class.text-blue-600]="isItemsExpanded"
-              class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
-              <span class="flex items-center gap-3">
-                <span class="text-lg">
-                  <mat-icon>inventory</mat-icon>
-                </span>
-                Items
-              </span>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                class="h-4 w-4 transition-transform duration-200" 
-                [class.rotate-180]="isItemsExpanded"
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            
-            <ul 
-              class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
-              [ngClass]="{'max-h-0': !isItemsExpanded, 'max-h-96': isItemsExpanded}">
-              <li><a routerLink="/home/item/all" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Items</a></li>
-              <li><a routerLink="/home/item/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Item</a></li>
-              <li><a routerLink="/home/item/active" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Active Items</a></li>
-              <li><a routerLink="/home/item/low-stock" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Low Stock Items</a></li>
-            </ul>
-          </li>
-        </ul>
+          Items Management
+        </a>
       </li>
       
       <!-- Customer Management - Collapsible -->

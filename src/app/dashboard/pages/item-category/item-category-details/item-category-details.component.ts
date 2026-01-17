@@ -53,4 +53,8 @@ export class ItemCategoryDetailsComponent implements OnInit {
   goBack() {
     this.router.navigate(['/home/item-category/all']);
   }
+
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
 } 

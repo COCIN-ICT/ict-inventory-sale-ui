@@ -24,11 +24,6 @@ export class SidebarComponent {
   isProductionOrderExpanded = false;
   isStockTransferExpanded = false;
 
-  // Items management nested toggles
-  isItemsManagementExpanded = false;
-  isUnitOfMeasureExpanded = false;
-  isItemCategoriesExpanded = false;
-  isItemsExpanded = false;
 
   // Customer management
   isCustomerManagementExpanded = false;
@@ -54,11 +49,6 @@ export class SidebarComponent {
   toggleProductionOrder(): void { this.isProductionOrderExpanded = !this.isProductionOrderExpanded; }
   toggleStockTransfer(): void { this.isStockTransferExpanded = !this.isStockTransferExpanded; }
 
-  // Items management nested toggles
-  toggleItemsManagement(): void { this.isItemsManagementExpanded = !this.isItemsManagementExpanded; }
-  toggleUnitOfMeasure(): void { this.isUnitOfMeasureExpanded = !this.isUnitOfMeasureExpanded; }
-  toggleItemCategories(): void { this.isItemCategoriesExpanded = !this.isItemCategoriesExpanded; }
-  toggleItems(): void { this.isItemsExpanded = !this.isItemsExpanded; }
 
   // Customer
   toggleCustomerManagement(): void { this.isCustomerManagementExpanded = !this.isCustomerManagementExpanded; }
