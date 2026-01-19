@@ -1,111 +1,124 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PricingService } from '../../../services/pricing.service';
-import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../../../services/toast.service';
 import { Pricing } from '../pricing/pricing.model';
-import { ActivatedRoute } from '@angular/router';
-
 
 @Component({
   selector: 'app-pricing',
   templateUrl: './pricing.component.html',
   styleUrl: './pricing.component.css'
 })
-export class PricingComponent {
-  pricingForm!: FormGroup;
- // stockId!: number;
-  isEditMode = false;
-  buttonLabel = 'Save Price';
-
+export class PricingComponent implements OnInit, OnChanges {
   @Input() stockId!: number;
+  @Output() pricingUpdated = new EventEmitter<void>();
+
+  pricingForm!: FormGroup;
+
+  currentPrice: number | null = null;
+  currentPricingId: number | null = null;
+  isSubmitting = false;
+
   constructor(
     private fb: FormBuilder,
     private pricingService: PricingService,
-    private toast: ToastService,
-    private route: ActivatedRoute
+    private toast: ToastService
   ) {}
 
-   ngOnInit(): void {
-    this.initializeForm();
-    // this.getStockIdFromRoute();
-    // this.loadPricingByStockId();
+  /* -------------------- lifecycle -------------------- */
 
-   // Step 1: Check if a valid stockId was passed via the @Input()
-    if (this.stockId && this.stockId > 0) {
-      this.loadPricingByStockId(); 
-    } else {
-      // Log an error, but prevent the erroneous API call with ID 0
-      console.warn('PricingComponent: Stock ID is missing or invalid. Skipping API call.');
+  ngOnInit(): void {
+    this.initForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['stockId'] && changes['stockId'].currentValue) {
+      this.loadCurrentPrice();
     }
   }
 
-  initializeForm(): void {
+  /* -------------------- form -------------------- */
+
+  private initForm(): void {
     this.pricingForm = this.fb.group({
       price: ['', [Validators.required, Validators.min(1)]],
     });
   }
 
-  // getStockIdFromRoute(): void {
-  //   this.stockId = Number(this.route.snapshot.paramMap.get('id'));
-  // }
+  /* -------------------- data -------------------- */
 
-  loadPricingByStockId(): void {
-    this.pricingService.getPricingByStock(this.stockId).subscribe({
-      next: (res) => {
-        if (res && res.length > 0) {
-          this.isEditMode = true;
-          this.buttonLabel = 'Update Price';
-          this.pricingForm.patchValue({ price: res[0].price });
-        }
-      },
-      error: (err) => console.error('Error loading pricing', err),
-    });
+  private loadCurrentPrice(): void {
+  if (!this.stockId) return;
+
+  this.pricingService.getPricingByStock(this.stockId).subscribe({
+    next: (pricing) => {
+      if (pricing?.id) {
+        this.currentPricingId = pricing.id;
+        this.currentPrice = pricing.price;
+        this.pricingForm.patchValue({ price: pricing.price });
+      } else {
+        this.resetPricingState();
+      }
+    },
+    error: (err) => {
+      if (err.status === 404) {
+        // no pricing exists yet
+        this.resetPricingState();
+      } else {
+        this.toast.error('Failed to load pricing');
+      }
+    }
+  });
+}
+
+
+  private resetPricingState(): void {
+    this.currentPricingId = null;
+    this.currentPrice = null;
+    this.pricingForm.reset();
   }
 
-  onSubmit(): void {
-    if (this.pricingForm.invalid) {
+  /* -------------------- submit -------------------- */
+
+  submitPrice(): void {
+    if (this.pricingForm.invalid || this.isSubmitting) {
       this.pricingForm.markAllAsTouched();
       return;
     }
 
-    // Add guard clause in case user submits before initialization is complete (just in case)
-    if (!this.stockId || this.stockId <= 0) {
-      this.toast.error('Cannot save: Stock ID is missing.');
-      return;
-    }
+    this.isSubmitting = true;
 
-    const formValue = this.pricingForm.value;
     const payload: Pricing = {
       stockId: this.stockId,
-      price: formValue.price,
+      price: this.pricingForm.value.price,
     };
 
-    if (this.isEditMode) {
-      this.updatePricing(payload);
-    } else {
-      this.createPricing(payload);
-    }
-  }
+    const request$ = this.currentPricingId
+      ? this.pricingService.updatePricing(this.currentPricingId, payload)
+      : this.pricingService.createPricing(payload);
 
-  createPricing(payload: Pricing): void {
-    this.pricingService.createPricing(payload).subscribe({
-      next: (res) => {
-        this.toast.success('Price saved successfully!');
-        this.isEditMode = true;
-        this.buttonLabel = 'Update Price';
+    request$.subscribe({
+      next: () => {
+        this.toast.success(
+          this.currentPricingId
+            ? 'Price updated successfully!'
+            : 'Price saved successfully!'
+        );
+
+        // Always re-sync from backend (source of truth)
+        this.loadCurrentPrice();
+        this.pricingUpdated.emit();
       },
-      error: (err) => console.error('Error creating pricing', err),
+      error: () => this.toast.error('Failed to save price'),
+      complete: () => (this.isSubmitting = false),
     });
   }
-
-  updatePricing(payload: Pricing): void {
-    this.pricingService.updatePricing(this.stockId, payload).subscribe({
-      next: (res) => {
-        alert('Price updated successfully!');
-      },
-      error: (err) => console.error('Error updating pricing', err),
-    });
-  }
-
 }

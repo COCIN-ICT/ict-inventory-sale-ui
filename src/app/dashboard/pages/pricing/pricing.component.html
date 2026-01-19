@@ -1,47 +1,56 @@
-<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-  <h2 class="text-xl font-semibold mb-4 text-center">
-    {{ isEditMode ? 'Update Pricing' : 'Add Pricing' }}
-  </h2>
+<div *ngIf="pricingForm" class="bg-white rounded-xl shadow p-6 max-w-md mx-auto">
 
-  <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()">
-    <!-- PRICE FIELD -->
-    <div class="mb-4">
-      <label for="price" class="block text-sm font-medium text-gray-700 mb-1">
+  <!-- Header -->
+  <div class="mb-6 text-center">
+    <h2 class="text-xl font-semibold text-gray-800">
+      {{ currentPricingId ? 'Update Price' : 'Add Price' }}
+    </h2>
+    <p class="text-sm text-gray-500">
+      Stock ID: {{ stockId }}
+    </p>
+  </div>
+
+  <!-- Current Price -->
+  <div
+    *ngIf="currentPrice !== null"
+    class="mb-4 p-3 bg-gray-50 border rounded text-sm text-gray-700"
+  >
+    Current Price:
+    <span class="font-semibold text-gray-900">
+      {{ currentPrice }}
+    </span>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="pricingForm" (ngSubmit)="submitPrice()" class="space-y-4">
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
         Price
       </label>
+
       <input
         type="number"
-        id="price"
         formControlName="price"
-        placeholder="Enter price"
-        class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+        class="w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
       />
 
-      <!-- Validation Errors -->
-      <div
-        *ngIf="
-          pricingForm.get('price')?.invalid &&
-          (pricingForm.get('price')?.dirty ||
-            pricingForm.get('price')?.touched)
-        "
-        class="text-red-500 text-sm mt-1"
+      <p
+        *ngIf="pricingForm.get('price')?.touched && pricingForm.get('price')?.invalid"
+        class="text-red-500 text-xs mt-1"
       >
-        <p *ngIf="pricingForm.get('price')?.errors?.['required']">
-          Price is required.
-        </p>
-        <p *ngIf="pricingForm.get('price')?.errors?.['min']">
-          Price must be greater than 0.
-        </p>
-      </div>
+        Price must be greater than 0
+      </p>
     </div>
 
-    <!-- SUBMIT BUTTON -->
     <button
       type="submit"
-      [disabled]="pricingForm.invalid"
-      class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+      [disabled]="pricingForm.invalid || isSubmitting"
+      class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium
+             hover:bg-blue-700 disabled:opacity-50 transition"
     >
-      {{ buttonLabel }}
+      {{ isSubmitting ? 'Saving...' : (currentPricingId ? 'Update Price' : 'Save Price') }}
     </button>
+
   </form>
 </div>
