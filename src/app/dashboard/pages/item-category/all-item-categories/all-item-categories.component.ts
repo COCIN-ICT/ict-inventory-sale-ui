@@ -102,4 +102,8 @@ export class AllItemCategoriesComponent implements OnInit {
       }
     }, 3000);
   }
+
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
 } 

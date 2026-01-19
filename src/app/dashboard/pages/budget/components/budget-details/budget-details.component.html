@@ -1,0 +1,186 @@
+<div class="container mx-auto px-4 py-6 max-w-6xl">
+  <div class="bg-white shadow-2xl rounded-xl p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">Budget Details</h2>
+        <p class="text-gray-600 mt-1">View and manage budget information</p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          (click)="onCancel()"
+          class="px-4 py-2 border border-gray-400 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+        >
+          Back to List
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading budget details...</p>
+    </div>
+
+    <!-- Budget Details -->
+    <div *ngIf="!isLoading && budget">
+      <!-- View Mode -->
+      <div *ngIf="!isEditing" class="space-y-6">
+        <!-- Status Badge -->
+        <div class="flex items-center gap-4">
+          <span class="text-sm font-medium text-gray-700">Status:</span>
+          <span class="px-3 py-1 text-sm font-medium rounded-full" [ngClass]="getStatusClass(budget.status)">
+            {{ budget.status || 'N/A' }}
+          </span>
+        </div>
+
+        <!-- Budget Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <label class="text-sm font-medium text-gray-600">Budget ID</label>
+            <p class="text-lg font-semibold text-gray-800 mt-1">{{ budget.id }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <label class="text-sm font-medium text-gray-600">Year</label>
+            <p class="text-lg font-semibold text-gray-800 mt-1">{{ budget.year }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <label class="text-sm font-medium text-gray-600">Allocated Amount</label>
+            <p class="text-lg font-semibold text-gray-800 mt-1">{{ budget.allocatedAmount | number:'1.2-2' }}</p>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <label class="text-sm font-medium text-gray-600">Budget Type</label>
+            <p class="text-lg font-semibold text-gray-800 mt-1">{{ budget.budgetType }}</p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-4 border-t">
+          <button
+            (click)="toggleEdit()"
+            class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Edit Budget
+          </button>
+          <button
+            *ngIf="canApprove()"
+            (click)="onApprove()"
+            [disabled]="isApproving"
+            class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isApproving">Approve Budget</span>
+            <span *ngIf="isApproving" class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Approving...
+            </span>
+          </button>
+          <button
+            (click)="onDelete()"
+            class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          >
+            Delete Budget
+          </button>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div *ngIf="isEditing" class="space-y-6">
+        <h3 class="text-xl font-semibold text-gray-800">Edit Budget</h3>
+        
+        <form [formGroup]="editForm" (ngSubmit)="onUpdate()">
+          <div class="space-y-6">
+            <!-- Year -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Year <span class="text-red-500">*</span>
+              </label>
+              <select
+                formControlName="year"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="isFieldInvalid('year')"
+              >
+                <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+              </select>
+              <p *ngIf="isFieldInvalid('year')" class="mt-1 text-sm text-red-600">
+                {{ getFieldError('year') }}
+              </p>
+            </div>
+
+            <!-- Allocated Amount -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Allocated Amount <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                formControlName="allocatedAmount"
+                step="0.01"
+                min="0.01"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="isFieldInvalid('allocatedAmount')"
+                placeholder="Enter allocated amount"
+              />
+              <p *ngIf="isFieldInvalid('allocatedAmount')" class="mt-1 text-sm text-red-600">
+                {{ getFieldError('allocatedAmount') }}
+              </p>
+            </div>
+
+            <!-- Budget Type -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Budget Type <span class="text-red-500">*</span>
+              </label>
+              <select
+                formControlName="budgetType"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="isFieldInvalid('budgetType')"
+              >
+                <option value="EXPENDITURE">Expenditure</option>
+                <option value="REVENUE">Revenue</option>
+              </select>
+              <p *ngIf="isFieldInvalid('budgetType')" class="mt-1 text-sm text-red-600">
+                {{ getFieldError('budgetType') }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Edit Action Buttons -->
+          <div class="flex gap-4 pt-6 border-t">
+            <button
+              type="button"
+              (click)="onCancel()"
+              class="px-5 py-2 border border-gray-400 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="isLoading || editForm.invalid"
+              class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span *ngIf="!isLoading">Update Budget</span>
+              <span *ngIf="isLoading" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Updating...
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- No Budget Found -->
+    <div *ngIf="!isLoading && !budget" class="text-center py-12 text-gray-500">
+      Budget not found.
+    </div>
+  </div>
+</div>

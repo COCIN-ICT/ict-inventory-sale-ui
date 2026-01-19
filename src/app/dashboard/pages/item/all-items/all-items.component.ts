@@ -220,4 +220,8 @@ export class AllItemsComponent implements OnInit, OnDestroy {
       }
     }, 3000);
   }
+
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
 } 

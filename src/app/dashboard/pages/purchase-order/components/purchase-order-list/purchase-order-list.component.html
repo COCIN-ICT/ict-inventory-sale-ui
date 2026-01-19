@@ -5,10 +5,32 @@
       <h2 class="text-2xl font-bold text-gray-800">Purchase Orders</h2>
       <button
         class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
-        (click)="createPurchaseOrder()"
+        (click)="openBudgetModal()"
       >
         + Add New Order
       </button>
+    </div>
+
+    <!-- Status Filter -->
+    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+      <div class="flex items-center gap-4">
+        <label class="text-sm font-medium text-gray-700">Filter by Status:</label>
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusFilterChange()"
+          class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+        >
+          <option value="all">All Orders</option>
+          <option value="pending">Pending</option>
+          <option value="VETTED">Vetted</option>
+          <option value="APPROVED">Approved</option>
+          <option value="RECEIVED">Received</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CLEARED">Cleared</option>
+          <option value="CANCELLED">Cancelled</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+      </div>
     </div>
 
     <!-- Orders Table -->
@@ -77,3 +99,173 @@
   </div>
 </div>
 
+<!-- Budget Selection Modal -->
+<div *ngIf="showBudgetModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" (click)="closeBudgetModal()">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4" (click)="$event.stopPropagation()">
+    <div class="p-6">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold text-gray-800">Select Budget for Purchase Order</h3>
+        <button
+          (click)="closeBudgetModal()"
+          class="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+        >
+          ×
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+        <h4 class="text-sm font-semibold text-gray-700 mb-3">Filter Budgets</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+            <select
+              [(ngModel)]="selectedUnitId"
+              (change)="onFilterChange()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option [value]="null">All Units</option>
+              <option *ngFor="let unit of units" [value]="unit.id">{{ unit.name }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Year</label>
+            <select
+              [(ngModel)]="selectedYear"
+              (change)="onFilterChange()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Type</label>
+            <select
+              [(ngModel)]="selectedBudgetType"
+              (change)="onFilterChange()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="EXPENDITURE">Expenditure</option>
+              <option value="REVENUE">Revenue</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget Selection -->
+      <div *ngIf="!selectedBudget" class="mb-6">
+        <h4 class="text-lg font-semibold text-gray-700 mb-3">Available Budgets</h4>
+        <div *ngIf="isLoadingBudgets" class="text-center py-8">
+          <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+          <p class="mt-2 text-gray-600">Loading budgets...</p>
+        </div>
+        <div *ngIf="!isLoadingBudgets && filteredBudgets.length === 0" class="text-center py-8 text-gray-500">
+          No budgets found matching the filters.
+        </div>
+        <div *ngIf="!isLoadingBudgets && filteredBudgets.length > 0" class="space-y-2 max-h-64 overflow-y-auto">
+          <div
+            *ngFor="let budget of filteredBudgets"
+            (click)="selectBudget(budget)"
+            class="p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold text-gray-800">Budget ID: {{ budget.id }}</p>
+                <p class="text-sm text-gray-600">Year: {{ budget.year }} | Type: {{ budget.budgetType }} | Amount: {{ budget.allocatedAmount | number:'1.2-2' }}</p>
+              </div>
+              <span class="px-2 py-1 text-xs font-medium rounded-full"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': budget.status === 'APPROVED',
+                  'bg-yellow-100 text-yellow-700': budget.status === 'PENDING',
+                  'bg-gray-100 text-gray-700': !budget.status
+                }">
+                {{ budget.status || 'N/A' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Budget Details -->
+      <div *ngIf="selectedBudget" class="mb-6">
+        <h4 class="text-lg font-semibold text-gray-700 mb-3">Selected Budget Details</h4>
+        <div *ngIf="isLoadingBudgetDetails" class="text-center py-4">
+          <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+        </div>
+        <div *ngIf="!isLoadingBudgetDetails" class="bg-blue-50 p-4 rounded-lg space-y-2">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium text-gray-600">Budget ID</label>
+              <p class="text-gray-800 font-semibold">{{ selectedBudget.id }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-600">Year</label>
+              <p class="text-gray-800 font-semibold">{{ selectedBudget.year }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-600">Budget Type</label>
+              <p class="text-gray-800 font-semibold">{{ selectedBudget.budgetType }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-600">Allocated Amount</label>
+              <p class="text-gray-800 font-semibold">{{ selectedBudget.allocatedAmount | number:'1.2-2' }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-600">Status</label>
+              <span class="px-2 py-1 text-xs font-medium rounded-full"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': selectedBudget.status === 'APPROVED',
+                  'bg-yellow-100 text-yellow-700': selectedBudget.status === 'PENDING',
+                  'bg-gray-100 text-gray-700': !selectedBudget.status
+                }">
+                {{ selectedBudget.status || 'N/A' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget Line Item ID Input -->
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Budget Line Item ID <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="budgetLineItemId"
+            min="1"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter or edit budget line item ID"
+          />
+          <p class="mt-1 text-xs text-gray-500">This ID will be used to create the purchase order</p>
+        </div>
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t">
+        <button
+          (click)="closeBudgetModal()"
+          class="px-5 py-2 border border-gray-400 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+        >
+          Cancel
+        </button>
+        <button
+          *ngIf="selectedBudget"
+          (click)="selectBudget(null)"
+          class="px-5 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+        >
+          Change Budget
+        </button>
+        <button
+          *ngIf="selectedBudget && budgetLineItemId"
+          (click)="createPurchaseOrder()"
+          class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          Create Purchase Order
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

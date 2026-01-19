@@ -58,6 +58,10 @@ export class CreateItemCategoryComponent implements OnInit {
     this.router.navigate(['/home/item-category/all']);
   }
 
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
+
   private markFormGroupTouched() {
     Object.keys(this.itemCategoryForm.controls).forEach(key => {
       const control = this.itemCategoryForm.get(key);

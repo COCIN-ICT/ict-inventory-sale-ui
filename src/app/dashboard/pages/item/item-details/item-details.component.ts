@@ -55,6 +55,10 @@ export class ItemDetailsComponent implements OnInit {
     this.router.navigate(['/home/item/all']);
   }
 
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
+
   formatDate(dateString?: string): string {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {

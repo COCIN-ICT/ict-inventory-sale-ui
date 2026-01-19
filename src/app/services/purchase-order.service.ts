@@ -24,19 +24,19 @@ export class PurchaseOrderService {
   }
 
   vetOrder(id: number): Observable<any> {
-    return this.http.post<any>(`${this.base}/purchase/order/vet/${id}`, {});
+    return this.http.patch<any>(`${this.base}/purchase/order/vet/${id}`, {});
   }
 
   clearOrder(id: number): Observable<any> {
-    return this.http.post<any>(`${this.base}/purchase/order/clear/${id}`, {});
+    return this.http.patch<any>(`${this.base}/purchase/order/clear/${id}`, {});
   }
 
   receiveOrder(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.base}/purchase/order/receive`, payload);
+    return this.http.patch<any>(`${this.base}/purchase/order/receive`, payload);
   }
 
   approveOrder(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.base}/purchase/order/approve`, payload);
+    return this.http.patch<any>(`${this.base}/purchase/order/approve`, payload);
   }
 
   getOrdersByStatus(status: string): Observable<any> {

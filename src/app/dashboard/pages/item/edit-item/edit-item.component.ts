@@ -128,6 +128,10 @@ export class EditItemComponent implements OnInit {
     this.router.navigate(['/home/item/all']);
   }
 
+  goBackToItemsManagement(): void {
+    this.router.navigate(['/home/items-management']);
+  }
+
   private markFormGroupTouched() {
     Object.keys(this.itemForm.controls).forEach(key => {
       const control = this.itemForm.get(key);

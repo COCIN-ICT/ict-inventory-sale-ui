@@ -54,6 +54,8 @@ const routes: Routes = [
       // Item Routes
       { path: 'item', loadChildren: () => import('./dashboard/pages/item/item.module').then(m => m.ItemModule) },
 
+      // Items Management Route
+      { path: 'items-management', loadChildren: () => import('./dashboard/pages/items-management/items-management.module').then(m => m.ItemsManagementModule) },
 
       { path: 'store', loadChildren: () => import('./dashboard/pages/store/store.module').then(m => m.StoreModule) },
 
@@ -75,6 +77,9 @@ const routes: Routes = [
       { path: 'stock-detail', loadChildren: () => import('./dashboard/pages/stock-detail/stock-detail.module').then(m => m.StockDetailModule) },
       //purchase order
       { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
+
+      //budget
+      { path: 'budget', loadChildren: () => import('./dashboard/pages/budget/budget.module').then(m => m.BudgetModule) },
 
       { path: 'sales-order', component: SalesOrderListComponent },
       { path: 'sales-order/create', component: SalesOrderCreateComponent },
