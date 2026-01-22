@@ -81,6 +81,9 @@ const routes: Routes = [
       //budget
       { path: 'budget', loadChildren: () => import('./dashboard/pages/budget/budget.module').then(m => m.BudgetModule) },
 
+      //reports
+      { path: 'reports', loadChildren: () => import('./dashboard/pages/reports/reports.module').then(m => m.ReportsModule) },
+
       { path: 'sales-order', component: SalesOrderListComponent },
       { path: 'sales-order/create', component: SalesOrderCreateComponent },
       { path: 'sales-order/:id/edit', component: SalesOrderEditComponent },
