@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { StoreService } from '../../../../../services/store.service';
 import { Pricing } from '../../../pricing/pricing.model';
 import { PricingService } from '../../../../../services/pricing.service';
+import { AuthService } from '../../../../../auth/auth.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class StockDetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private storeService: StoreService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
