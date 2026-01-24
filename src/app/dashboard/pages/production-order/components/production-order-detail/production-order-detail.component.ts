@@ -6,7 +6,7 @@ import { ProductionInputItemService } from '../../../../../services/production-i
 import { ProductionOrderResponse as ProductionOrder } from '../../../../../api/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ItemService } from '../../../../../services/item.service';
-
+import { AuthService } from '../../../../../auth/auth.service';
 
 @Component({
   selector: 'app-production-order-detail',
@@ -38,6 +38,7 @@ export class ProductionOrderDetailComponent {
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {

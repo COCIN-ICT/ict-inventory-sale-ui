@@ -1,14 +1,159 @@
-{{ stocks | json}}
 
 
-<!-- The rest of your stock details display below -->
 
-    
-    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
+<div class="max-w-7xl mx-auto p-6 space-y-8">
+
+  <!-- ================= HEADER ================= -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h1 class="text-2xl font-bold text-gray-800">
+      {{ stock?.item?.name || 'Stock Details' }}
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Item Code: {{ stock?.item?.itemCode }}
+    </p>
+
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <span class="font-semibold text-gray-700">Store:</span>
+        <span class="ml-1">{{ store?.name }}</span>
+      </div>
+
+      <div>
+        <span class="font-semibold text-gray-700">Store Type:</span>
+        <span
+          class="ml-1 px-2 py-1 rounded text-xs font-medium"
+          [ngClass]="{
+            'bg-emerald-100 text-emerald-700': storeType === 'PRIMARY',
+            'bg-blue-100 text-blue-700': storeType === 'SECONDARY'
+          }"
+        >
+          {{ storeType }}
+        </span>
+      </div>
+
+      <div>
+        <span class="font-semibold text-gray-700">Total Quantity:</span>
+        <span class="ml-1">{{ stock?.totalQuantity || 0 }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ACTIONS ================= -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Actions</h2>
+
+    <!-- SECONDARY STORE → PRICING -->
+  <div *ngIf="authService.hasRole(['ADMIN'])">
+    <app-pricing 
+      *ngIf="storeType === 'SECONDARY'"
+      [stockId]="stockId">
+    </app-pricing>
+
+    <!-- PRIMARY STORE → STOCK TRANSFER -->
+    <app-stock-transfer
+      *ngIf="storeType === 'PRIMARY'"
+      [itemId]="stock?.item?.id">
+    </app-stock-transfer>
+  </div>
+
+  <!-- ================= BATCHES ================= -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Batches</h2>
+
+    <div *ngIf="batches.length > 0; else noBatches" class="overflow-x-auto">
+      <table class="min-w-full border text-sm">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left">Batch No</th>
+            <th class="px-4 py-2 text-left">Quantity</th>
+            <th class="px-4 py-2 text-left">Expiry Date</th>
+            <th class="px-4 py-2 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let batch of batches"
+            class="border-t hover:bg-gray-50"
+          >
+            <td class="px-4 py-2">{{ batch.batchNumber }}</td>
+            <td class="px-4 py-2">{{ batch.quantity }}</td>
+            <td class="px-4 py-2">
+              {{ batch.expirationDate ? (batch.expirationDate | date) : 'N/A' }}
+            </td>
+            <td class="px-4 py-2">
+              <span
+                class="px-2 py-1 rounded text-xs font-medium"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': batch.status === 'ACTIVE',
+                  'bg-red-100 text-red-700': batch.status === 'EXPIRED'
+                }"
+              >
+                {{ batch.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noBatches>
+      <p class="text-sm text-gray-500">No batches available.</p>
+    </ng-template>
+  </div>
+
+  <!-- ================= PROMOTIONS ================= -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Promotions</h2>
+
+    <div *ngIf="promotions.length > 0; else noPromotions" class="overflow-x-auto">
+      <table class="min-w-full border text-sm">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left">Title</th>
+            <th class="px-4 py-2 text-left">Start</th>
+            <th class="px-4 py-2 text-left">End</th>
+            <th class="px-4 py-2 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let promo of promotions"
+            class="border-t hover:bg-gray-50"
+          >
+            <td class="px-4 py-2">{{ promo.title }}</td>
+            <td class="px-4 py-2">{{ promo.startDate | date }}</td>
+            <td class="px-4 py-2">{{ promo.endDate | date }}</td>
+            <td class="px-4 py-2">
+              <span
+                class="px-2 py-1 rounded text-xs font-medium"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': promo.status === 'ACTIVE',
+                  'bg-yellow-100 text-yellow-700': promo.status === 'UPCOMING',
+                  'bg-red-100 text-red-700': promo.status === 'EXPIRED'
+                }"
+              >
+                {{ promo.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noPromotions>
+      <p class="text-sm text-gray-500">No promotions available.</p>
+    </ng-template>
+  </div>
+
+</div>
+
+
+
+
+<!-- <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
   <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Stock Details</h2>
 
   <div  *ngIf="stocks; else noData">
-    <!-- Top Info -->
     <div class="grid md:grid-cols-2 gap-4 mb-6 text-gray-700">
       <div>
         <p><span class="font-semibold">Stock ID:</span> {{ stocks.id }}</p>
@@ -16,43 +161,38 @@
         <p><span class="font-semibold">Quantity:</span> {{ stocks.totalQuantity || 0 }}</p>
       </div>
 
-      
-   
 
     </div>
 
-    <!-- STOCK TRANSFER -->
     <app-pricing *ngIf="storeType === 'SECONDARY'" [stockId]="stockId" ></app-pricing>
    <app-stock-transfer *ngIf="storeType === 'PRIMARY'" [itemId]="stocks?.item?.id" (transferCompleted)="loadStockDetails()"></app-stock-transfer>
 
-    <!-- Tables -->
     <div class="grid md:grid-cols-2 gap-6">
-      <!-- Batches -->
       <div>
         <h3 class="text-lg font-semibold text-gray-800 mb-3">Batches</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-200 rounded-lg">
-            <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+        <div class="overflow-x-auto shadow-md rounded-lg border border-gray-200">
+          <table class="min-w-full border-collapse">
+            <thead class="bg-gray-800 text-white text-sm uppercase">
               <tr>
-                <th class="px-4 py-2 border">S/N</th>
-                <th class="px-4 py-2 border">Quantity</th>
-                <th class="px-4 py-2 border">Expiry Date</th>
-                <th class="px-4 py-2 border">Status</th>
+                <th class="px-4 py-3 border-r">S/N</th>
+                <th class="px-4 py-3 border-r">Quantity</th>
+                <th class="px-4 py-3 border-r">Expiry Date</th>
+                <th class="px-4 py-3">Status</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 *ngFor="let batch of batches; let i = index"
-                class="text-center hover:bg-gray-50"
+                class="text-center hover:bg-blue-50 transition-colors"
               >
-                <td class="px-4 py-2 border">{{ i + 1 }}</td>
-                <td class="px-4 py-2 border">{{ batch.quantity }}</td>
-                <td class="px-4 py-2 border">{{ batch.expirationDate | date }}</td>
-                <td class="px-4 py-2 border">
+                <td class="px-4 py-2 border-r">{{ i + 1 }}</td>
+                <td class="px-4 py-2 border-r">{{ batch.quantity }}</td>
+                <td class="px-4 py-2 border-r">{{ batch.expirationDate | date }}</td>
+                <td class="px-4 py-2">
                   <span
-                    class="px-2 py-1 rounded-full text-xs"
+                    class="px-2 py-1 rounded-full text-xs font-medium"
                     [ngClass]="{
-                      'bg-green-100 text-green-800': batch.status === 'Active',
+                      'bg-emerald-100 text-emerald-800': batch.status === 'Active',
                       'bg-red-100 text-red-800': batch.status === 'Expired'
                     }"
                   >
@@ -61,42 +201,41 @@
                 </td>
               </tr>
               <tr *ngIf="stocks.batches?.length === 0">
-                <td colspan="4" class="text-gray-500 py-3">No batch data available</td>
+                <td colspan="4" class="text-gray-500 py-3 bg-gray-50 text-center">No batch data available</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Promotions -->
-       <div>
+      <div>
       <h3 class="text-lg font-semibold text-gray-800 mb-3">Promotions</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full border border-gray-200 rounded-lg">
-          <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+      <div class="overflow-x-auto shadow-md rounded-lg border border-gray-200">
+        <table class="min-w-full border-collapse">
+          <thead class="bg-gray-800 text-white text-sm uppercase">
             <tr>
-              <th class="px-4 py-2 border">S/N</th>
-              <th class="px-4 py-2 border">Title</th>
-              <th class="px-4 py-2 border">Start Date</th>
-              <th class="px-4 py-2 border">End Date</th>
-              <th class="px-4 py-2 border">Status</th>
+              <th class="px-4 py-3 border-r">S/N</th>
+              <th class="px-4 py-3 border-r">Title</th>
+              <th class="px-4 py-3 border-r">Start Date</th>
+              <th class="px-4 py-3 border-r">End Date</th>
+              <th class="px-4 py-3">Status</th>
             </tr>
           </thead>
           <tbody>
             <tr
               *ngFor="let promo of promotions; let i = index"
-              class="text-center hover:bg-gray-50"
+              class="text-center hover:bg-blue-50 transition-colors"
             >
-              <td class="px-4 py-2 border">{{ i + 1 }}</td>
-              <td class="px-4 py-2 border">{{ promo.title }}</td>
-              <td class="px-4 py-2 border">{{ promo.startDate | date }}</td>
-              <td class="px-4 py-2 border">{{ promo.endDate | date }}</td>
-              <td class="px-4 py-2 border">
+              <td class="px-4 py-2 border-r">{{ i + 1 }}</td>
+              <td class="px-4 py-2 border-r">{{ promo.title }}</td>
+              <td class="px-4 py-2 border-r">{{ promo.startDate | date }}</td>
+              <td class="px-4 py-2 border-r">{{ promo.endDate | date }}</td>
+              <td class="px-4 py-2">
                 <span
-                  class="px-2 py-1 rounded-full text-xs"
+                  class="px-2 py-1 rounded-full text-xs font-medium"
                   [ngClass]="{
-                    'bg-green-100 text-green-800': promo.status === 'Active',
-                    'bg-gray-100 text-gray-700': promo.status === 'Upcoming',
+                    'bg-emerald-100 text-emerald-800': promo.status === 'Active',
+                    'bg-gray-100 text-gray-800': promo.status === 'Upcoming',
                     'bg-red-100 text-red-800': promo.status === 'Expired'
                   }"
                 >
@@ -105,24 +244,23 @@
               </td>
             </tr>
             <tr *ngIf="promotions.length === 0">
-              <td colspan="5" class="text-gray-500 py-3">No promotions available</td>
+              <td colspan="5" class="text-gray-500 py-3 bg-gray-50 text-center">No promotions available</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-   
+
     </div>
 
-    <!-- Action Buttons -->
     <div class="flex justify-end gap-4 mt-8">
       <button
-        class="px-5 py-2 border border-gray-400 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+        class="px-5 py-2 border border-gray-400 rounded-xl text-gray-800 font-semibold hover:bg-gray-100 transition"
       >
         Other Buttons
       </button>
       <button
-        class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        class="px-5 py-2 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition"
       >
         Create Promotion
       </button>
@@ -132,4 +270,4 @@
   <ng-template #noData>
     <p class="text-center text-gray-500">No stock details found.</p>
   </ng-template>
-</div>
+</div> -->

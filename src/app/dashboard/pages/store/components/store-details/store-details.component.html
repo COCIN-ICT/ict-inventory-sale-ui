@@ -1,11 +1,8 @@
-    {{ stores | json}}
-    <br><hr>
-    {{ allStocks | json}}
-    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
+
+   <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
   <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Store Details</h2>
 
   <div  *ngIf="stores; else noData">
-    <!-- Top Info -->
     <div class="grid md:grid-cols-2 gap-4 mb-6 text-gray-700">
       <div>
         <p><span class="font-semibold">Store ID:</span> {{ stores.id }}</p>
@@ -19,46 +16,43 @@
     <span class="text-blue-600 text-lg">{{stores.storeType }}</span>
   </p>
 
- 
+
 </div>
 
     </div>
 
-    <!-- Tables -->
-    <div class="grid md:grid-cols-2 gap-6">
-  <!-- Stocks -->
+    <div class="space-y-6"> 
   <div>
     <h3 class="text-lg font-semibold text-gray-800 mb-3">Stocks</h3>
-    <div class="overflow-x-auto">
-      <table class="min-w-full border border-gray-200 rounded-lg">
-        <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+    <div class="overflow-x-auto shadow-md rounded-lg border border-gray-200">
+      <table class="min-w-full border-collapse">
+        <thead class="bg-gray-800 text-white text-sm uppercase">
           <tr>
-            <th class="px-4 py-2 border">S/N</th>
-            <!-- <th class="px-4 py-2 border">Stock ID</th> -->
-            <th class="px-4 py-2 border">Item</th>
-            <th class="px-4 py-2 border">Quantity</th>
-            <th class="px-4 py-2 border">Action</th>
+            <th class="px-4 py-3 border-r">S/N</th>
+            <th class="px-4 py-3 border-r">Item</th>
+            <th class="px-4 py-3 border-r">Quantity</th>
+            <th class="px-4 py-3">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="let stock of allStocks; let i = index"
-            class="text-center hover:bg-gray-50"  (click)="goToStockDetails(stock.id)"
+            class="text-center hover:bg-blue-50 transition-colors"  (click)="goToStockDetails(stock.id)"
           >
-            <td class="px-4 py-2 border">{{ i + 1 }}</td>
-            <!-- <td class="px-4 py-2 border">{{ stock.id }}</td> -->
-            <td class="px-4 py-2 border">{{ stock.item?.name }}</td>
-            <td class="px-4 py-2 border">{{ stock.totalQuantity }}</td>
-            <td class="px-4 py-2 border">
+            <td class="px-4 py-2 border-r">{{ i + 1 }}</td>
+            <td class="px-4 py-2 border-r">{{ stock.item?.name }}</td>
+            <td class="px-4 py-2 border-r">{{ stock.totalQuantity }}</td>
+            <td class="px-4 py-2">
               <button  [routerLink]="['/home/store/details', stores.id, 'stock', stock.id]"
-                type="button" class="text-red-600 hover:text-red-900" >
-                Open
+                type="button" 
+                class="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow-sm hover:bg-blue-700 transition active:scale-95" >
+                Open Details
               </button>
             </td>
           </tr>
 
           <tr *ngIf="!allStocks || allStocks.length === 0">
-            <td colspan="5" class="text-gray-500 py-3 text-center">
+            <td colspan="5" class="text-gray-500 py-3 text-center bg-gray-50">
               No stock data available
             </td>
           </tr>
@@ -66,30 +60,10 @@
       </table>
     </div>
   </div>
-
-
-
-
-  
-
-
 </div>
 
 
-    <!-- Action Buttons -->
-    <!-- <div class="flex justify-end gap-4 mt-8">
-      <button
-        class="px-5 py-2 border border-gray-400 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-      >
-        Other Buttons
-      </button>
-      <button
-        class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-      >
-        Create Promotion
-      </button>
-    </div> -->
-  </div>
+    </div>
 
   <ng-template #noData>
     <p class="text-center text-gray-500">No stock details found.</p>

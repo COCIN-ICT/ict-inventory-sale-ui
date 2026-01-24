@@ -1,117 +1,95 @@
-<!-- This is the main HTML template for your Bank Account List component -->
 <div class="container mx-auto p-6 max-w-4xl">
   <div class="bg-white shadow-xl rounded-lg p-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
       <h4 class="text-xl font-bold text-gray-900 tracking-tight">Bank Account List</h4>
       <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-        <!-- Search Input to filter all fields -->
         <div class="relative w-full sm:w-64">
           <input type="text" placeholder="Search accounts..."
                  class="w-full pl-10 pr-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500"
                  [(ngModel)]="searchTerm" (input)="searchList()"/>
         </div>
-        <!-- Create New Account Button -->
         <button type="button" (click)="openCreateForm()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition w-full sm:w-auto">
+                class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition w-full sm:w-auto">
           Create New Account
         </button>
       </div>
     </div>
 
 
-    <!-- Status Filter -->
-<div class="mb-4 flex gap-2">
+    <div class="mb-4 flex gap-2">
   <button 
     (click)="loadAccounts()" 
-    class="px-3 py-1 rounded-lg text-sm font-medium"
-    [ngClass]="selectedStatus === null ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'">
+    class="px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+    [ngClass]="selectedStatus === null ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
     All
   </button>
   <button 
     (click)="loadAccounts(true)" 
-    class="px-3 py-1 rounded-lg text-sm font-medium"
-    [ngClass]="selectedStatus === true ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'">
+    class="px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+    [ngClass]="selectedStatus === true ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
     Active
   </button>
   <button 
     (click)="loadAccounts(false)" 
-    class="px-3 py-1 rounded-lg text-sm font-medium"
-    [ngClass]="selectedStatus === false ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'">
+    class="px-3 py-1 rounded-lg text-sm font-medium transition-colors"
+    [ngClass]="selectedStatus === false ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
     Inactive
   </button>
 </div>
 
     
-    <!-- Bank Account List Table -->
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto shadow-lg rounded-xl border border-gray-200">
       <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+        <thead class="bg-gray-800">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-xl">
               Account Name
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Account Number
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Bank Name
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tr-xl">
               Actions
             </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let account of bankAccounts">
-            <!-- Account Name -->
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          <tr *ngFor="let account of bankAccounts" class="hover:bg-blue-50 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
               {{ account.accountName }}
             </td>
 
-            <!-- Account Number -->
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {{ account.accountNumber }}
             </td>
 
-            <!-- Bank Name -->
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {{ account.bankName }}
             </td>
 
-            
-
-            <!-- Actions -->
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
               <button
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all duration-200"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all duration-200 shadow-sm"
               (click)="openEditForm(account)"
             >
               Edit
             </button>
 
 
-              <!-- <button type="button" (click)="openEditForm(account)"
-                      class="text-blue-600 hover:text-blue-900">
-                Edit
-              </button> -->
-
-
-              <!-- <button [ngClass]="account.active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'" type="button" (click)="changeStatus(account)"
-                      class="text-red-600 hover:text-red-900">
-                {{ account.active ? 'Deactivate' : 'Activate' }}
-              </button> -->
               <button
-              class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200"
-              [ngClass]="account.active ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-green-600 text-white hover:bg-green-700'"
+              class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm"
+              [ngClass]="account.active ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-emerald-600 text-white hover:bg-emerald-700'"
               (click)="changeStatus(account)">
               {{ account.active ? 'Deactivate' : 'Activate' }}
             </button>
             </td>
           </tr>
 
-          <!-- No Records Found -->
           <tr *ngIf="bankAccounts.length === 0">
-            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 bg-gray-50">
               No bank accounts found.
             </td>
           </tr>

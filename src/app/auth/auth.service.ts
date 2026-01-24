@@ -119,4 +119,23 @@ export class AuthService {
 
     this.router.navigate(['/login']);
   }
+
+ getUserRoles(): string | null {
+    const user = this.getUser();
+
+    if (!user || !Array.isArray(user.roles) || user.roles.length === 0) {
+      return null;
+    }
+    return user.roles[0].roleName;
+  }
+
+  hasRole(allowedRoles: string[]): boolean {
+    const user = this.getUser();
+
+    if (!user || !Array.isArray(user.roles)) {
+      return false;
+    }
+    return user.roles.some((role: any) => allowedRoles.includes(role.roleName));
+  }
 }
+

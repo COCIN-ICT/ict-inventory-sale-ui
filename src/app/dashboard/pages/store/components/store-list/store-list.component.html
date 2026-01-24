@@ -1,56 +1,52 @@
-<div class="container mx-auto p-6 max-w-4xl">
+<div class="container mx-auto p-6 max-w-7xl">
         <div class="bg-white shadow-xl rounded-lg p-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <h4 class="text-xl font-bold text-gray-900 tracking-tight">Store List</h4>
                 <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                    <!-- Search Input -->
                     <div class="relative w-full sm:w-64">
                         <input type="text" placeholder="Search stores..."
                             [(ngModel)]="searchTerm"
                             (input)="applyFilters()"
                             class="w-full pl-10 pr-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500" />
                     </div>
-                    <!-- Department Filter -->
-                     
                     <div class="w-full sm:w-48">
                         <select (change)="onUnitSelected($any($event.target).value)"
                             class="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500">
                             <option value="" selected>Filter by Unit</option>
                             <option *ngFor="let unit of units" [value]="unit.id"> {{ unit.name }}</option>
-                            
+
                         </select>
                     </div>
                     <button type="button" (click)="openCreateForm()"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition w-full sm:w-auto">
+                        class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition w-full sm:w-auto">
                         Create New Store
                     </button>
                 </div>
             </div>
-            
-            <div class="overflow-x-auto">
+
+            <div class="overflow-x-auto shadow-lg rounded-xl border border-gray-200">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-800">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-xl">
                                 Name
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                 Location
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                 Store Type
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                 Unit Name
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tr-xl">
                                 Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- Sample Data Row 1 -->
-                        <tr *ngFor="let store of stores">
+                        <tr *ngFor="let store of stores" class="hover:bg-blue-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">{{ store.name }}</div>
                             </td>
@@ -65,17 +61,21 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{store.unit?.name || 'N/A'}}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                 <div class="flex gap-2">
                                     
-                                    <button  [routerLink]="['details', store.id]" type="button" class="text-red-600 hover:text-red-900" >
-                                        Open
+                                    <button  
+                                        [routerLink]="['details', store.id]" 
+                                        type="button" 
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow-sm hover:bg-blue-700 transition active:scale-95" 
+                                    >
+                                        Open Details
                                     </button>
 
                                 </div>
                             </td>
                         </tr>
-                        
+
                     </tbody>
                 </table>
             </div>

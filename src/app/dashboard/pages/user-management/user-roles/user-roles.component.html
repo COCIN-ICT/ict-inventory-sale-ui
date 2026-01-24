@@ -1,21 +1,19 @@
 <div class="font-sans">
   <div class="max-w-7xl mx-auto bg-white shadow-2xl rounded-3xl p-6 sm:p-10">
 
-    <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 border-b pb-4">
       <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">
         User Roles Management
       </h2>
 
       <button
-        class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold shadow-md hover:bg-indigo-700 transition active:scale-95 w-full sm:w-auto"
+        class="px-6 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold shadow-md hover:bg-emerald-700 transition active:scale-95 w-full sm:w-auto"
         (click)="isRoleModalOpen = true"
       >
         + Add New Role
       </button>
     </div>
 
-    <!-- Success Message -->
     <div
       *ngIf="successMessage"
       class="bg-green-500 text-white p-3 rounded mb-4 text-center text-sm font-medium transition-opacity duration-500"
@@ -23,13 +21,12 @@
       {{ successMessage }}
     </div>
 
-    <!-- Roles Table -->
     <div class="mt-4">
       <h3 class="text-xl font-bold text-gray-800 mb-3">Existing Roles</h3>
 
       <div class="overflow-x-auto shadow-lg rounded-xl border border-gray-200">
         <table class="w-full border-collapse min-w-[800px] bg-white">
-          <thead class="bg-indigo-600 text-white">
+          <thead class="bg-gray-800 text-white">
             <tr>
               <th class="px-6 py-4 text-left text-sm font-medium">Role Name</th>
               <th class="px-6 py-4 text-left text-sm font-medium">Permissions</th>
@@ -40,7 +37,7 @@
           <tbody class="bg-white divide-y divide-gray-100">
             <tr
               *ngFor="let role of roles; even as isEven"
-              class="transition-colors hover:bg-indigo-50"
+              class="transition-colors hover:bg-blue-50"
               [class.bg-white]="!isEven"
               [class.bg-gray-50]="isEven"
             >
@@ -48,19 +45,15 @@
                 {{ role.roleName }}
               </td>
 
-              <!-- <td class="px-6 py-4 text-sm text-gray-600">
-                {{ getRolePermissionsDisplay(role) }}
-              </td> -->
-
               <td class="px-6 py-4 text-sm text-gray-600">
-  {{ getRolePermissionsDisplay(role) | prettyPermission }}
-</td>
+                {{ getRolePermissionsDisplay(role) | prettyPermission }}
+              </td>
 
 
               <td class="px-6 py-4 text-center text-sm">
                 <div class="flex flex-wrap justify-center gap-3">
                   <button
-                    class="px-4 py-2 bg-yellow-500 text-white rounded-full text-sm font-medium shadow hover:bg-yellow-600 transition active:scale-95 w-full sm:w-auto"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium shadow hover:bg-blue-700 transition active:scale-95 w-full sm:w-auto"
                     (click)="editRole(role); isRoleModalOpen = true"
                   >
                     Edit
@@ -86,7 +79,6 @@
       </div>
     </div>
 
-    <!-- MODAL -->
     <div
       *ngIf="isRoleModalOpen"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4"
@@ -100,7 +92,6 @@
 
         <form (ngSubmit)="saveRole()" #roleForm="ngForm" class="space-y-6">
 
-          <!-- Role Name -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
               Role Name <span class="text-red-500">*</span>
@@ -110,12 +101,11 @@
               name="roleName"
               required
               [(ngModel)]="newRole.roleName"
-              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter role name"
             />
           </div>
 
-          <!-- Permissions -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Permissions <span class="text-red-500">*</span>
@@ -130,20 +120,16 @@
                   type="checkbox"
                   [(ngModel)]="permission.selected"
                   [ngModelOptions]="{ standalone: true }"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
-                <!-- <label class="text-sm text-gray-700">
-                  {{ permission.permissionType }}
-                </label> -->
                 <label class="text-sm text-gray-700">
-  {{ permission.permissionType | prettyPermission }}
-</label>
+                  {{ permission.permissionType | prettyPermission }}
+                </label>
 
               </div>
             </div>
           </div>
 
-          <!-- Buttons -->
           <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4">
             <button
               type="button"
@@ -155,14 +141,13 @@
 
             <button
               type="submit"
-              class="px-6 py-2 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition active:scale-95 w-full sm:w-auto"
+              class="px-6 py-2 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition active:scale-95 w-full sm:w-auto"
             >
               {{ editing ? 'Update Role' : 'Create Role' }}
             </button>
           </div>
         </form>
 
-        <!-- Close Icon -->
         <button
           (click)="isRoleModalOpen = false"
           class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-xl"

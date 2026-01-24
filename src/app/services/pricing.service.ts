@@ -16,19 +16,25 @@ export class PricingService {
   createPricing(pricingModel: PricingModel): Observable<PricingModel> {
     return this.http.post<PricingModel>(`${API_URL}/pricing`, pricingModel);
   }
-  getPricingByID(id: number): Observable<PricingModel[]> {
-    return this.http.get<PricingModel[]>(`${API_URL}/${id}`);
-  }
+  // getPricingByID(id: number): Observable<PricingModel[]> {
+  //   return this.http.get<PricingModel[]>(`${API_URL}/pricing/${id}`);
+  // }
 
   updatePricing(id: number, pricingModel: PricingModel): Observable<PricingModel> {
-    return this.http.put<PricingModel>(`${API_URL}/${id}`, pricingModel);
+    return this.http.put<PricingModel>(`${API_URL}/pricing/${id}`, pricingModel);
   }
 
-  getPricingByStock(stockId: number): Observable<PricingModel[]> {
-    return this.http.get<PricingModel[]>(`${API_URL}/stock/${stockId}`);
-  }
+  // getPricingByStock(stockId: number): Observable<PricingModel[]> {
+  //   return this.http.get<PricingModel[]>(`${API_URL}/stock/${stockId}`);
+  // }
 
-  getStock(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_URL}/stock`);
-  }
+  getPricingByStock(stockId: number): Observable<PricingModel> {
+  return this.http.get<PricingModel>(
+    `${API_URL}/pricing/stock/${stockId}`
+  );
+}
+
+  // getStock(): Observable<any[]> {
+  //   return this.http.get<any[]>(`${API_URL}/stock`);
+  // }
 }
