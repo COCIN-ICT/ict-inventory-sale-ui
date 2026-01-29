@@ -81,6 +81,12 @@ const routes: Routes = [
       //budget
       { path: 'budget', loadChildren: () => import('./dashboard/pages/budget/budget.module').then(m => m.BudgetModule) },
 
+      // other expense
+      { path: 'other-expense', loadChildren: () => import('./dashboard/pages/other-expense/other-expense.module').then(m => m.OtherExpenseModule) },
+
+      // other income
+      { path: 'other-income', loadChildren: () => import('./dashboard/pages/other-income/other-income.module').then(m => m.OtherIncomeModule) },
+
       //reports
       { path: 'reports', loadChildren: () => import('./dashboard/pages/reports/reports.module').then(m => m.ReportsModule) },
 
