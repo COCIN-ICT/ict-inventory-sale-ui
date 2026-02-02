@@ -129,13 +129,28 @@ export class AuthService {
     return user.roles[0].roleName;
   }
 
-  hasRole(allowedRoles: string[]): boolean {
-    const user = this.getUser();
+  // hasRole(allowedRoles: string[]): boolean {
+  //   const user = this.getUser();
 
-    if (!user || !Array.isArray(user.roles)) {
-      return false;
-    }
-    return user.roles.some((role: any) => allowedRoles.includes(role.roleName));
+  //   if (!user || !Array.isArray(user.roles)) {
+  //     return false;
+  //   }
+  //   return user.roles.some((role: any) => allowedRoles.includes(role.roleName));
+  // }
+
+  /** auth.service.ts **/
+
+hasPermission(requiredPermission: string): boolean {
+  const user = this.getUser(); // Uses your existing logic to get user from localStorage
+  
+  if (!user || !user.roles || !Array.isArray(user.roles)) {
+    return false;
   }
+
+  // Look through the user's roles and their nested permissions array
+  return user.roles.some((role: any) => 
+    role.permissions?.some((p: any) => p.permissionType === requiredPermission)
+  );
+}
 }
 

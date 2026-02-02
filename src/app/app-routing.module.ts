@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './layout/main/main.component';
 import { AllUsersComponent } from './dashboard/pages/all-users/all-users.component';
 import { AuthGuard } from './auth/auth.guard';
+import { PermissionGuard } from './auth/permission.guard';
 import { EditSupplierComponent } from './dashboard/pages/supplier-management/edit-supplier/edit-supplier.component';
 import { SupplierDetailsComponent } from './dashboard/pages/supplier-management/supplier-details/supplier-details.component';
 import { SalesOrderListComponent } from './dashboard/pages/sales-order/sales-order-list/sales-order-list.component';
@@ -79,7 +80,10 @@ const routes: Routes = [
       { path: 'purchase-order', loadChildren: () => import('./dashboard/pages/purchase-order/purchase-order.module').then(m => m.PurchaseOrderModule) },
 
       //budget
-      { path: 'budget', loadChildren: () => import('./dashboard/pages/budget/budget.module').then(m => m.BudgetModule) },
+      { path: 'budget', loadChildren: () => import('./dashboard/pages/budget/budget.module').then(m => m.BudgetModule),
+        canActivate: [PermissionGuard],
+        data: { permission: 'BUDGET_READ'}
+       },
 
       //reports
       { path: 'reports', loadChildren: () => import('./dashboard/pages/reports/reports.module').then(m => m.ReportsModule) },

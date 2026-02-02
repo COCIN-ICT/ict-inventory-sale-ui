@@ -7,6 +7,7 @@ import { PurchaseQuotationService } from '../../../../../services/purchase-quota
 import { ItemService } from '../../../../../services/item.service';
 import { SupplierService } from '../../../../../services/supplier.service';
 import { ToastService } from '../../../../../services/toast.service';
+import { AuthService } from '../../../../../auth/auth.service';
 
 @Component({
   selector: 'app-purchase-order-details',
@@ -36,7 +37,8 @@ export class PurchaseOrderDetailsComponent implements OnInit {
     private itemService: ItemService,
     private supplierService: SupplierService,
     private toast: ToastService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
