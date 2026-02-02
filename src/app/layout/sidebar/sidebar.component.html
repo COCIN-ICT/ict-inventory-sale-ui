@@ -321,6 +321,25 @@
     Stock Transfer List
   </a>
 
+  <!-- Other Expenses -->
+  <a routerLink="/home/other-expense" 
+     routerLinkActive="bg-blue-100 text-blue-600" 
+     class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
+    <span class="text-lg">
+      <mat-icon>payments</mat-icon>
+    </span> 
+    Other Expenses
+  </a>
+
+  <!-- Other Incomes -->
+  <a routerLink="/home/other-income" 
+     routerLinkActive="bg-blue-100 text-blue-600" 
+     class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
+    <span class="text-lg">
+      <mat-icon>account_balance_wallet</mat-icon>
+    </span> 
+    Other Incomes
+  </a>
 
   <!-- 5. Reports -->
   <a *ngIf="authService.hasPermission('REPORT_READ')" 
