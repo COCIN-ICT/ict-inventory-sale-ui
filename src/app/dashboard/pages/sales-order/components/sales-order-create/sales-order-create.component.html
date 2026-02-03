@@ -1,0 +1,174 @@
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+  <div class="bg-white shadow-2xl rounded-xl p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-4">
+        <button
+          class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-200 transition"
+          (click)="goBack()"
+        >
+          ← Back
+        </button>
+        <h2 class="text-2xl font-bold text-gray-800">Create Sales Order</h2>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <!-- Customer Selection -->
+      <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-700">Customer</h3>
+          <button
+            type="button"
+            class="text-sm text-blue-600 hover:text-blue-700"
+            (click)="toggleCustomerMode()"
+          >
+            {{ createNewCustomer ? 'Select Existing Customer' : 'Create New Customer' }}
+          </button>
+        </div>
+
+        <!-- Existing Customer Selection -->
+        <div *ngIf="!createNewCustomer" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Select Customer</label>
+            <select
+              [(ngModel)]="selectedCustomerId"
+              [ngModelOptions]="{standalone: true}"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option [value]="null">-- Select Customer --</option>
+              <option *ngFor="let customer of customers" [value]="customer.id">
+                {{ customer.name }} - {{ customer.phone }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- New Customer Form -->
+        <div *ngIf="createNewCustomer" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+              <input
+                type="text"
+                formControlName="name"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="customerForm.get('name')?.invalid && customerForm.get('name')?.touched"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+              <input
+                type="text"
+                formControlName="phone"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="customerForm.get('phone')?.invalid && customerForm.get('phone')?.touched"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+              <input
+                type="text"
+                formControlName="address"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="customerForm.get('address')?.invalid && customerForm.get('address')?.touched"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                formControlName="email"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Section -->
+      <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-700">Items</h3>
+          <button
+            type="button"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
+            (click)="addItem()"
+          >
+            + Add Item
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div
+            *ngFor="let item of selectedItems; let i = index"
+            class="bg-white p-4 rounded-lg border border-gray-200"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Item</label>
+                <select
+                  [(ngModel)]="selectedItems[i].itemId"
+                  [ngModelOptions]="{standalone: true}"
+                  (change)="onItemChange(i, selectedItems[i].itemId)"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                >
+                  <option [value]="0">-- Select Item --</option>
+                  <option *ngFor="let item of items" [value]="item.id">
+                    {{ item.name }} ({{ item.itemCode }})
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                <input
+                  type="number"
+                  [(ngModel)]="selectedItems[i].quantity"
+                  [ngModelOptions]="{standalone: true}"
+                  min="1"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div class="flex items-end">
+                <button
+                  type="button"
+                  class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition"
+                  (click)="removeItem(i)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedItems.length === 0" class="text-center py-4 text-gray-500">
+            No items added. Click "+ Add Item" to add items.
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex items-center justify-end gap-4">
+        <button
+          type="button"
+          class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-gray-300 transition"
+          (click)="goBack()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+        >
+          {{ isLoading ? 'Creating...' : 'Create Sales Order' }}
+        </button>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
+</div>

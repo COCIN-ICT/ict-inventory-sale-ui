@@ -1,0 +1,213 @@
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+  <div class="bg-white shadow-2xl rounded-xl p-6">
+    <!-- Loader -->
+    <div *ngIf="isLoading" class="text-center py-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading sales order details...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="!isLoading && errorMessage" class="bg-red-100 text-red-700 px-4 py-3 rounded mb-4">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Details -->
+    <div *ngIf="!isLoading && order" class="space-y-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b pb-4">
+        <h2 class="text-2xl font-bold text-gray-800">
+          Sales Order #{{ order.id }}
+        </h2>
+        <button
+          (click)="goBackToList()"
+          class="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+        >
+          <mat-icon>arrow_back</mat-icon>
+          Back to List
+        </button>
+      </div>
+
+      <!-- Basic Details -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div>
+          <p class="text-sm text-gray-500">Order ID</p>
+          <p class="text-lg font-medium text-gray-800">#{{ order.id }}</p>
+        </div>
+
+        <div>
+          <p class="text-sm text-gray-500">Status</p>
+          <span class="px-3 py-1 rounded-full text-sm font-semibold inline-block mt-1"
+            [ngClass]="{
+              'bg-green-100 text-green-700': order.status === 'COMPLETED',
+              'bg-yellow-100 text-yellow-700': order.status === 'PENDING',
+              'bg-red-100 text-red-700': order.status === 'CANCELLED' || order.status === 'REJECTED',
+              'bg-gray-100 text-gray-700': !order.status
+            }"
+          >
+            {{ order.status || 'N/A' }}
+          </span>
+        </div>
+
+        <div>
+          <p class="text-sm text-gray-500">Total Payable</p>
+          <p class="text-lg font-semibold text-gray-800">
+            {{ order.totalPayable | number:'1.2-2' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm text-gray-500">Created Date</p>
+          <p class="text-lg font-medium text-gray-800">
+            {{ formatDate(order.createdAt) }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Financial Summary -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Financial Summary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <p class="text-sm text-gray-500">Subtotal</p>
+            <p class="text-xl font-semibold text-gray-800">{{ order.subtotal | number:'1.2-2' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Discount</p>
+            <p class="text-xl font-semibold text-gray-800">{{ order.discount | number:'1.2-2' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total Payable</p>
+            <p class="text-xl font-semibold text-blue-600">{{ order.totalPayable | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Information -->
+      <div *ngIf="order.customer" class="bg-blue-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Customer Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-500">Name</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.customer.name }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Phone</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.customer.phone }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Address</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.customer.address }}</p>
+          </div>
+          <div *ngIf="order.customer.email">
+            <p class="text-sm text-gray-500">Email</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.customer.email }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sales Items -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Sales Items</h3>
+        <div class="overflow-x-auto rounded-lg shadow-sm">
+          <table class="min-w-full bg-white">
+            <thead class="bg-blue-50">
+              <tr class="text-gray-600 text-sm uppercase text-left">
+                <th class="px-6 py-3 font-semibold">Item</th>
+                <th class="px-6 py-3 font-semibold">Quantity</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let item of order.items" class="hover:bg-gray-50">
+                <td class="px-6 py-4 text-sm text-gray-800">
+                  {{ item.item?.name || item.itemId }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-600">
+                  {{ item.quantity }}
+                </td>
+              </tr>
+              <tr *ngIf="!order.items || order.items.length === 0">
+                <td colspan="2" class="px-6 py-4 text-center text-gray-500">No items found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Credit Information -->
+      <div *ngIf="order.credit" class="bg-purple-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Credit Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-500">Amount</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.credit.amount | number:'1.2-2' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Outstanding Balance</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.credit.outstandingBalance | number:'1.2-2' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Status</p>
+            <span class="px-3 py-1 rounded-full text-sm font-semibold"
+              [ngClass]="{
+                'bg-green-100 text-green-700': order.credit.status === 'PAID',
+                'bg-yellow-100 text-yellow-700': order.credit.status === 'PENDING',
+                'bg-red-100 text-red-700': order.credit.status === 'OVERDUE'
+              }"
+            >
+              {{ order.credit.status }}
+            </span>
+          </div>
+          <div *ngIf="order.credit.expectedRepaymentDate">
+            <p class="text-sm text-gray-500">Expected Repayment Date</p>
+            <p class="text-lg font-medium text-gray-800">{{ formatDate(order.credit.expectedRepaymentDate) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Information -->
+      <div *ngIf="order.salesOrderPayment" class="bg-green-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Payment Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <p class="text-sm text-gray-500">Total Payable</p>
+            <p class="text-lg font-medium text-gray-800">{{ order.salesOrderPayment.totalPayable | number:'1.2-2' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total Paid</p>
+            <p class="text-lg font-medium text-green-600">{{ order.salesOrderPayment.totalPaid | number:'1.2-2' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Balance</p>
+            <p class="text-lg font-semibold"
+              [ngClass]="{
+                'text-green-600': order.salesOrderPayment.balance <= 0,
+                'text-red-600': order.salesOrderPayment.balance > 0
+              }"
+            >
+              {{ order.salesOrderPayment.balance | number:'1.2-2' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-3 pt-4 border-t">
+        <button
+          *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'"
+          (click)="finishOrder()"
+          [disabled]="isUpdating"
+          class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ isUpdating ? 'Finishing...' : 'Finish Order' }}
+        </button>
+        <button
+          (click)="deleteOrder()"
+          [disabled]="isUpdating"
+          class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ isUpdating ? 'Deleting...' : 'Delete Order' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

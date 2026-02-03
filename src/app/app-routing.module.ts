@@ -28,7 +28,9 @@ const routes: Routes = [
     children: [
       { path: 'users', component: AllUsersComponent},
 
-      { path: '', loadChildren: () => import('./dashboard/pages/home/home.module').then(m => m.HomeModule) }, 
+      { path: '', loadChildren: () => import('./dashboard/pages/home/home.module').then(m => m.HomeModule) },
+      // Point of Sale Landing Page - placed early to avoid route conflicts
+      { path: 'point-of-sale', loadChildren: () => import('./dashboard/pages/point-of-sale/point-of-sale.module').then(m => m.PointOfSaleModule) },
       { path: 'user-management/users', loadChildren: () => import('./dashboard/pages/user-management/users/users.module').then(m => m.UsersModule) },
       { path: 'user-management/create-user', loadChildren: () => import('./dashboard/pages/user-management/create-user/create-user.module').then(m => m.CreateUserModule) },
       { path: 'user-management/user-roles', loadChildren: () => import('./dashboard/pages/user-management/user-roles/user-roles.module').then(m => m.UserRolesModule) },
@@ -90,25 +92,38 @@ const routes: Routes = [
       //reports
       { path: 'reports', loadChildren: () => import('./dashboard/pages/reports/reports.module').then(m => m.ReportsModule) },
 
+      // Sales Order Module (New Implementation)
+      { path: 'pos/sales-orders', loadChildren: () => import('./dashboard/pages/sales-order/sales-order.module').then(m => m.SalesOrderModule) },
+
+      // Sales Items Stub
+      { path: 'pos/sales-items', loadChildren: () => import('./dashboard/pages/sales-items-stub/sales-items-stub.module').then(m => m.SalesItemsStubModule) },
+
+      // Sales Credit Stub
+      { path: 'pos/sales-credit', loadChildren: () => import('./dashboard/pages/sales-credit-stub/sales-credit-stub.module').then(m => m.SalesCreditStubModule) },
+
+      // Sales Promotions Stub
+      { path: 'pos/sales-promotions', loadChildren: () => import('./dashboard/pages/sales-promotions-stub/sales-promotions-stub.module').then(m => m.SalesPromotionsStubModule) },
+
+      // Old routes (kept for backward compatibility - can be removed later)
       { path: 'sales-order', component: SalesOrderListComponent },
       { path: 'sales-order/create', component: SalesOrderCreateComponent },
       { path: 'sales-order/:id/edit', component: SalesOrderEditComponent },
-      { path: 'sales-order/:id', component: SalesOrderEditComponent }, // or view component if added
+      { path: 'sales-order/:id', component: SalesOrderEditComponent },
 
-      // Sales Credit Routes
+      // Sales Credit Routes (old)
       { path: 'sales-credit', component: SalesCreditListComponent },
       { path: 'sales-credit/create', component: SalesCreditCreateComponent },
       { path: 'sales-credit/:id', component: SalesCreditDetailsComponent },
       { path: 'sales-credit/pending', component: SalesCreditPendingComponent },
 
-      // Sales Promotion Routes
+      // Sales Promotion Routes (old)
       { path: 'sales-promotion', component: SalesPromotionListComponent },
       { path: 'sales-promotion/create', component: SalesPromotionCreateComponent },
       { path: 'sales-promotion/:id', component: SalesPromotionDetailsComponent },
       { path: 'sales-promotion/:id/edit', component: SalesPromotionEditComponent },
       { path: 'sales-promotion/by-stock', component: SalesPromotionByStockComponent },
 
-      // Sales Items Routes
+      // Sales Items Routes (old)
       { path: 'sales-items', component: SalesItemsListComponent },
       { path: 'sales-items/create', component: SalesItemsCreateComponent },
 
