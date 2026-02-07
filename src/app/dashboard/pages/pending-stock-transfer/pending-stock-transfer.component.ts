@@ -24,20 +24,43 @@ export class PendingStockTransferComponent implements OnInit {
     this.loadTransfers();
   }
 
+  // loadTransfers(): void {
+  //   this.loading = true;
+  //   this.stockTransferService.pendingStockTransfers().subscribe({
+  //     next: (res: any[]) => {
+  //       this.pendingTransfers = res.filter(t => t.status === 'PENDING');
+  //       this.approvedTransfers = res.filter(t => t.status === 'APPROVED');
+  //       this.loading = false;
+  //     },
+  //     error: () => {
+  //       this.loading = false;
+  //       this.toast.error('Failed to load stock transfers');
+  //     },
+  //   });
+  // }
+
   loadTransfers(): void {
-    this.loading = true;
-    this.stockTransferService.pendingStockTransfers().subscribe({
-      next: (res: any[]) => {
-        this.pendingTransfers = res.filter(t => t.status === 'PENDING');
-        this.approvedTransfers = res.filter(t => t.status === 'APPROVED');
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-        this.toast.error('Failed to load stock transfers');
-      },
-    });
-  }
+  this.loading = true;
+  this.stockTransferService.pendingStockTransfers().subscribe({
+    next: (res: any) => {
+      const transfers = res?.data || res?.result || res || [];
+
+      this.pendingTransfers = transfers.filter(
+        (t: any) => t.status === 'PENDING'
+      );
+      this.approvedTransfers = transfers.filter(
+        (t: any) => t.status === 'APPROVED'
+      );
+
+      this.loading = false;
+    },
+    error: () => {
+      this.loading = false;
+      this.toast.error('Failed to load stock transfers');
+    }
+  });
+}
+
 
   setActiveTab(tab: 'PENDING' | 'APPROVED'): void {
     this.activeTab = tab;
