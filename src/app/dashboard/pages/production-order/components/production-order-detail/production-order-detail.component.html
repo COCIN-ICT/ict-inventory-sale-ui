@@ -54,10 +54,11 @@
     </div>
 
     <!-- Status Actions -->
-    <div class="mt-6 flex space-x-4"  *ngIf="authService.hasRole(['ADMIN'])">
+    <div class="mt-6 flex space-x-4" >
       <!-- Pending -> Vet -->
       <button
-        *ngIf="productionOrder.status === 'PENDING'"
+        *ngIf="productionOrder.status === 'PENDING' &&
+       authService.hasPermission('PRODUCTION_VET')"
         (click)="vetOrder()"
         class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition disabled:opacity-50"
         [disabled]="isLoading"
@@ -66,8 +67,8 @@
       </button>
 
       <!-- Vetted -> Approve -->
-      <button
-        *ngIf="productionOrder.status === 'VETTED'"
+      <button 
+        *ngIf="productionOrder.status === 'VETTED'  && authService.hasPermission('PRODUCTION_APPROVE')"
         (click)="approveOrder()"
         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
         [disabled]="isLoading"
@@ -77,7 +78,7 @@
 
       <!-- Approved -> Dispense -->
       <button
-        *ngIf="productionOrder.status === 'APPROVED'"
+        *ngIf="productionOrder.status === 'APPROVED' && authService.hasPermission('PRODUCTION_DISPENSE')"
         (click)="dispenseOrder()"
         class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition disabled:opacity-50"
         [disabled]="isLoading"
@@ -87,7 +88,7 @@
 
       <!-- Dispensed -> Finish -->
       <button
-        *ngIf="productionOrder.status === 'CLEARED'"
+        *ngIf="productionOrder.status === 'CLEARED' && authService.hasPermission('PRODUCTION_FINISH')"
         (click)="openFinishModal()"
         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
         [disabled]="isLoading"

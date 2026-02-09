@@ -66,7 +66,7 @@
     <div class="mt-6 flex flex-wrap gap-3">
       <!-- Pending -> Vet -->
       <button
-        *ngIf="order.status === 'PENDING'"
+        *ngIf="order.status === 'PENDING' && authService.hasPermission('PURCHASE_VET')"
         (click)="vetOrder()"
         class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="isLoading"
@@ -76,7 +76,7 @@
 
       <!-- Vetted -> Approve -->
       <button
-        *ngIf="order.status === 'VETTED'"
+        *ngIf="order.status === 'VETTED' && authService.hasPermission('PURCHASE_APPROVE')"
         (click)="approveOrder()"
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="isLoading"
@@ -86,7 +86,7 @@
 
       <!-- Approved -> Receive -->
       <button
-        *ngIf="order.status === 'APPROVED'"
+        *ngIf="order.status === 'APPROVED' && authService.hasPermission('PURCHASE_RECEIVE')"
         (click)="receiveOrder()"
         class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="isLoading"
@@ -96,7 +96,7 @@
 
       <!-- Received -> Clear -->
       <button
-        *ngIf="order.status === 'RECEIVED' || order.status === 'COMPLETED'"
+        *ngIf="order.status === 'RECEIVED' || order.status === 'COMPLETED' && authService.hasPermission('PURCHASE_CLEAR')"
         (click)="clearOrder()"
         class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="isLoading"

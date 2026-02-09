@@ -52,7 +52,7 @@
       </li> -->
 
       <!-- Purchase Orders - Direct Link (like Production) -->
-      <li>
+      <li  *ngIf="authService.hasPermission('PURCHASE_READ')">
         <a routerLink="/home/purchase-order" 
            routerLinkActive="bg-blue-50 text-blue-600" 
            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">
@@ -64,7 +64,7 @@
       </li>
 
       <!-- Budget - Direct Link -->
-      <li>
+      <li *ngIf="authService.hasPermission('BUDGET_READ')">
         <a routerLink="/home/budget" 
            routerLinkActive="bg-blue-50 text-blue-600" 
            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">
@@ -111,7 +111,8 @@
   </div>
 
   <!-- 2. Production -->
-  <a routerLink="/home/production-order" 
+  <a *ngIf="authService.hasPermission('PRODUCTION_READ')"
+    routerLink="/home/production-order" 
      routerLinkActive="bg-blue-100 text-blue-600" 
      class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
     <span class="text-lg">
@@ -120,19 +121,177 @@
     Production
   </a>
 
-  <!-- 3. Point of Sale -->
-  <a *ngIf="authService.hasRole(['ADMIN'])" 
-     routerLink="/home/point-of-sale" 
-     routerLinkActive="bg-blue-100 text-blue-600" 
-     class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
-    <span class="text-lg">
-      <mat-icon>point_of_sale</mat-icon>
-    </span> 
-    Point of Sale
-  </a>
+
+  <!-- 3. Point of Sale - Collapsible Section -->
+  <div *ngIf="authService.hasPermission('SALE_READ')">
+    <button 
+      type="button"
+      (click)="togglePointOfSale()"
+      [class.bg-blue-50]="isPointOfSaleExpanded"
+      [class.text-blue-600]="isPointOfSaleExpanded"
+      class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 cursor-pointer">
+      <span class="flex items-center gap-3">
+        <span class="text-lg">
+          <mat-icon>point_of_sale</mat-icon>
+        </span>
+        Point of Sale
+      </span>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        class="h-4 w-4 transition-transform duration-200" 
+        [class.rotate-180]="isPointOfSaleExpanded"
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <ul 
+      class="ml-4 space-y-1 overflow-hidden transition-all duration-300"
+      [ngClass]="{'max-h-0': !isPointOfSaleExpanded, 'max-h-[2000px]': isPointOfSaleExpanded}">
+
+      <!-- Sales Orders - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesOrders()"
+          [class.bg-blue-50]="isSalesOrdersExpanded"
+          [class.text-blue-600]="isSalesOrdersExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>receipt_long</mat-icon>
+            </span>
+            Sales Orders
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesOrdersExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesOrdersExpanded, 'max-h-96': isSalesOrdersExpanded}">
+          <li><a routerLink="/home/sales-order" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Orders</a></li>
+          <li><a routerLink="/home/sales-order/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Order</a></li>
+        </ul>
+      </li>
+
+      <!-- Sales Items - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesItems()"
+          [class.bg-blue-50]="isSalesItemsExpanded"
+          [class.text-blue-600]="isSalesItemsExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>inventory</mat-icon>
+            </span>
+            Sales Items
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesItemsExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesItemsExpanded, 'max-h-96': isSalesItemsExpanded}">
+          <li><a routerLink="/home/sales-items" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Items</a></li>
+          <li><a routerLink="/home/sales-items/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Item</a></li>
+        </ul>
+      </li>
+
+      <!-- Sales Credit - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesCredit()"
+          [class.bg-blue-50]="isSalesCreditExpanded"
+          [class.text-blue-600]="isSalesCreditExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>credit_card</mat-icon>
+            </span>
+            Sales Credit
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesCreditExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesCreditExpanded, 'max-h-96': isSalesCreditExpanded}">
+          <li><a routerLink="/home/sales-credit" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Sales Credits</a></li>
+          <li><a routerLink="/home/sales-credit/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Sales Credit</a></li>
+          <li><a routerLink="/home/sales-credit/pending" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Pending Credits</a></li>
+        </ul>
+      </li>
+
+      <!-- Sales Promotion - Collapsible (moved from Admin) -->
+      <li>
+        <button 
+          type="button"
+          (click)="toggleSalesPromotion()"
+          [class.bg-blue-50]="isSalesPromotionExpanded"
+          [class.text-blue-600]="isSalesPromotionExpanded"
+          class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200 cursor-pointer">
+          <span class="flex items-center gap-3">
+            <span class="text-lg">
+              <mat-icon>local_offer</mat-icon>
+            </span>
+            Sales Promotion
+          </span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 transition-transform duration-200" 
+            [class.rotate-180]="isSalesPromotionExpanded"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <ul 
+          class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
+          [ngClass]="{'max-h-0': !isSalesPromotionExpanded, 'max-h-96': isSalesPromotionExpanded}">
+          <li><a routerLink="/home/sales-promotion" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">All Promotions</a></li>
+          <li><a routerLink="/home/sales-promotion/create" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Create Promotion</a></li>
+          <li><a routerLink="/home/sales-promotion/by-stock" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Promotions by Stock</a></li>
+        </ul>
+      </li>
+
+    </ul>
+  </div>
+
 
   <!-- 4. Credit Management -->
-  <a routerLink="/home/credit-management" 
+  <a *ngIf="authService.hasPermission('CREDIT_READ')" 
+  routerLink="/home/credit-management" 
      routerLinkActive="bg-blue-100 text-blue-600" 
      class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
     <span class="text-lg">
@@ -143,7 +302,8 @@
 
 
    <!-- Customers -->
-  <a routerLink="/home/customers " 
+  <a *ngIf="authService.hasPermission('CUSTOMER_READ')" 
+    routerLink="/home/customers" 
      routerLinkActive="bg-blue-100 text-blue-600" 
      class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
     <span class="text-lg">
@@ -153,7 +313,8 @@
   </a>
 
   <!-- Stock Transfer List -->
-  <a routerLink="/home/pending-stock-transfer" 
+  <a *ngIf="authService.hasPermission('STOCK_TRANSFER_READ')" 
+     routerLink="/home/ck-transfer" 
      routerLinkActive="bg-blue-100 text-blue-600" 
      class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
     <span class="text-lg">
@@ -183,7 +344,8 @@
   </a>
 
   <!-- 5. Reports -->
-  <a routerLink="/home/reports" 
+  <a *ngIf="authService.hasPermission('REPORT_READ')" 
+  routerLink="/home/reports" 
      routerLinkActive="bg-blue-100 text-blue-600" 
      class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
     <span class="text-lg">
@@ -193,8 +355,8 @@
   </a>
 
   <!-- 6. Admin - Collapsible Section -->
-  <div>
-    <button 
+  <div >
+    <button pending-sto
       type="button"
       (click)="toggleAdmin()"
       [class.bg-blue-50]="isAdminExpanded"
@@ -250,16 +412,20 @@
         <ul 
           class="ml-8 space-y-1 overflow-hidden transition-all duration-300"
           [ngClass]="{'max-h-0': !isUserManagementExpanded, 'max-h-96': isUserManagementExpanded}">
-          <li><a routerLink="/home/user-management/users" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Users</a></li>
-          <li><a routerLink="/home/user-management/user-roles" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">User Roles</a></li>
-          <li><a routerLink="/home/user-management/departments" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Departments</a></li>
-          <li><a routerLink="/home/user-management/permissions" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Permissions</a></li>
-          <li><a routerLink="/home/user-management/units" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Units</a></li>
+          <li
+          *ngIf="authService.hasPermission('ROLE_READ')"><a routerLink="/home/user-management/users" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Users</a></li>
+          <li *ngIf="authService.hasPermission('ROLE_READ')"><a routerLink="/home/user-management/user-roles" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">User Roles</a></li>
+          <li 
+          *ngIf="authService.hasPermission('DEPARTMENT_READ')"><a routerLink="/home/user-management/departments" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Departments</a></li>
+          <li 
+          *ngIf="authService.hasPermission('PERMISSION_READ')"><a routerLink="/home/user-management/permissions" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Permissions</a></li>
+          <li
+          *ngIf="authService.hasPermission('UNIT_READ')"><a routerLink="/home/user-management/units" routerLinkActive="bg-blue-50 text-blue-600" class="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">Units</a></li>
         </ul>
       </li>
 
       <!-- Supplier Management - Collapsible -->
-      <li>
+      <li *ngIf="authService.hasPermission('SUPPLIER_READ')">
         <button 
           type="button"
           (click)="toggleSupplierManagement()"
@@ -295,7 +461,7 @@
       </li>
 
       <!-- Store Management - Collapsible -->
-      <li>
+      <li *ngIf="authService.hasPermission('STORE_READ')">
         <button 
           type="button"
           (click)="toggleStoreManagement()"
@@ -327,7 +493,7 @@
       </li>
 
       <!-- Bank Accounts Management - Collapsible -->
-      <li  *ngIf="authService.hasRole(['ADMIN'])">
+      <li *ngIf="authService.hasPermission('BANK_ACCOUNT_READ')">
         <button 
           type="button"
           (click)="toggleBankAccounts()"
@@ -395,7 +561,7 @@
      
 
       <!-- Items Management - Direct Link -->
-      <li>
+      <li *ngIf="authService.hasPermission('ITEM_READ')">
         <a routerLink="/home/items-management" 
            routerLinkActive="bg-blue-50 text-blue-600" 
            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded transition-all duration-200">
