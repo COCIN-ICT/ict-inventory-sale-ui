@@ -121,6 +121,7 @@
     Production
   </a>
 
+
   <!-- 3. Point of Sale - Collapsible Section -->
   <div *ngIf="authService.hasPermission('SALE_READ')">
     <button 
@@ -286,6 +287,7 @@
 
     </ul>
   </div>
+
 
   <!-- 4. Credit Management -->
   <a *ngIf="authService.hasPermission('CREDIT_READ')" 
