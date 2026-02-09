@@ -17,6 +17,7 @@ export interface ItemRequest {
   isExpirable: boolean;
   unitOfMeasureId: number;
   itemCategoryId: number;
+  lowStockThreshold: number;
 }
 
 export interface ItemResponse {

@@ -1,0 +1,114 @@
+<div class="w-full mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="text-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading income details...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!isLoading && errorMessage" class="bg-red-100 text-red-700 px-4 py-3 rounded mb-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Details -->
+  <div *ngIf="!isLoading && income" class="space-y-6">
+    <div class="flex items-center justify-between border-b pb-2">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Other Income #{{ income.id || income.incomeId }}
+      </h2>
+      <button
+        (click)="goBackToList()"
+        class="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to List
+      </button>
+    </div>
+
+    <!-- Basic Details -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-gray-500">Income ID</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.id || income.incomeId }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Amount</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.amount | number:'1.2-2' }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Source</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.source || '-' }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Reference</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.reference || '-' }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Payment Method</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.paymentMethod || '-' }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Budget Line Item ID</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.budgetLineItemId || '-' }}</p>
+      </div>
+
+      <div *ngIf="income.accountId">
+        <p class="text-sm text-gray-500">Account ID</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.accountId }}</p>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Status</p>
+        <span class="px-3 py-1 rounded-full text-sm font-semibold"
+          [ngClass]="{
+            'bg-green-100 text-green-700': income.status === 'APPROVED',
+            'bg-yellow-100 text-yellow-700': income.status === 'PENDING',
+            'bg-red-100 text-red-700': income.status === 'REJECTED'
+          }">
+          {{ income.status || 'PENDING' }}
+        </span>
+      </div>
+
+      <div>
+        <p class="text-sm text-gray-500">Created At</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.createdAt | date:'medium' }}</p>
+      </div>
+
+      <div *ngIf="income.notes" class="sm:col-span-2">
+        <p class="text-sm text-gray-500">Notes</p>
+        <p class="text-lg font-medium text-gray-800">{{ income.notes }}</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-3 pt-4 border-t">
+      <button
+        *ngIf="income.status === 'PENDING'"
+        (click)="approveIncome()"
+        class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+      >
+        Approve
+      </button>
+      <button
+        *ngIf="income.status === 'PENDING'"
+        (click)="rejectIncome()"
+        class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+      >
+        Reject
+      </button>
+      <button
+        (click)="deleteIncome()"
+        class="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
