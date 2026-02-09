@@ -1,0 +1,111 @@
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+  <div class="bg-white shadow-2xl rounded-xl p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Other Incomes</h2>
+      <button
+        class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
+        (click)="navigateToCreate()"
+      >
+        + Add New Income
+      </button>
+    </div>
+
+    <!-- Filter -->
+    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+      <div class="flex items-center gap-4">
+        <label class="text-sm font-medium text-gray-700">Filter:</label>
+        <button
+          (click)="togglePendingOnly()"
+          [class.bg-blue-600]="showPendingOnly"
+          [class.text-white]="showPendingOnly"
+          [class.bg-white]="!showPendingOnly"
+          [class.text-gray-700]="!showPendingOnly"
+          class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-blue-50 transition"
+        >
+          {{ showPendingOnly ? 'Show All' : 'Show Pending Only' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="mb-4 bg-red-100 text-red-700 px-4 py-3 rounded">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Incomes Table -->
+    <div class="mt-4">
+      <div class="overflow-x-auto rounded-lg shadow-sm">
+        <table class="min-w-full bg-white">
+          <thead class="bg-blue-50">
+            <tr class="text-gray-600 text-sm uppercase text-left">
+              <th class="px-6 py-3 font-semibold">ID</th>
+              <th class="px-6 py-3 font-semibold">Amount</th>
+              <th class="px-6 py-3 font-semibold">Source</th>
+              <th class="px-6 py-3 font-semibold">Reference</th>
+              <th class="px-6 py-3 font-semibold">Payment Method</th>
+              <th class="px-6 py-3 font-semibold">Status</th>
+              <th class="px-6 py-3 font-semibold">Date</th>
+              <th class="px-6 py-3 font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let income of incomes"
+              class="border-b hover:bg-blue-50 transition cursor-pointer"
+              (click)="navigateToDetails(income)"
+            >
+              <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                {{ income.id || income.incomeId || '-' }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ income.amount | number:'1.2-2' }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ income.source || '-' }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ income.reference || '-' }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ income.paymentMethod || '-' }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                <span class="px-2 py-1 text-xs font-medium rounded-full"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': income.status === 'APPROVED',
+                    'bg-yellow-100 text-yellow-700': income.status === 'PENDING',
+                    'bg-red-100 text-red-700': income.status === 'REJECTED'
+                  }">
+                  {{ income.status || 'PENDING' }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                {{ income.createdAt | date:'mediumDate' }}
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <button 
+                  class="bg-green-500 text-white px-3 py-1.5 rounded-md mr-2 hover:bg-green-600 transition"
+                  (click)="navigateToDetails(income); $event.stopPropagation()"
+                >
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- No Data -->
+    <div *ngIf="!isLoading && incomes.length === 0" class="text-center py-4 text-gray-500">
+      No incomes found.
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading incomes...</p>
+    </div>
+  </div>
+</div>

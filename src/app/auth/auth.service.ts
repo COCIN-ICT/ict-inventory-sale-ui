@@ -129,14 +129,14 @@ export class AuthService {
     return user.roles[0].roleName;
   }
 
-  // hasRole(allowedRoles: string[]): boolean {
-  //   const user = this.getUser();
+  hasRole(allowedRoles: string[]): boolean {
+    const user = this.getUser();
 
-  //   if (!user || !Array.isArray(user.roles)) {
-  //     return false;
-  //   }
-  //   return user.roles.some((role: any) => allowedRoles.includes(role.roleName));
-  // }
+    if (!user || !Array.isArray(user.roles)) {
+      return false;
+    }
+    return user.roles.some((role: any) => allowedRoles.includes(role.roleName));
+  }
 
   /** auth.service.ts **/
 

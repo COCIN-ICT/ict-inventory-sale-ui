@@ -39,7 +39,8 @@ export class CreateItemComponent implements OnInit {
       itemType: ['', [Validators.required]],
       isExpirable: [false, [Validators.required]],
       unitOfMeasureId: ['', [Validators.required]],
-      itemCategoryId: ['', [Validators.required]]
+      itemCategoryId: ['', [Validators.required]],
+      lowStockThreshold: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -72,7 +73,15 @@ export class CreateItemComponent implements OnInit {
       this.loading = true;
       this.errorMessage = '';
 
-      const itemData: ItemRequest = this.itemForm.value;
+      const formValue = this.itemForm.value;
+      const itemData: ItemRequest = {
+        name: formValue.name,
+        itemType: formValue.itemType,
+        isExpirable: formValue.isExpirable,
+        unitOfMeasureId: Number(formValue.unitOfMeasureId),
+        itemCategoryId: Number(formValue.itemCategoryId),
+        lowStockThreshold: Number(formValue.lowStockThreshold)
+      };
 
       this.itemService.createItem(itemData).subscribe({
         next: (response) => {
