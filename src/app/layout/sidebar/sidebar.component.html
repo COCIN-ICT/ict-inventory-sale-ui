@@ -190,8 +190,8 @@
     Other Income
   </a>
 
-  <!-- 5. Reports (visible to all ADMIN users regardless of specific permissions) -->
-  <a *ngIf="authService.hasRole(['ADMIN'])" 
+  <!-- 5. Reports (strictly controlled by REPORT_READ permission) -->
+  <a *ngIf="authService.hasPermission('REPORT_READ')" 
      routerLink="/home/reports" 
      routerLinkActive="bg-blue-100 text-blue-600" 
      class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200">
