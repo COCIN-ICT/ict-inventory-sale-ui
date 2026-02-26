@@ -1,0 +1,118 @@
+<app-auth-layout>
+    <div class="w-full">
+        <!-- Heading -->
+        <h1 class="font-['Poppins'] !text-[40px] lg:!text-[55px] !font-bold text-black mb-8 tracking-tight text-left">
+            Create User
+        </h1>
+
+        <!-- Registration Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-8">
+
+                <!-- First Name -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">First name</label>
+                    <input type="text" formControlName="firstName" placeholder="Enter first name"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10 placeholder:text-gray-400"
+                        [class.border-red-500]="f['firstName'].invalid && (f['firstName'].touched || f['firstName'].dirty)" />
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Last name</label>
+                    <input type="text" formControlName="lastName" placeholder="Enter last name"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10 placeholder:text-gray-400"
+                        [class.border-red-500]="f['lastName'].invalid && (f['lastName'].touched || f['lastName'].dirty)" />
+                </div>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Username</label>
+                    <input type="text" formControlName="username" placeholder="Enter username"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10 placeholder:text-gray-400"
+                        [class.border-red-500]="f['username'].invalid && (f['username'].touched || f['username'].dirty)" />
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Email</label>
+                    <input type="email" formControlName="email" placeholder="Enter email"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10 placeholder:text-gray-400"
+                        [class.border-red-500]="f['email'].invalid && (f['email'].touched || f['email'].dirty)" />
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Phone</label>
+                    <input type="tel" formControlName="phone" placeholder="Enter phone"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10 placeholder:text-gray-400"
+                        [class.border-red-500]="f['phone'].invalid && (f['phone'].touched || f['phone'].dirty)" />
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Password</label>
+                    <input type="password" formControlName="password" placeholder="Enter password"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10 placeholder:text-gray-400"
+                        [class.border-red-500]="f['password'].invalid && (f['password'].touched || f['password'].dirty)" />
+                </div>
+
+                <!-- Department -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Department</label>
+                    <select formControlName="department"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10"
+                        [class.border-red-500]="f['department'].invalid && (f['department'].touched || f['department'].dirty)">
+                        <option value="" disabled selected>Select department</option>
+                        <option *ngFor="let dep of departments" [value]="dep">{{ dep }}</option>
+                    </select>
+                </div>
+
+                <!-- Unit -->
+                <div class="form-group">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Unit</label>
+                    <select formControlName="unit"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10"
+                        [class.border-red-500]="f['unit'].invalid && (f['unit'].touched || f['unit'].dirty)">
+                        <option value="" disabled selected>Select unit</option>
+                        <option *ngFor="let unit of units" [value]="unit">{{ unit }}</option>
+                    </select>
+                </div>
+
+                <!-- Role -->
+                <div class="form-group md:col-span-1">
+                    <label class="block text-[14px] font-semibold text-gray-700 mb-1.5">Role</label>
+                    <select formControlName="role"
+                        class="w-full h-[48px] bg-white border border-transparent rounded-[10px] px-4 text-[14px] outline-none transition-all duration-200 focus:border-[#3285DD] focus:ring-2 focus:ring-[#3285DD]/10"
+                        [class.border-red-500]="f['role'].invalid && (f['role'].touched || f['role'].dirty)">
+                        <option value="" disabled selected>Select role</option>
+                        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div *ngIf="successMessage"
+                class="mb-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm text-center font-medium">
+                {{ successMessage }}
+            </div>
+            <div *ngIf="errorMessage"
+                class="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm text-center font-medium">
+                {{ errorMessage }}
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col gap-3">
+                <button type="submit" [disabled]="isLoading"
+                    class="w-full bg-[#3285DD] hover:bg-[#2a74c5] active:scale-[0.98] text-white h-[48px] rounded-[10px] text-[16px] font-bold transition-all duration-200 shadow-lg shadow-blue-500/20 disabled:bg-[#91bde8] disabled:cursor-not-allowed">
+                    <span *ngIf="!isLoading">Create User</span>
+                    <span *ngIf="isLoading">Creating account...</span>
+                </button>
+                <button type="button" (click)="onCancel()"
+                    class="w-full bg-[#9CA3AF] hover:bg-[#838996] active:scale-[0.98] text-white h-[48px] rounded-[10px] text-[16px] font-bold transition-all duration-200">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</app-auth-layout>

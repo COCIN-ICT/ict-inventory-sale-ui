@@ -3,7 +3,6 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './auth/login/login.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -23,7 +22,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
 import { AuthInterceptor } from './auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatIconModule  } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -54,7 +53,6 @@ import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     SidebarComponent,
     FooterComponent,
     HeaderComponent,
@@ -79,7 +77,7 @@ import { SharedModule } from './shared/shared.module';
     ,
     SalesItemsListComponent,
     SalesItemsCreateComponent,
-    
+
 
   ],
   imports: [
@@ -93,11 +91,11 @@ import { SharedModule } from './shared/shared.module';
     MatDialogModule,
     MatButtonModule,
     SharedModule,
-    
-    
-    
-   // AllUsersModule,
-    
+
+
+
+    // AllUsersModule,
+
     StoreModule.forRoot({
       auth: authReducer
     }, {}),

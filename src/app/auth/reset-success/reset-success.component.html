@@ -1,0 +1,45 @@
+<app-auth-layout>
+    <div class="flex flex-col items-center w-full">
+        <!-- Icon Circle (Success Checkmark) -->
+        <div
+            class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-500/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+
+        <!-- Heading -->
+        <h1
+            class="font-['Poppins'] !text-[32px] lg:!text-[30px] !font-semibold text-black text-center mb-2 tracking-tight">
+            Password successfully reset
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-[15px] font-medium text-gray-600 text-center mb-10 max-w-[340px]">
+            Your password has been updated. You can now log in with your new password.
+        </p>
+
+        <!-- Back to Login Button -->
+        <div class="w-full">
+            <button routerLink="/login"
+                class="w-full bg-[#3285DD] hover:bg-[#2a74c5] active:scale-[0.98] text-white py-4 rounded-[10px] text-[18px] font-bold transition-all duration-200 shadow-lg shadow-blue-500/20">
+                Back to Login
+            </button>
+        </div>
+
+        <!-- Return Link -->
+        <div class="mt-8 w-full text-left">
+            <a routerLink="/login"
+                class="inline-flex items-center text-[14px] font-semibold text-gray-800 hover:text-[#3285DD] transition-colors duration-200 group">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-2 transform group-hover:-translate-x-1 transition-transform duration-200"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Go to Login page
+            </a>
+        </div>
+    </div>
+</app-auth-layout>
