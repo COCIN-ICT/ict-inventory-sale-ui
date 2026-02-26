@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import axios from 'axios';
@@ -13,7 +13,7 @@ import { AppState } from '../../store/app.state';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'], // fixed typo: `styleUrl` → `styleUrls`
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
@@ -32,6 +32,10 @@ export class LoginComponent {
     this.store.select(state => state.auth.error).subscribe(error => this.errorMessage = error || '');
   }
 
+  ngOnInit(): void {
+    // Session clearing is now handled by disabling auto-login in AppComponent
+  }
+
   get username() { return this.loginForm.get('username'); }
   get password() { return this.loginForm.get('password'); }
 
@@ -39,20 +43,20 @@ export class LoginComponent {
   //   if (this.loginForm.valid) {
   //     this.isLoading = true;
   //     this.errorMessage = '';
-      
-      // Simulate API call.....
-      // setTimeout(async () => {
-      //   const { username, password } = this.loginForm.value;
-      //   const response = await axios.post(`${environment.apiUrl}/auth/login`, { username, password });
 
-        // Mock authentication logic.....
-        // if (response && response.status === 200) {
-          // Successful login.....
-        //   localStorage.setItem('token', response?.data.token);
-        //   alert('Login successful!');
-        //   this.router.navigate(['/home']);
-        // } else {
-          // Failed login.....
+  // Simulate API call.....
+  // setTimeout(async () => {
+  //   const { username, password } = this.loginForm.value;
+  //   const response = await axios.post(`${environment.apiUrl}/auth/login`, { username, password });
+
+  // Mock authentication logic.....
+  // if (response && response.status === 200) {
+  // Successful login.....
+  //   localStorage.setItem('token', response?.data.token);
+  //   alert('Login successful!');
+  //   this.router.navigate(['/home']);
+  // } else {
+  // Failed login.....
   //         this.errorMessage = 'Invalid username or password';
   //       }
   //       console.log('test', username, password);
@@ -67,7 +71,7 @@ export class LoginComponent {
 
 
   onSubmit() {
-    if ( this.loginForm.valid) {
+    if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
       const { username, password } = this.loginForm.value;
