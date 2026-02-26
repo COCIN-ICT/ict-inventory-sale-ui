@@ -10,8 +10,9 @@ import { AppState } from './store/app.state';
 })
 export class AppComponent {
   title = 'pims';
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) { }
   ngOnInit() {
-    this.store.dispatch(AuthActions.checkAuthStatus());
+    // Temporarily disabled auto-login to allow viewing the new login page designs
+    // this.store.dispatch(AuthActions.checkAuthStatus());
   }
 }
