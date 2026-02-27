@@ -7,6 +7,18 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
+
+  navItems = [
+    { label: 'Dashboard', icon: 'bi bi-house-door', active: true },
+    { label: 'Purchase', icon: 'bi bi-cart3', active: false },
+    { label: 'Production', icon: 'bi bi-cpu', active: false },
+    { label: 'Point of sales', icon: 'bi bi-hash', active: false },
+    { label: 'Report', icon: 'bi bi-journal-text', active: false },
+    { label: 'Dashboard', icon: 'bi bi-house-door', active: false },
+    { label: 'Admin', icon: 'bi bi-shield-lock', active: false, hasSubmenu: true },
+  ];
+
+
   // Admin group toggles
   isAdminExpanded = false;
   isUserManagementExpanded = false;
